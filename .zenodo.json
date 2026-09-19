@@ -7,7 +7,15 @@
   "creators": [
     {
       "name": "You, Lingsen",
-      "affiliation": "Department of Cardiology, Zhongshan Hospital, Fudan University, Shanghai, China"
+      "affiliation": "Department of Cardiology, Zhongshan Hospital, Fudan University, Shanghai Institute of Cardiovascular Diseases, Shanghai, China"
+    },
+    {
+      "name": "Shen, Li",
+      "affiliation": "Department of Cardiology, Zhongshan Hospital, Fudan University, Shanghai Institute of Cardiovascular Diseases, Shanghai, China"
+    },
+    {
+      "name": "Ge, Junbo",
+      "affiliation": "Department of Cardiology, Zhongshan Hospital, Fudan University, Shanghai Institute of Cardiovascular Diseases, Shanghai, China"
     }
   ],
   "keywords": [
@@ -23,5 +31,5 @@
     "model calibration",
     "reproducible research"
   ],
-  "notes": "TODO before publishing the Zenodo record: add every co-author to `creators` in the agreed order, add ORCIDs, and add the preprint DOI as a `related_identifiers` entry with relation `isSupplementTo` once the preprint is posted."
+  "notes": "TODO before publishing the Zenodo record: confirm the author order with all three authors, add ORCIDs, and add the preprint DOI as a related_identifiers entry with relation isSupplementTo once the preprint is posted. Also add the National Basic Science Center grant number under 'grants' if the work is to be attributed to it."
 }

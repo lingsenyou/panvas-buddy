@@ -1,17 +1,35 @@
 # Suitcordance: a calibrated, time-resolved operator for device–vessel matching across the arterial tree, and an audit of the literature values it was calibrated against
 
-**Lingsen You**¹ ‡
+**Lingsen You**<sup>1,2,3,4,5</sup>, **Li Shen**<sup>1,2,3,4,5</sup>,
+**Junbo Ge**<sup>1,2,3,4,5</sup> ‡
 
-¹ Department of Cardiology, Zhongshan Hospital, Fudan University, Shanghai, China
+<sup>1</sup> Department of Cardiology, Zhongshan Hospital, Fudan University, Shanghai
+Institute of Cardiovascular Diseases, No. 180 Fenglin Road, Xuhui District, Shanghai
+200032, China
+
+<sup>2</sup> National Clinical Research Center for Interventional Medicine, No. 180
+Fenglin Road, Xuhui District, Shanghai 200032, China
+
+<sup>3</sup> Oriental Pan-Vascular Devices Innovation College, University of Shanghai
+for Science and Technology (USST), No. 516 Jungong Road, Yangpu District, Shanghai
+200093, China
+
+<sup>4</sup> State Key Laboratory of Cardiovascular Diseases, Zhongshan Hospital, Fudan
+University, No. 1609 Xietu Road, Xuhui District, Shanghai 200032, China
+
+<sup>5</sup> NHC Key Laboratory of Ischemic Heart Diseases, No. 1609 Xietu Road, Xuhui
+District, Shanghai 200032, China
 
 ‡ Corresponding author.
 
-> **AUTHORSHIP — RESOLVE BEFORE POSTING.** This draft carries one author. Every
-> person who contributed to the framework, the device parameters or the cohorts
-> named in §8 must be added and must consent in writing to the preprint being
-> posted; bioRxiv requires the corresponding author to confirm that all authors
-> agree. Do not add a senior author's name without their explicit sign-off on
-> this specific version.
+> **BEFORE POSTING — two things only the authors can do.** bioRxiv makes the submitting
+> author affirm that **every** listed author has seen and agreed to this specific
+> version. Given what §3 reports — that most of our own first anchor set did not hold
+> up, and that §4 and §5 report findings against the model — that affirmation should be
+> obtained on the current text, not on a description of it. Second, competing interests
+> must be declared for all three authors, including any relationship with manufacturers
+> of the device classes modelled here. Confirm also which author is corresponding on
+> this paper.
 
 ---
 
@@ -84,6 +102,14 @@ discussed as a property of the moment of implantation, and two devices that look
 identical on the table can diverge over the following two years for reasons that are
 predictable from their materials.
 
+The framework this paper operationalises was set out by our group as the research
+programme of China's National Basic Science Center for panvascular interventional
+complex systems [1]. That statement names device–vessel suitcordance as the object of
+study; what it does not do — what no statement of the idea has done — is compute it.
+Γ_sc has been a concept with no numerical value, no time course, and therefore nothing
+that could be checked against an outcome. This paper is an attempt to close that gap
+and to report honestly what happens when one does.
+
 This paper does four things. It defines an operator that computes the agreement
 between a device and a vessel on four axes, as a function of time, in any of six
 arterial beds from one parameter set (§2). It reports an adversarial audit of the
@@ -135,6 +161,14 @@ not its absolute size, so a drug outliving its stimulus earns nothing. A second 
 charges the healing window: the period struts stay uncovered, lengthened by the drug
 and by strut thickness, and for a resorbable device the agreement between resorption
 and healing timescales.
+
+The four axes are a refinement of the three ecological balances — mechanical,
+cellular, and physicochemical–immune — in which the framework was originally stated
+[2]. The mapping is not one to one, and the difference is deliberate: the geometric
+and hemodynamic axes separate two things the mechanical balance conflated, namely
+whether the device fits the vessel and whether the lumen it leaves carries flow. §4
+reports that the corrected calibration does not currently need the mechanical axis,
+which is a result about this operator and this endpoint, not about the balances.
 
 ### 2.2 Composition
 
@@ -368,7 +402,7 @@ recalibration.
 
 Device selection needs a policy deciding how the operator is used — the sizing rule,
 when to prepare calcium, when to demand an antiproliferative device. Following the
-separation used in recent interactive scientific agents [1], we hold that policy as
+separation used in recent interactive scientific agents [3], we hold that policy as
 data rather than code, score candidate plans against a fixed rubric composer, and
 improve the policy with the operator's constants frozen. Across 60 development tasks
 with 120 held out, the held-out rubric score rose from 0.749 to 0.948 with no
@@ -449,7 +483,16 @@ manufacturers of the device classes modelled here.*
 > their DOIs, all verified against the source during the audit in §3. The list below is
 > the non-anchor references.
 
-1. Xue S, Zhong J, Nan Z, et al. ScienceBuddy: recursive-in-recursive self-improvement
+1. You L, Shen L, Ge J. The foundation and development of China's National Basic
+   Science Center for panvascular interventional complex systems: pioneering
+   device–vessel suitcordance research. *Eur Heart J*. 2025;46(35):3400–3403.
+   doi:10.1093/eurheartj/ehaf418
+
+2. You L, et al. Vascular–device suitcordance: a tri-ecological framework for
+   eco-rebalancing. *Trends Mol Med*. In press (accepted 14 September 2026).
+   *[DOI to be added once assigned — do not post without it.]*
+
+3. Xue S, Zhong J, Nan Z, et al. ScienceBuddy: recursive-in-recursive self-improvement
    for interactive scientific agents. *arXiv*:2609.17523. 2026.
 
 ---

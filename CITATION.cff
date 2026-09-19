@@ -5,8 +5,16 @@ type: software
 authors:
   - family-names: "You"
     given-names: "Lingsen"
-    affiliation: "Department of Cardiology, Zhongshan Hospital, Fudan University, Shanghai, China"
-    # orcid: "https://orcid.org/0000-0000-0000-0000"   # TODO: add before release
+    affiliation: "Department of Cardiology, Zhongshan Hospital, Fudan University, Shanghai Institute of Cardiovascular Diseases, Shanghai, China"
+    # orcid: ""   # TODO: add before release
+  - family-names: "Shen"
+    given-names: "Li"
+    affiliation: "Department of Cardiology, Zhongshan Hospital, Fudan University, Shanghai Institute of Cardiovascular Diseases, Shanghai, China"
+    # orcid: ""   # TODO: add before release
+  - family-names: "Ge"
+    given-names: "Junbo"
+    affiliation: "Department of Cardiology, Zhongshan Hospital, Fudan University, Shanghai Institute of Cardiovascular Diseases, Shanghai, China"
+    # orcid: ""   # TODO: add before release
 repository-code: "https://github.com/lingsenyou/panvas-buddy"   # TODO: confirm once created
 url: "https://lingsenyou.com/suitcordance/"
 abstract: >-
