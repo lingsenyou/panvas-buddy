@@ -74,9 +74,14 @@ revascularisation endpoint cannot see that; late lumen loss and follow-up percen
 diameter stenosis are published by the anchor trials and would have caught it
 immediately. That check is now falsification item 6.
 
-Fix: bound `nih_max_um` to a measurable range (≤ 400–500 µm) and refit; report what it
-costs. If the anchors cannot be reproduced with physiological neointima, **that is the
-result.**
+**Fixed, and it cost.** `nih_max_um` is now bounded to (40, 300) µm and the realised
+thickness is capped at 60% of the deployed radius inside the operator. Worst implied
+thickness fell from 2,245 to 819 µm, the contemporary DES anchor from 528 to 253 µm, and
+anchors on the Γ_H floor from nine to six. Accuracy fell with it, 1.18 to 1.51 points.
+Pushing further (the two right-hand rows of the frontier above) reaches one anchor on the
+floor and 601 µm, at 3.46 points and with nine of eleven constants pinned. **Still open:**
+six anchors on the Γ_H floor, and a worst-case 70% diameter stenosis in a below-the-knee
+lesion whose observed CD-TLR is 13%.
 
 ## D3. FIXED. The mechanical axis could not penalise a balloon
 
@@ -97,7 +102,13 @@ any physiology is evaluated — and the device that sets Γ*(sfa) is itself a DC
 The manuscript says the DCB trade-off "falls out of the model rather than being written
 into it". Half of it is written in, by the `compliance_dev = None` convention.
 
-Fix: compute overstretch strain from the balloon at inflation, not after recoil.
+**Fixed.** Overstretch strain for a device that leaves nothing behind is now taken at
+inflation. Γ_M for a plain balloon in a 2.9 mm below-knee artery: 1.0000 at 1:1 (correct
+— nothing beyond the reference), 0.865 at 1.3:1, 0.505 at 1.55:1. The fix had a second
+effect that matters more: with balloons chargeable, the mechanical axis became
+identifiable for the first time — removing it now costs 0.45 points of MAE, where before
+it *improved* the fit by 0.05. **Still open:** there is no dissection, bailout-stenting
+or perforation term, so oversizing is charged through wall stress alone.
 
 ## D4. FIXED. Stenosis severity was ignored
 
@@ -105,11 +116,15 @@ Fix: compute overstretch strain from the balloon at inflation, not after recoil.
 builder and the real-data loader. A 40% stenosis and a 95% stenosis produce bit-identical
 output (risk 0.008298 for both in a 3.0 mm coronary with a 3.0 × 20 DES).
 
-Consequences: recoil is applied as a fraction of the balloon diameter rather than of the
-acute gain (which is what recoils), and `_injury_index` is driven by
-`(nominal_d − d_ref)/d_ref`, so **a 1:1 balloon delivers an injury index of exactly zero**
-— plain angioplasty is modelled as causing no barotrauma at all, which deletes the
-mechanism of post-PTA restenosis.
+Consequences were that recoil was applied as a fraction of the balloon diameter rather
+than of the acute gain, and `_injury_index` was driven by oversizing alone, so a 1:1
+balloon delivered an injury index of exactly zero — plain angioplasty modelled as causing
+no barotrauma, which deletes the mechanism of post-PTA restenosis.
+
+**Fixed.** `mld_pre()` sets the pre-procedure lumen from the stenosis; recoil takes back
+a fraction of the acute gain; barotrauma is driven by how far the wall was opened plus
+any oversizing beyond the reference. A 40% and a 95% stenosis now give different risk,
+and a 1:1 balloon in a tight lesion delivers real injury.
 
 ## D5. FIXED. Catalogue errors
 
@@ -120,12 +135,14 @@ mechanism of post-PTA restenosis.
 - `dcb_siro_cor`: 3.5 µg/mm² with 30-day retention. Marketed sirolimus DCBs are
   ~1.0–1.4 µg/mm², and their design rationale is *longer* tissue retention than
   paclitaxel, not shorter than the 45 days given to the paclitaxel entry. The dose is
-  inflated roughly threefold and the retention ordering is reversed. **Not fixed** —
-  changing it requires a refit.
+  inflated roughly threefold and the retention ordering is reversed. **Fixed:** now
+  1.3 µg/mm² with a 60-day constant.
 - `bms` has `d_range = (2.5, 5.0)`, but the renal reference case uses `nominal_d = 5.5`.
-  **The renal bed's entire calibration runs on a device sized outside its own catalogue
-  range**, because nothing validates `nominal_d` against `d_range`. **Not fixed** — the
-  fix changes λ₀(renal) and requires a refit.
+  **The renal bed's entire calibration ran on a device sized outside its own catalogue
+  range**, because nothing validated `nominal_d` against `d_range`. **Fixed:** the range
+  is now (2.5, 7.0), and `check_plan()` refuses any plan a device cannot physically be.
+  The tests assert it for every anchor and every reference case, so this class of bug
+  cannot recur silently.
 
 ## D6. Reporting
 
@@ -134,7 +151,8 @@ mechanism of post-PTA restenosis.
   item 7.
 - Six of the twelve anchors are their own bed's reference case and reproduce λ₀ by
   construction. The informative-subset error is 2.3 points, not 1.4.
-- Removing Γ_M entirely improves the fit (1.37 → 1.32 points).
+- Removing Γ_M improved the fit before the repairs (1.37 → 1.32). After them it costs
+  0.45 points, which is the first evidence in this project that the axis is real.
 - The cross-bed transfer result does not survive a seed sweep and the bootstrap was
   resampling procedures rather than beds.
 
