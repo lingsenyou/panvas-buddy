@@ -62,10 +62,18 @@ CATALOG: List[Device] = [
            "Leaves nothing behind: no compliance mismatch, no scaffolding either."),
     Device("dcb_siro_cor", "Coronary sirolimus DCB", "DCB", "none",
            ("coronary", "btk"), (2.0, 4.0), 40, 0, 0.00, None, 1.00, 1.00,
-           "sirolimus", 3.5, 30, None, 0.28, 0.90, ""),
+           "sirolimus", 1.3, 60, None, 0.28, 0.90,
+           "Marketed sirolimus DCBs carry roughly 1.0-1.4 ug/mm2, and their design "
+           "rationale is LONGER tissue retention than paclitaxel. This entry read "
+           "3.5 ug/mm2 with a 30-day constant until 2026-09-19: about threefold high, "
+           "with the retention ordering against paclitaxel reversed."),
     Device("bms", "Bare-metal stent", "BMS", "balloon",
-           ("coronary", "renal", "iliac"), (2.5, 5.0), 38, 110, 1.00, 0.30, 0.70, 0.85,
-           "none", 0.0, 1, None, 0.03, 1.15, "Comparator arm."),
+           ("coronary", "renal", "iliac"), (2.5, 7.0), 38, 110, 1.00, 0.30, 0.70, 0.85,
+           "none", 0.0, 1, None, 0.03, 1.15,
+           "Comparator arm, and the renal reference device. The top of the range read "
+           "5.0 mm until 2026-09-19 while the renal reference case used 5.5 mm, so "
+           "that bed's entire calibration ran on a device sized outside its own "
+           "catalogue. Nothing checked; check_plan() now does."),
 
     # ---------------- peripheral ----------------
     Device("se_nitinol", "Self-expanding nitinol stent", "SE", "self",

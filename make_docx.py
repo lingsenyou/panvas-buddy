@@ -26,7 +26,8 @@ SRC = os.path.join(HERE, "preprint", "manuscript.md")
 OUT = os.path.join(HERE, "preprint", "Suitcordance_preprint.docx")
 FIGS = [("Figure 1", "out/figures/fig1_trajectories.png", 6.4),
         ("Figure 2", "out/figures/fig2_calibration.png", 3.9),
-        ("Figure 3", "out/figures/fig3_experiments.png", 6.4)]
+        ("Figure 3", "out/figures/fig3_experiments.png", 6.4),
+        ("Figure 4", "out/figures/fig4_frontier.png", 6.4)]
 
 INLINE = re.compile(r"(\*\*.+?\*\*|\*[^*]+?\*|`[^`]+?`|<sup>.+?</sup>|<sub>.+?</sub>)")
 

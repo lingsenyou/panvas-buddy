@@ -262,6 +262,7 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--hair);
    suitcordance operator, ported 1:1 from panvas/suitcordance.py
    --------------------------------------------------------------- */
 const TAU_NIH = MODEL.tauNih, TAU_DRIVE = MODEL.tauDrive, TH = MODEL.theta;
+const NIH_RADIUS_FRAC = MODEL.nihRadiusFrac;
 const WG = MODEL.axisWeights.G, WM = MODEL.axisWeights.M,
       WH = MODEL.axisWeights.H, WB = MODEL.axisWeights.B;
 const DEV = {}; MODEL.devices.forEach(d => DEV[d.key] = d);
@@ -273,33 +274,53 @@ const clamp = (x, a, b) => Math.min(Math.max(x, a), b);
 
 function caEff(les, plan){ return les.calcium * (1 - MODEL.prep[plan.prep].ca_relief); }
 
+/* Minimum lumen diameter before the procedure. Until 2026-09-19 the operator
+   declared les.stenosis and never read it, so recoil was applied to the balloon's
+   diameter rather than to the acute gain, and a 1:1 balloon delivered no injury. */
+function mldPre(les){
+  return Math.max(0.15, dRef(les) * (1 - clamp(les.stenosis, 0, 0.95)));
+}
+
+function inflatedDiameter(les, plan){
+  const dev = DEV[plan.device], ca = caEff(les, plan);
+  const resist = 1 - 0.22 * Math.pow(ca, 1.5) * (plan.postdilate ? 0.55 : 1);
+  if (dev.expansion === "self"){
+    const gap = Math.max(0, plan.nominal_d - dRef(les));
+    return dRef(les) + gap * 0.55 * (1 - 0.40 * ca);
+  }
+  return plan.nominal_d * resist;
+}
+
 function deployed(les, plan, t){
   const dev = DEV[plan.device], bed = MODEL.beds[les.bed];
   const dv = dRef(les), ca = caEff(les, plan);
-  const resist = 1 - 0.22 * Math.pow(ca, 1.5) * (plan.postdilate ? 0.55 : 1);
+  const dInflate = inflatedDiameter(les, plan), m0 = mldPre(les);
   let d0, dInf, tau;
   if (dev.expansion === "balloon"){
-    d0 = plan.nominal_d * resist * (1 - dev.recoil);
+    d0 = m0 + (dInflate - m0) * (1 - dev.recoil);
     if (dev.degrade_tau_d){ dInf = d0 * 1.05; tau = dev.degrade_tau_d; }
     else { dInf = d0 * 1.01; tau = bed.tau_remodel; }
   } else if (dev.expansion === "self"){
     const gap = Math.max(0, plan.nominal_d - dv);
-    d0 = dv + gap * 0.55 * (1 - 0.40 * ca);
+    d0 = dInflate;
     dInf = dv + gap * 0.90; tau = 60;
   } else {
+    /* elastic recoil takes back a fraction of the ACUTE GAIN, not of the balloon */
     const elastic = bed.compliance / 4;
-    const recoil = Math.min(0.55, dev.recoil * (0.75 + 0.45 * elastic) * (1 - 0.35 * ca));
-    d0 = plan.nominal_d * resist * (1 - recoil);
-    dInf = d0 * 0.96; tau = 90;
+    const recoil = Math.min(0.60, dev.recoil * (0.75 + 0.45 * elastic) * (1 - 0.35 * ca));
+    d0 = m0 + (dInflate - m0) * (1 - recoil);
+    dInf = m0 + (d0 - m0) * 0.94; tau = 90;
   }
   return t.map(x => dInf + (d0 - dInf) * Math.exp(-x / tau));
 }
 
 function injuryIndex(les, plan){
-  const dev = DEV[plan.device];
-  const strain = Math.max(0, (plan.nominal_d - dRef(les)) / dRef(les));
-  const ca = caEff(les, plan);
-  return clamp(strain * (1 + 1.2 * ca) * 2.2 + MODEL.prep[plan.prep].injury
+  const dev = DEV[plan.device], ca = caEff(les, plan);
+  const inflate = inflatedDiameter(les, plan), m0 = mldPre(les);
+  const gain = Math.max(0, (inflate - m0) / dRef(les));
+  const over = Math.max(0, (inflate - dRef(les)) / dRef(les));
+  return clamp((0.55 * gain + 1.65 * over) * (1 + 1.2 * ca)
+               + MODEL.prep[plan.prep].injury
                + 0.10 * (plan.postdilate ? 1 : 0) + 0.25 * (dev.strut_um / 150), 0, 1.5);
 }
 
@@ -359,7 +380,11 @@ function gammaM(les, plan, t, dd){
       const mm = Math.abs(cDev - cWall) / (cDev + cWall);
       comp = Math.exp(-TH.k_comp * mm * mm);
     }
-    const eps = Math.max(0, (dd[i] - dRef(les)) / dRef(les));
+    /* strain the wall actually saw: AT INFLATION for a device that leaves nothing
+       behind, otherwise Gamma_M is identically 1 for every balloon at every sizing */
+    const eps = dev.expansion === "none"
+      ? Math.max(0, (inflatedDiameter(les, plan) - dRef(les)) / dRef(les))
+      : Math.max(0, (dd[i] - dRef(les)) / dRef(les));
     const stress = Math.exp(-Math.pow(eps / epsTol, 2) * TH.k_stress);
     const fat = dev.expansion === "none" ? 1
       : Math.exp(-TH.k_fat * fatLoad * fatLoad * (1 - Math.exp(-x / 365)));
@@ -418,7 +443,9 @@ function evaluateCase(les, plan, dt, horizon){
   const de = drugEffect(les, plan, t);
   const nSix = Math.max(1, Math.round(180 / dt));
   const deMean = de.slice(0, nSix).reduce((a, b) => a + b, 0) / nSix;
-  const nihMax = TH.nih_max_um * driveOf(les, injury) * (1 - 0.68 * deMean);
+  const ddMean = dd.reduce((a, b) => a + b, 0) / dd.length;
+  const nihMax = Math.min(TH.nih_max_um * driveOf(les, injury) * (1 - 0.68 * deMean),
+                          NIH_RADIUS_FRAC * (ddMean / 2) * 1000);
   const nih = t.map(x => nihMax * (1 - Math.exp(-x / TAU_NIH)));
 
   const cl = a => a.map(v => clamp(v, 1e-4, 1));

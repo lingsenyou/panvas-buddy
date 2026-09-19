@@ -1,27 +1,27 @@
 building cohort ...
-  n=9000  overall 12-month event rate 0.129
+  n=9000  overall 12-month event rate 0.166
 
 E1  cross-bed transfer   train n=2959 ('coronary', 'carotid')  test n=6041 ('sfa', 'btk', 'renal', 'iliac')
-    event rate  train 0.065  test 0.160
-    (base-rate-only Brier on the test beds: 0.1346)
+    event rate  train 0.073  test 0.211
+    (base-rate-only Brier on the test beds: 0.1667)
     representation                        in-bed AUC  cross AUC  cross Brier intercept-only   slope+int   slope
-    A   raw + bed one-hot (tree)               0.765      0.571       0.1510         0.1628      0.1333   0.143
-    A'  raw + bed physiology (tree)            0.765      0.571       0.1510         0.1628      0.1333   0.143
-    A'' raw + bed physiology (linear)          0.792      0.635       0.1636         0.1492      0.1314   0.316
-    B   suitcordance, 4 numbers (linear)       0.820      0.610       0.2491         0.1510      0.1324   0.262
-    cross-bed AUC advantage of B over A'':  -0.024 (95% bootstrap -0.041 to -0.010)
+    A   raw + bed one-hot (tree)               0.808      0.586       0.1978         0.2086      0.1641   0.145
+    A'  raw + bed physiology (tree)            0.808      0.586       0.1978         0.2086      0.1641   0.145
+    A'' raw + bed physiology (linear)          0.835      0.627       0.1849         0.1920      0.1615   0.228
+    B   suitcordance, 4 numbers (linear)       0.881      0.639       0.2838         0.1892      0.1614   0.311
+    cross-bed AUC advantage of B over A'':  +0.012 (95% bootstrap -0.003 to +0.024)
 
 E2  sample efficiency, coronary only, held-out n=400
     representation                           100     200     400     800
-    A   raw + bed one-hot (tree)           0.600   0.744   0.664   0.699
-    A'  raw + bed physiology (tree)        0.600   0.744   0.664   0.699
-    A'' raw + bed physiology (linear)      0.596   0.670   0.755   0.778
-    B   suitcordance, 4 numbers (linear)   0.790   0.797   0.794   0.797
+    A   raw + bed one-hot (tree)           0.639   0.678   0.700   0.729
+    A'  raw + bed physiology (tree)        0.639   0.678   0.700   0.729
+    A'' raw + bed physiology (linear)      0.687   0.698   0.781   0.792
+    B   suitcordance, 4 numbers (linear)   0.817   0.806   0.817   0.818
 
 E3  decision utility, n=300 fresh cases across all beds
-    fixed protocol       mean predicted 12-month event rate 0.0913
-    harness v0           mean predicted 12-month event rate 0.1097
-    harness evolved      mean predicted 12-month event rate 0.0431
-    catalogue oracle     mean predicted 12-month event rate 0.0412
+    fixed protocol       mean predicted 12-month event rate 0.0847
+    harness v0           mean predicted 12-month event rate 0.1229
+    harness evolved      mean predicted 12-month event rate 0.0348
+    catalogue oracle     mean predicted 12-month event rate 0.0301
 
 written: out/experiments.json

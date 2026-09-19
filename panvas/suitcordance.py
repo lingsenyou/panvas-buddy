@@ -126,6 +126,7 @@ _gamma_star_cache: Dict[Tuple[str, tuple], float] = {}
 
 # fixed structural constants (not fitted)
 TAU_NIH = 120.0         # neointimal growth time constant, days
+NIH_RADIUS_FRAC = 0.60  # neointima cannot exceed this fraction of the deployed radius
 TAU_DRIVE = 210.0       # decay of the proliferative stimulus after injury, days
 T_HORIZON = 730         # default evaluation horizon, days
 
@@ -180,44 +181,78 @@ def _calcium_effective(les: Lesion, plan: Plan) -> float:
     return les.calcium * (1.0 - PREP[plan.prep]["ca_relief"])
 
 
+def mld_pre(les: Lesion) -> float:
+    """Minimum lumen diameter before the procedure, mm.
+
+    Until 2026-09-19 the operator declared `Lesion.stenosis` and never read it, so a
+    40% and a 95% stenosis produced bit-identical output, recoil was applied to the
+    balloon's diameter rather than to the acute gain (which is what recoils), and a
+    1:1 balloon delivered an injury index of exactly zero -- deleting the mechanism of
+    post-angioplasty restenosis. Everything downstream of this function is the fix.
+    """
+    return max(0.15, les.d_ref * (1.0 - float(np.clip(les.stenosis, 0.0, 0.95))))
+
+
+def inflated_diameter(les: Lesion, plan: Plan) -> float:
+    """How far the wall is pushed open at maximum inflation, mm."""
+    ca = _calcium_effective(les, plan)
+    resist = 1.0 - 0.22 * (ca ** 1.5) * (0.55 if plan.postdilate else 1.0)
+    dev = BY_KEY[plan.device]
+    if dev.expansion == "self":
+        # a self-expanding device never reaches nominal acutely
+        gap = max(0.0, plan.nominal_d - les.d_ref)
+        return les.d_ref + gap * 0.55 * (1.0 - 0.40 * ca)
+    return plan.nominal_d * resist
+
+
 def deployed_diameter(les: Lesion, plan: Plan, t: np.ndarray) -> np.ndarray:
     """Outer deployed diameter of the device over time, mm."""
     dev = BY_KEY[plan.device]
     bed = BEDS[les.bed]
     d_ves = les.d_ref
     ca = _calcium_effective(les, plan)
-    # calcium resists expansion; post-dilatation recovers part of the deficit
-    resist = 1.0 - 0.22 * (ca ** 1.5) * (0.55 if plan.postdilate else 1.0)
+    d_inflate = inflated_diameter(les, plan)
+    m0 = mld_pre(les)
 
     if dev.expansion == "balloon":
-        d0 = plan.nominal_d * resist * (1.0 - dev.recoil)
+        # a scaffold holds nearly all of the acute gain
+        d0 = m0 + (d_inflate - m0) * (1.0 - dev.recoil)
         if dev.degrade_tau_d:                      # resorbable: late enlargement
             d_inf, tau = d0 * 1.05, dev.degrade_tau_d
         else:
             d_inf, tau = d0 * 1.01, bed.tau_remodel
     elif dev.expansion == "self":
         gap = max(0.0, plan.nominal_d - d_ves)
-        f0 = 0.55 * (1.0 - 0.40 * ca)
-        d0 = d_ves + gap * f0
+        d0 = d_inflate
         d_inf = d_ves + gap * 0.90                 # chronic outward force keeps working
         tau = 60.0
-    else:                                          # balloon only, nothing left behind
+    else:
+        # nothing left behind: elastic recoil takes back a fraction of the ACUTE GAIN,
+        # not of the balloon's diameter. That is what recoils, and applying the
+        # fraction to the diameter is why balloon lumens came out absurdly small.
         elastic = bed.compliance / 4.0
-        recoil = min(0.55, dev.recoil * (0.75 + 0.45 * elastic) * (1.0 - 0.35 * ca))
-        d0 = plan.nominal_d * resist * (1.0 - recoil)
-        d_inf = d0 * 0.96                          # constrictive remodelling
+        recoil = min(0.60, dev.recoil * (0.75 + 0.45 * elastic) * (1.0 - 0.35 * ca))
+        d0 = m0 + (d_inflate - m0) * (1.0 - recoil)
+        d_inf = m0 + (d0 - m0) * 0.94              # constrictive remodelling
         tau = 90.0
 
     return d_inf + (d0 - d_inf) * np.exp(-t / tau)
 
 
 def _injury_index(les: Lesion, plan: Plan) -> float:
-    """Barotrauma delivered to the wall, 0..1.5."""
+    """Barotrauma delivered to the wall, 0..1.5.
+
+    Driven by how far the wall was pushed open relative to its reference calibre --
+    the acute gain -- plus any oversizing beyond the reference. A 1:1 balloon in a
+    tight lesion therefore delivers real injury, which is the mechanism of
+    post-angioplasty restenosis; before 2026-09-19 it delivered none.
+    """
     dev = BY_KEY[plan.device]
-    strain = max(0.0, (plan.nominal_d - les.d_ref) / les.d_ref)
     ca = _calcium_effective(les, plan)
+    gain = max(0.0, (inflated_diameter(les, plan) - mld_pre(les)) / les.d_ref)
+    over = max(0.0, (inflated_diameter(les, plan) - les.d_ref) / les.d_ref)
     return float(np.clip(
-        strain * (1.0 + 1.2 * ca) * 2.2
+        (0.55 * gain + 1.65 * over) * (1.0 + 1.2 * ca)
         + PREP[plan.prep]["injury"]
         + 0.10 * plan.postdilate
         + 0.25 * (dev.strut_um / 150.0),
@@ -248,9 +283,24 @@ def _drug_effect(les: Lesion, plan: Plan, t: np.ndarray, th: Dict[str, float]) -
     return a ** 1.2 / (a ** 1.2 + 1.0)
 
 
-def _neointima_um(les: Lesion, t: np.ndarray, injury: float,
-                  drug_eff: float, th: Dict[str, float]) -> np.ndarray:
+def _neointima_um(les: Lesion, t: np.ndarray, injury: float, drug_eff: float,
+                  th: Dict[str, float], d_dep: float) -> np.ndarray:
+    """Neointimal thickness per side over time, micrometres.
+
+    Two bounds, both added 2026-09-19. Before them the fit put 528 um under a
+    contemporary drug-eluting stent whose observed CD-TLR is 2.0%, and 2,245 um in a
+    2.75 mm below-the-knee vessel -- against roughly 100 um measured by optical
+    coherence tomography for a contemporary stent. Nine of twelve anchors then sat at
+    the lumen clip for most of year one, so the hemodynamic axis was reporting where a
+    numerical floor had been hit rather than device-vessel physics.
+
+    NIH_RADIUS_FRAC is the physical one: neointima cannot take more than this
+    fraction of the deployed radius. `nih_max_um` is bounded in calibrate.py to a
+    range the OCT literature can recognise.
+    """
     nih_max = th["nih_max_um"] * _drive(les, injury) * (1.0 - 0.68 * drug_eff)
+    ceiling = NIH_RADIUS_FRAC * (d_dep / 2.0) * 1000.0
+    nih_max = min(nih_max, ceiling)
     return nih_max * (1.0 - np.exp(-t / TAU_NIH))
 
 
@@ -310,7 +360,16 @@ def _gamma_M(les: Lesion, plan: Plan, t: np.ndarray, d_dep: np.ndarray,
         mm = np.abs(c_dev - c_wall) / (c_dev + c_wall)
         comp = np.exp(-th["k_comp"] * mm ** 2)
 
-    eps = np.maximum(0.0, (d_dep - les.d_ref) / les.d_ref)
+    # Overstretch strain is the strain the wall actually saw. For a device that
+    # leaves nothing behind that is the strain AT INFLATION, not after recoil.
+    # Taking it after recoil made Gamma_M identically 1.0000 for every balloon at
+    # every sizing, so the axis meant to carry dissection and rupture was inert for
+    # exactly the devices that cause them.
+    if dev.expansion == "none":
+        eps = np.full_like(t, max(0.0, (inflated_diameter(les, plan) - les.d_ref)
+                                  / les.d_ref))
+    else:
+        eps = np.maximum(0.0, (d_dep - les.d_ref) / les.d_ref)
     eps_tol = 0.115 * math.sqrt(max(c_wall, 0.4) / 4.0)
     stress = np.exp(-((eps / eps_tol) ** 2) * th["k_stress"])
 
@@ -445,7 +504,8 @@ def evaluate(les: Lesion, plan: Plan, horizon: int = T_HORIZON, dt: float = 5.0,
     injury = _injury_index(les, plan)
     drug_eff = _drug_effect(les, plan, t, th)
     nih = _neointima_um(les, t, injury,
-                        float(np.mean(drug_eff[: max(1, int(180 / dt))])), th)
+                        float(np.mean(drug_eff[: max(1, int(180 / dt))])), th,
+                        float(np.mean(d_dep)))
 
     G = np.clip(_gamma_G(les, plan, d_dep, th), 1e-4, 1.0)
     M = np.clip(_gamma_M(les, plan, t, d_dep, th), 1e-4, 1.0)
@@ -475,6 +535,28 @@ def evaluate(les: Lesion, plan: Plan, horizon: int = T_HORIZON, dt: float = 5.0,
         gamma0=float(gamma[0]), gamma_end=float(gamma[-1]),
         hazard=lam, risk_12m=float(np.interp(365, t, risk)),
         risk_end=float(risk[-1]), weights=tuple(w))
+
+
+def check_plan(les: Lesion, plan: Plan) -> None:
+    """Raise if a plan is not physically expressible with the device it names.
+
+    The renal reference case ran for weeks on a bare-metal stent sized 0.5 mm beyond
+    the top of its own catalogue range, because nothing looked. Called from the
+    tests and from calibrate.py so that it cannot happen again unnoticed.
+    """
+    dev = BY_KEY.get(plan.device)
+    if dev is None:
+        raise ValueError(f"unknown device {plan.device!r}")
+    if les.bed not in dev.beds:
+        raise ValueError(f"{plan.device} is not licensed for the {les.bed} bed")
+    lo, hi = dev.d_range
+    if not (lo - 1e-9 <= plan.nominal_d <= hi + 1e-9):
+        raise ValueError(f"{plan.device}: nominal_d {plan.nominal_d} outside its "
+                         f"catalogue range {dev.d_range}")
+    if plan.length <= 0 or plan.length > dev.l_max + 1e-9:
+        raise ValueError(f"{plan.device}: length {plan.length} outside (0, {dev.l_max}]")
+    if plan.prep not in PREP:
+        raise ValueError(f"unknown lesion preparation {plan.prep!r}")
 
 
 def risk_12m(les: Lesion, plan: Plan, theta: Optional[Dict[str, float]] = None) -> float:

@@ -1,0 +1,19 @@
+16 anchors (12 in the fit, 4 excluded)
+MAE over the fitted anchors 0.0151, worst 0.0587
+constructs in the fit: CD-TLR, TLR, symptom-driven TLR
+   COR-DES-modern      2.0% obs     2.2% pred  w=0.90  CD-TLR
+   COR-BRS-plla        3.0% obs     1.7% pred  w=0.90  CD-TLR
+   COR-BMS             9.8% obs     9.6% pred  w=0.75  CD-TLR
+   COR-POBA           17.0% obs    22.9% pred  w=0.55  symptom-driven TLR
+   SFA-DCB             2.4% obs     2.5% pred  w=1.00  CD-TLR
+   SFA-POBA           20.6% obs    16.7% pred  w=1.00  CD-TLR
+   SFA-nitinol        12.7% obs    12.8% pred  w=0.70  TLR
+   BTK-DCB             9.2% obs    11.0% pred  w=0.70  CD-TLR
+   BTK-POBA           13.1% obs    17.5% pred  w=0.70  CD-TLR
+   CAR-stent           0.6% obs     0.6% pred  w=0.60  CD-TLR
+   ILIAC-stent         2.8% obs     2.9% pred  w=0.70  CD-TLR
+   RENAL-stent         5.9% obs     5.9% pred  w=0.45  CD-TLR
+ x COR-undersized      3.9% obs     4.5% pred  w=0.00  TVF
+ x SFA-long-bare      31.8% obs    60.4% pred  w=0.00  TLR
+ x COR-DES-complex     5.7% obs     1.9% pred  w=0.00  TLF
+ x COR-DCB-small       4.4% obs     6.1% pred  w=0.00  TLF

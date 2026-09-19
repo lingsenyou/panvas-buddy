@@ -1,0 +1,60 @@
+
+=== calibrate.py  SKIPPED (pass --refit to run it)
+
+=== export_anchors.py  (anchor table with provenance and predictions)
+    x COR-undersized      3.9% obs     4.5% pred  w=0.00  TVF
+    x SFA-long-bare      31.8% obs    60.4% pred  w=0.00  TLR
+    x COR-DES-complex     5.7% obs     1.9% pred  w=0.00  TLF
+    x COR-DCB-small       4.4% obs     6.1% pred  w=0.00  TLF
+   [0s]
+
+=== export_model.py  (dump the operator for the browser workbench)
+   out/model.json 9956 bytes
+   gammaStar: {'coronary': 0.648, 'sfa': 0.631, 'btk': 0.186, 'carotid': 0.625, 'renal': 0.508, 'iliac': 0.621}
+   [0s]
+
+=== app/workbench.html  (private workbench, rebuilt on the current model)
+
+=== inner_loop.py  (harness search with the operator frozen)
+      step 2  dev 0.9518  prepared_calcium: lithotripsy from moderate calcium up
+      step 3  dev 0.9541  apposition: size 10% over reference
+   final skills: size_from_reference, cover_the_lesion, score_and_rank, prepare_calcium
+   written: out/harness_evolution.json, harness/harness_final.json
+   [15s]
+
+=== experiments.py  (E1-E3)
+       harness v0           mean predicted 12-month event rate 0.1229
+       harness evolved      mean predicted 12-month event rate 0.0348
+       catalogue oracle     mean predicted 12-month event rate 0.0301
+   written: out/experiments.json
+   [36s]
+
+=== make_figures.py  (the three preprint figures)
+   fig1
+   fig2
+   fig3
+   written to out/figures
+   [1s]
+
+=== build_site.py  (the public page at lingsenyou.com/suitcordance)
+   written C:\Users\25450\Documents\claude_tmp\lingsenyou_wcj_20260916\lingsenyou.github.io\suitcordance\index.html 73560 chars
+   [1s]
+
+=== make_docx.py  (the submission Word file)
+   written C:\Users\25450\Documents\claude_tmp\panvas_buddy\preprint\Suitcordance_preprint.docx 477486 bytes
+   [0s]
+
+=== tests/make_js_reference.py  (reference values for the JS parity check)
+   sfa       se_nitinol     g0=0.36068 tau= 270.43 risk12=0.09742
+   btk       dcb_periph     g0=0.51109 tau= 106.03 risk12=0.10398
+   carotid   car_dual       g0=0.52564 tau= 189.47 risk12=0.00656
+   out/js_reference.json and out/js_check.js written; paste the snippet into the workbench console
+   [0s]
+
+=== tests/test_operator.py  (property tests, including the structural ones)
+     ok    no anchor's neointima exceeds the radius ceiling
+   Gamma_H clipping
+     FAIL  at most two anchors sit at the Gamma_H floor at 365 days  6 of 12: ['COR-BMS', 'COR-POBA', 'SFA-DCB', 'SFA-POBA', 'BTK-DCB', 'BTK-POBA']
+   1 check(s) FAILED: at most two anchors sit at the Gamma_H floor at 365 days
+
+tests/test_operator.py failed after 1s

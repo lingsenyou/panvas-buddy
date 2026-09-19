@@ -22,6 +22,8 @@ INK, MUTED, HAIR = "#10151b", "#6c7884", "#dbe1e6"
 
 # plain Unicode rather than mathtext: renders identically in DejaVu Sans and
 # keeps the source free of escape sequences
+G_M_LABEL = "Γ_M"
+G_H_LABEL = "Γ_H"
 G_G, G_M, G_H, G_B, G_SC, TAU = "Γ_G", "Γ_M", "Γ_H", "Γ_B", \
                                 "Γ_sc", "τ_sc"
 
@@ -217,8 +219,72 @@ def fig3():
     print("fig3")
 
 
+
+
+# ---------------------------------------------------------------- figure 4
+def fig4():
+    """The accuracy / plausibility frontier: what physiology costs."""
+    rows = json.load(open("out/bounds_sweep.json", encoding="utf-8"))
+    short = ["no bounds", "neointima", "+ lumen", "both tight"]
+    mae = [r["mae"] * 100 for r in rows]
+    clip = [r["clipped"] for r in rows]
+    nih = [r["worst_nih_um"] for r in rows]
+    delta = [(r["mae_without_gamma_m"] - r["mae"]) * 100 for r in rows]
+    x = list(range(len(rows)))
+
+    fig, axes = plt.subplots(1, 3, figsize=(7.8, 2.8))
+    a, b, c = axes
+
+    a.plot(x, mae, "-o", color="#a8332a", ms=5, lw=1.8)
+    for i, v in enumerate(mae):
+        a.annotate(f"{v:.2f}", (i, v), xytext=(0, 7), textcoords="offset points",
+                   ha="center", fontsize=7, color=INK)
+    a.set_ylim(0, max(mae) * 1.30)
+    a.set_ylabel("anchor MAE, points")
+    a.set_title("a   what plausibility costs", loc="left", fontsize=8.5, pad=6)
+
+    b.plot(x, nih, "-o", color="#0a6d9e", ms=5, lw=1.8)
+    b.set_ylabel("worst neointima, um", color="#0a6d9e")
+    b.tick_params(axis="y", colors="#0a6d9e")
+    b.set_ylim(0, max(nih) * 1.30)
+    b.axhspan(0, 150, color="#2f8f5b", alpha=.12)
+    b.annotate("OCT range, contemporary stent", (-0.38, 205), fontsize=6.2,
+               color="#2f8f5b")
+    b2 = b.twinx()
+    b2.plot(x, clip, "-s", color="#c2692a", ms=4.5, lw=1.6)
+    b2.set_ylabel("anchors on the " + G_H_LABEL + " floor", color="#c2692a",
+                  fontsize=7.5)
+    b2.tick_params(axis="y", colors="#c2692a")
+    b2.set_ylim(0, 12)
+    b2.spines["top"].set_visible(False)
+    b.set_title("b   how impossible the internals are", loc="left", fontsize=8.5,
+                pad=6)
+
+    cols = ["#2f8f5b" if v > 0.05 else "#9aa4ad" for v in delta]
+    c.bar(x, delta, width=.55, color=cols)
+    for i, v in enumerate(delta):
+        c.annotate(f"{v:+.2f}", (i, v), xytext=(0, 4 if v >= 0 else -11),
+                   textcoords="offset points", ha="center", fontsize=7, color=INK)
+    c.axhline(0, color=MUTED, lw=1)
+    c.set_ylim(min(delta) - .15, max(delta) * 1.5 + .1)
+    c.set_ylabel("MAE cost of removing " + G_M_LABEL)
+    c.set_title("c   does the mechanical axis earn its place", loc="left",
+                fontsize=8.5, pad=6)
+
+    for ax in (a, b, c):
+        ax.set_xticks(x)
+        ax.set_xticklabels(short, fontsize=7.2)
+        ax.set_xlim(-0.45, len(rows) - 0.55)
+        despine(ax)
+    fig.tight_layout()
+    fig.savefig(f"{OUT}/fig4_frontier.png")
+    plt.close(fig)
+    print("fig4")
+
+
 if __name__ == "__main__":
     fig1()
     fig2()
     fig3()
+    fig4()
     print("written to", OUT)

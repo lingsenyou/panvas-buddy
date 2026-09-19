@@ -13,11 +13,14 @@ import sys
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from panvas.beds import BEDS, BED_KEYS
 from panvas.devices import BY_KEY, candidates_for
 from panvas.suitcordance import (Lesion, Plan, evaluate, gamma_star, THETA,
-                                 REFERENCE_CASE)
+                                 REFERENCE_CASE, check_plan, mld_pre,
+                                 inflated_diameter, NIH_RADIUS_FRAC, _injury_index,
+                                 _drive, _drug_effect, _neointima_um)
 from panvas.anchors import ANCHORS
 from panvas.agent import HARNESS_V0, propose, oracle
 
@@ -155,6 +158,8 @@ def test_harness_and_oracle():
               o_risk <= evaluate(les, plan, horizon=380, dt=10.0).risk_12m + 1e-9)
 
 
+
+
 def main():
     test_bounds_and_composition()
     test_time_constant()
@@ -165,6 +170,9 @@ def main():
     test_reference_anchoring()
     test_calibration_quality()
     test_harness_and_oracle()
+
+    import test_structural
+    test_structural.run(check)
 
     print()
     if FAILURES:

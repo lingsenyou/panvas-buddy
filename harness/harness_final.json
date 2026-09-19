@@ -9,7 +9,7 @@
   ],
   "policy": {
     "sizing_rule": "mean_ref",
-    "oversize_target": 1.05,
+    "oversize_target": 1.1,
     "length_margin_mm": 2.0,
     "calcium_prep_threshold": 0.45,
     "prep_choice": "ivl",

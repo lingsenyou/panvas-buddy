@@ -16,6 +16,6 @@
   "iliac",
   "renal"
  ],
- "mae_in_fit": 0.0137,
- "max_err_in_fit": 0.0426
+ "mae_in_fit": 0.0151,
+ "max_err_in_fit": 0.0587
 }

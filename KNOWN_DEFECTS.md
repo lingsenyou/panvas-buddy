@@ -4,14 +4,29 @@ Found by an adversarial pre-submission review (five reviewer lenses over the man
 and the code, every finding independently verified, then re-verified here by running the
 code). Each entry below was reproduced from the released files before being written down.
 
-These are recorded rather than quietly fixed because fixing the first four requires a
-refit, which changes every number in the paper. **The operator should not be described as
-working until they are addressed.** The citation audit in §3 of the manuscript is
-unaffected by all of them.
+**UPDATE 19 September 2026, later the same day.** D1 to D5 have now been fixed and the
+operator refitted. Fixing them did not make the model work; it revealed a trade-off, and
+that trade-off is now the paper's main result. See §4.2 of the manuscript and
+`sweep_bounds.py`:
+
+| bounds on the internals | MAE, pts | worst | neointima | Γ_H on floor | constants at a bound |
+|---|---|---|---|---|---|
+| unbounded | 1.18 | 5.09 | 1014 µm | 5/12 | 6/11 |
+| neointima bounded | 1.51 | 5.87 | 819 µm | 6/12 | 7/11 |
+| + lumen kernel bounded | 2.16 | 11.25 | 819 µm | 4/12 | 8/11 |
+| both tight | 3.46 | 18.00 | 601 µm | 1/12 | 9/11 |
+
+Accuracy degrades monotonically as the internals are forced toward plausibility. The
+shipped constants are the second row — the only setting in which all four axes are
+identified. **The operator as specified cannot reproduce these outcomes through a
+physiologically defensible path**, and that is the finding, not a nuisance.
+
+What each entry below now says is marked FIXED or OPEN. The citation audit in §3 of the
+manuscript is unaffected by all of them.
 
 ---
 
-## D1. The below-the-knee baseline is a withdrawn device from a negative trial
+## D1. OPEN (labelling fixed). The below-the-knee baseline is a withdrawn device
 
 `λ₀(btk)` and `REFERENCE_CASE["btk"]` are the drug-eluting balloon arm of IN.PACT DEEP.
 That trial **missed its primary efficacy endpoints** (CD-TLR 9.2% against 13.1% for plain
@@ -31,7 +46,7 @@ Four of the twelve retained anchors are paclitaxel-DCB arms from two Medtronic t
 The paclitaxel mortality meta-analysis and the regulatory response to it are not
 discussed anywhere in the paper. They should be.
 
-## D2. The fitted neointima is not physiological
+## D2. FIXED, at a price. The fitted neointima was not physiological
 
 `nih_max_um` = 822 µm at unit drive. Implied 12-month per-side neointimal thickness:
 
@@ -63,7 +78,7 @@ Fix: bound `nih_max_um` to a measurable range (≤ 400–500 µm) and refit; rep
 costs. If the anchors cannot be reproduced with physiological neointima, **that is the
 result.**
 
-## D3. The mechanical axis cannot penalise a balloon
+## D3. FIXED. The mechanical axis could not penalise a balloon
 
 Γ_M = 1.0000 exactly, at every timepoint, for all five balloon anchors. A plain balloon
 at 1.30:1 in a 2.9 mm below-knee artery still scores exactly 1.0000; it only departs from
@@ -84,7 +99,7 @@ into it". Half of it is written in, by the `compliance_dev = None` convention.
 
 Fix: compute overstretch strain from the balloon at inflation, not after recoil.
 
-## D4. Stenosis severity is ignored
+## D4. FIXED. Stenosis severity was ignored
 
 `Lesion.stenosis` is declared and never read by the operator — only by the ML feature
 builder and the real-data loader. A 40% stenosis and a 95% stenosis produce bit-identical
@@ -96,7 +111,7 @@ acute gain (which is what recoils), and `_injury_index` is driven by
 — plain angioplasty is modelled as causing no barotrauma at all, which deletes the
 mechanism of post-PTA restenosis.
 
-## D5. Catalogue errors
+## D5. FIXED. Catalogue errors
 
 - `se_interwoven` had `recoil = 2.00` where the field is a fraction and every other
   self-expanding entry is 0.02 — a hundredfold typo. Numerically inert (the

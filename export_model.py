@@ -10,12 +10,13 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from panvas.beds import BEDS
 from panvas.devices import CATALOG, PREP
 from panvas.suitcordance import (THETA, W_G, W_M, W_H, W_B, TAU_NIH, TAU_DRIVE,
-                                 gamma_star)
+                                 NIH_RADIUS_FRAC, gamma_star)
 
 out = {
     "theta": THETA,
     "axisWeights": {"G": W_G, "M": W_M, "H": W_H, "B": W_B},
     "tauNih": TAU_NIH,
+    "nihRadiusFrac": NIH_RADIUS_FRAC,
     "tauDrive": TAU_DRIVE,
     "beds": {k: asdict(v) for k, v in BEDS.items()},
     "gammaStar": {k: gamma_star(k, THETA) for k in BEDS},

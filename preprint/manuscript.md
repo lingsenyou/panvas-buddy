@@ -58,26 +58,38 @@ paper — endpoint substitution rather than transcription error. Within a single
 lesion revascularisation differ by two- to threefold, so a claim that the endpoint
 is "held constant" while either may be used holds nothing constant.
 
-We therefore report the corrected calibration: 12 anchors, all
-revascularisation constructs, each carrying seven declared provenance fields, with
-four further anchors excluded and listed. Eleven free constants fit these with a
-mean absolute error of 1.4 percentage points — which we report as a consistency check
-and not as performance, because eleven constants against six informative
-comparisons is under-determined, and because six of the twelve anchors are their own
-bed's reference case and reproduce its baseline rate by construction: on the six
-genuinely informative anchors the error is 2.3 points. Seven of the eleven constants land
-on their bounds, and **removing the mechanical axis entirely improves the fit** (1.37 to
-1.32 points), so that axis is not merely unused but currently harmful. Whether it is
-empty, wrongly specified, or simply invisible to a 12-month revascularisation endpoint is
-not decidable here; §7 states the test. In a 9,000-procedure simulation
+We therefore report the corrected calibration: 12 anchors, all revascularisation
+constructs, each carrying seven declared provenance fields, with four further anchors
+excluded and listed. Eleven free constants fit these to a mean absolute error of
+1.5 percentage points — which we report as a consistency check and not as
+performance, because eleven constants against six informative comparisons is
+under-determined, and because six of the twelve anchors are their own bed's reference
+case and reproduce its baseline rate by construction.
+
+A second audit, of the model rather than the literature, produced the result we think
+matters most. The operator was reproducing its endpoints through a path that cannot
+occur in an artery: up to 2.4 mm of neointima per side, the hemodynamic axis pinned at
+its numerical floor for nine of twelve anchors, the mechanical axis exactly inert for
+every balloon, and lesion stenosis declared but never read, so that a 40% and a 95%
+stenosis gave identical output. Repairing those four defects and refitting under
+physiological bounds reveals a frontier rather than a fix. **As the internals are forced
+toward plausibility, accuracy degrades monotonically — 1.18, 1.51, 2.16 and 3.46 points
+of mean absolute error — while the number of constants pinned at a bound rises 6, 7, 8,
+9 of 11, and at the tightest setting the worst anchor is off by 18 points.** Only in the
+middle of that frontier is the mechanical axis identified at all: there, removing it
+costs 0.45 points, whereas before the repairs removing it *improved*
+the fit. A model that reproduces published outcomes only when its internal quantities are
+impossible has not reproduced them, and we report the frontier rather than a point on
+it. In a 9,000-procedure simulation
 with an unobserved frailty term and realistic measurement error, the operator's
-four-number summary reached AUC 0.790 at n = 100, a level 44 raw
-features had not reached by n = 800. The pan-vascular transfer claim did not survive
-its own test either way: against a linear model given the same continuous bed
-physiology, the operator's cross-bed difference was −0.024 AUC at the first seed we
-ran, but the sign flips across simulation seeds (−0.024 to +0.037), and a bootstrap over
-the four held-out beds — the actual unit of the claim — covers zero at every seed. With
-four beds the design has no power to decide, which is itself the finding.
+four-number summary reached AUC 0.817 at n = 100, a level 44 raw features
+had not reached by n = 800 (0.792). The pan-vascular transfer claim did not
+survive its own test either way: the operator's cross-bed difference against a linear
+model given the same continuous bed physiology is +0.012 AUC
+(-0.003 to +0.024), the sign flips across simulation seeds, and a
+bootstrap over the four held-out beds — the actual unit of the claim — covers zero at
+every seed. With four beds the design has no power to decide, which is itself the
+finding.
 No patient-level data were used. This is a modelling, calibration and
 evidence-audit report, not a validation.
 
@@ -368,29 +380,56 @@ of 1.4 points is therefore not evidence that the operator is right.** With more 
 parameters than informative constraints, a low residual is what one should expect, and
 we report it as a consistency check rather than as performance.
 
-**Seven of the eleven fitted constants sit on their bounds**, which is the clearest
-signal in the fit and points at the model rather than at the data. Γ_M is built from
-three kernels and all three are degenerate: the compliance-mismatch and overstretch
-kernels collapse to their floors, and the cyclic-fatigue kernel is pinned at its
-*ceiling* (11.999 against a bound of 12.0). We report the ceiling as well as the floors,
-because omitting it would be exactly the selective reading of a bounds table that this
-paper otherwise argues against.
+### 4.1 A second audit, of the model
 
-We then did the obvious test and it went against us. **Setting Γ_M ≡ 1 for every anchor
-improves the fit**: mean absolute error falls from 1.37 to 1.32 points, and the residual
-on SFA-nitinol — the one anchor the fatigue term exists to explain — falls from 1.39 to
-0.54 points. The saturated fatigue term is pushing its own anchor the wrong way. The
-mechanical axis is therefore not merely never binding; on this endpoint it is actively
-harmful.
+A reviewer then did to the operator what §3 did to the literature, and it did not
+survive either. Four defects, each reproduced by running the released code:
 
-Three readings are available and these data cannot separate them. The axis may be empty.
-Its functional forms may be wrong, which the pinned bounds independently suggest. Or — the
-reading we find most likely, and which §7 is designed to test — a 12-month
-revascularisation endpoint simply cannot see it: compliance convergence, fatigue accrual
-and resorption are slow, a poly-L-lactide scaffold's compliance approaches the wall's
-only over two to three years, and an axis whose predictions live in years 2 to 5 cannot
-be identified from year-one revascularisation. What is not available is presenting the
-four-axis structure as established by this calibration. It is not.
+- **The neointima was not physiological.** The fitted asymptote implied 0.5 to 2.4 mm
+  per side — 528 µm under the contemporary drug-eluting stent anchor whose observed
+  CD-TLR is 2.0%, against roughly 100 µm measured by optical coherence tomography.
+- **Γ_H was reporting a clip, not physics.** Nine of twelve anchors sat at the lumen
+  floor for most of year one, on the axis that was doing the explaining.
+- **The mechanical axis was inert for balloons.** Γ_M was exactly 1.0000, at every
+  timepoint and every sizing, for every balloon anchor, because overstretch strain was
+  computed after recoil and recoil always put the balloon below the reference diameter.
+  The axis meant to carry dissection could not charge the devices that cause it, and in
+  the femoropopliteal bed that handed 36% of the weight to a balloon for nothing.
+- **Lesion stenosis was declared and never read.** A 40% and a 95% stenosis produced
+  bit-identical output; recoil was applied to the balloon's diameter rather than to the
+  acute gain, which is what recoils; and a 1:1 balloon delivered an injury index of
+  exactly zero, deleting the mechanism of post-angioplasty restenosis.
+
+We repaired all four — stenosis now sets the pre-procedure lumen and drives both recoil
+and barotrauma, overstretch is taken at inflation, and the neointima carries a ceiling at
+a fixed fraction of the deployed radius — and refitted. The repairs by themselves
+*improved* the unconstrained fit, from 1.37 to 1.18 points: getting the physics right
+made the model fit better, not worse.
+
+### 4.2 The frontier
+
+Forcing the internals toward plausibility is then a trade-off, and we measured it by
+refitting all eleven constants from scratch at four settings.
+
+| bounds on the internals | MAE, pts | worst | neointima, µm | Γ_H on floor | constants at a bound | cost of removing Γ_M |
+|---|---|---|---|---|---|---|
+| unbounded | 1.18 | 5.09 | 1014 | 5/12 | 6/11 | +0.07 |
+| neointima bounded | 1.51 | 5.87 | 819 | 6/12 | 7/11 | +0.45 |
+| + lumen kernel bounded | 2.16 | 11.25 | 819 | 4/12 | 8/11 | -0.05 |
+| both tight | 3.46 | 18.00 | 601 | 1/12 | 9/11 | -0.04 |
+
+**Accuracy degrades monotonically as the internals are forced toward plausibility, and
+degeneracy rises with it.** At the tightest setting only one anchor is left on the Γ_H
+floor and the worst neointima is 601 µm, but the mean error is 3.46 points, the worst
+anchor is off by 18, and nine of eleven constants are pinned at a bound. A model that
+fits only when its internal quantities are impossible has not fitted, and this is the
+quantitative statement of that.
+
+The one encouraging line is the second. There, and only there, **the mechanical axis is
+identified**: removing it costs 0.45 points, where before the repairs
+removing it *improved* the fit by 0.05. Fixing the balloon overstretch term is what did
+it — the axis could not previously be charged against the devices that most need
+charging. We ship that setting, and we do not claim the frontier has an optimum.
 
 Within a bed, the device-versus-balloon contrast is same-trial and self-consistent.
 Across beds it is not: coronary POBA is 1991–93, symptom-driven, without routine
@@ -429,25 +468,32 @@ produces — year-one mean Γ_sc, mismatch dose, τ_sc and log λ₀ — under a
 ### 5.3 Results
 
 **Sample efficiency (Figure 3a).** Within the coronary bed the operator's four numbers
-reached AUC 0.790 at n = 100 and were flat thereafter
-(0.797 at n = 800). Raw features under a linear model were at
-0.596 at n = 100 and had still not caught up at n = 800
-(0.778); under trees they were lower and unstable
-(0.600 at n = 100, 0.699 at n = 800).
-For single-centre cohorts, where the number of procedures is the binding constraint,
-this is the operator's only demonstrated practical advantage — and it is the one that
-survived the recalibration, in a sharper form.
+reached AUC 0.817 at n = 100 and were flat thereafter (0.818 at n = 800). Raw features
+under a linear model started at 0.687 and had still not caught up by n = 800 (0.792);
+under trees they were lower and unstable (0.639 at n = 100, 0.729 at n = 800). The
+operator's in-bed discrimination is also the highest of the four arms, 0.881 against
+0.835. For single-centre cohorts, where the number of procedures is the binding
+constraint, this is the operator's only demonstrated practical advantage — and it is the
+one that survived both the recalibration and the repair of the model, in a sharper form
+each time.
+
+It is also the one most exposed to the circularity of §5.1: the four numbers are close
+to sufficient statistics of the simulator that generated the labels, so their efficiency
+here is partly arithmetic. The claim that survives is comparative and conditional — a
+physics-parameterised summary needs fewer procedures than raw features to reach its
+ceiling — and it is item 4 of §7 precisely because simulation cannot settle it.
 
 **Cross-bed transfer: the experiment cannot answer the question (Figure 3b).** Training on coronary and carotid and testing on femoropopliteal, below-the-knee, renal
-and iliac, the operator reached AUC 0.610 against 0.635 for raw features plus continuous
-bed physiology under a linear model — a difference of −0.024, with a case-level bootstrap
-interval of (−0.041, −0.010) that excludes zero.
+and iliac, the operator reached AUC 0.639 against 0.627 for raw
+features plus continuous bed physiology under a linear model — a difference of
++0.012, with a case-level bootstrap interval of (-0.003, +0.024).
 
-**That result does not survive its own robustness check, and we report the check rather
-than the result.** Repeating the whole experiment at five simulation seeds gives
-differences of −0.024, +0.024, +0.037, +0.003 and −0.005: the sign flips, the mean is
-+0.007, and the case-level interval excludes zero in three of the five seeds — in both
-directions. The case-level bootstrap is also resampling the wrong unit. The claim is
+**Neither that interval nor the earlier one should be read as an answer.** Before the
+model was repaired the same comparison gave −0.024 with an interval that excluded zero,
+and we were about to report the operator as significantly worse. Repeating the whole
+experiment at five simulation seeds gave differences of −0.024, +0.024, +0.037, +0.003
+and −0.005: the sign flips, the mean is +0.007, and the case-level interval excluded
+zero in three of five seeds, in both directions. The case-level bootstrap is also resampling the wrong unit. The claim is
 about four arterial beds; resampling 6,041 individual procedures treats them as 6,041
 independent observations of bed-to-bed transfer, which they are not. Resampling the four
 **beds** instead gives intervals that cover zero at every seed, including the seed that
@@ -468,20 +514,17 @@ continuous bed parameter and a tree, which can only interpolate between values i
 seen, cannot. Representations (A) and (A′) were numerically identical, for that reason.
 
 **The risk scale does not transfer, and an offset does not fix it.** The operator's raw
-cross-bed Brier score was 0.249, far worse than predicting the test
-beds' base rate (0.135). Two different corrections get called "recalibration" and they
-are not interchangeable, so we report both. Shifting the intercept only — keeping the
-model's log-odds slope — leaves every arm *worse* than the base rate: 0.151
-for the operator, 0.149 for raw features plus bed physiology,
-0.163 for trees. What actually repairs them is refitting the
-slope as well (0.132, 0.131,
-0.133), and the slope the operator needs is
-0.26 — its log-odds are roughly four times too steep across
-beds. Both of these use the test labels and are therefore ceilings, not out-of-sample
-scores.
+cross-bed Brier score was 0.284, far worse than predicting the test beds' base rate
+(0.135). Two different corrections get called "recalibration" and they are not
+interchangeable, so we report both. Shifting the intercept only — keeping the model's
+log-odds slope — leaves the operator at 0.189, raw features plus bed physiology at
+0.192 and trees at 0.209: at or worse than the base rate in every arm. What repairs
+them is refitting the slope as well (0.161 for the operator), and the slope it needs is
+0.31 — its log-odds are roughly three times too steep across beds. Both use the test
+labels and are therefore ceilings, not out-of-sample scores.
 
 The distinction matters for anyone who wants to use the operator in a new bed. Its
-*ordering* carries (AUC 0.610, poor but above chance); its *risk scale*
+*ordering* carries (AUC 0.639, poor but above chance); its *risk scale*
 does not, and it is over-dispersed rather than merely offset. A new bed needs a slope as
 well as a level, which is a two-parameter recalibration on real events, not a constant
 anyone can look up.
@@ -493,8 +536,8 @@ when to prepare calcium, when to demand an antiproliferative device. Following t
 separation used in recent interactive scientific agents [6], we hold that policy as
 data rather than code, score candidate plans against a fixed rubric composer, and
 improve the policy with the operator's constants frozen. Across 60 development tasks with
-120 held out, the held-out rubric score rose from 0.749 to 0.948 with no change to the
-operator.
+120 held out, the held-out rubric score rose from 0.702 to 0.945 with no change
+to the operator.
 
 **This is an internal-consistency result and must not be read as evidence that the policy
 got clinically better.** The rubric's heaviest criterion is the operator's own optimum,
@@ -572,6 +615,19 @@ Stated before any patient data are analysed:
 - **The carotid anchor is 0.6%**, indistinguishable from zero on a CD-TLR scale. That
   bed's informative endpoint is duplex restenosis, which is not in the retained
   construct, so the carotid bed may simply not be calibratable here.
+**Fixed since the first draft, and reported because the fix changed the result:** the
+neointimal ceiling, the balloon overstretch term, the use of lesion stenosis, the
+sirolimus-balloon dose, and a bare-metal stent that the renal reference case was sizing
+beyond its own catalogue range because nothing checked. §4.1 gives the detail, and
+`check_plan()` now refuses a plan a device cannot physically be.
+
+**Still true of the shipped model:**
+
+- **Six of twelve anchors still reach the Γ_H floor within year one**, down from nine.
+  For those six the hemodynamic axis reports a clip rather than physics, and reducing it
+  further costs 0.65 points of accuracy and the identifiability of the mechanical axis
+  (§4.2). The regression test asserts six rather than the two we want, so that the defect
+  stays visible instead of passing quietly.
 - **The below-the-knee baseline is a withdrawn device from a negative trial.** λ₀(btk)
   and that bed's reference case are IN.PACT DEEP's drug-eluting balloon arm: the trial
   missed its primary endpoints (CD-TLR 9.2% against 13.1% for plain angioplasty), carried
@@ -580,39 +636,32 @@ Stated before any patient data are analysed:
   that bed, not because it is good care, and Γ*(btk) = 0.21 against 0.47–0.74 elsewhere
   is a property of that anchor rather than of the bed. Four of the twelve retained
   anchors are paclitaxel-balloon arms from two trials by one manufacturer.
-- **The mechanical axis cannot penalise a balloon.** Γ_M is exactly 1 for every
-  balloon anchor at every timepoint, because overstretch strain is computed after recoil
-  and recoil always puts the balloon below the reference diameter. There is no
-  dissection, bailout-stenting or perforation term. In the femoropopliteal bed this hands
-  36% of the weight to a drug-coated balloon at a perfect score before any physiology is
-  evaluated, and the device setting Γ*(sfa) is itself a balloon.
-- **Stenosis severity is ignored.** `Lesion.stenosis` is never read by the operator: a
-  40% and a 95% stenosis give bit-identical output. A 1:1 balloon therefore delivers an
-  injury index of exactly zero, which deletes the mechanism of post-angioplasty
-  restenosis.
-- **The model reproduces the endpoint through a physically wrong path.** See §8.1.
+- **There is still no dissection, bailout-stenting or perforation term**, so an
+  oversized balloon is charged through wall stress alone. Γ_M is no longer inert for
+  balloons, but the specific complications that make oversizing dangerous are absent.
+- **The worst anchor still implies a 70% diameter stenosis at twelve months**, in a
+  below-the-knee lesion whose observed CD-TLR is 13%. The neointimal ceiling binds there
+  rather than the fitted constant, so the number is a bound, not a prediction.
 - **Not a clinical decision tool** and must not be used as one.
 
-### 8.1 The neointima is not physiological, and it matters
+### 8.1 What the physiological bounds cost, and why we report the cost
 
-The fitted neointimal constant implies 12-month per-side thicknesses of 0.5 to 2.2 mm —
-528 µm for the contemporary drug-eluting stent anchor whose observed CD-TLR is 2.0%,
-2,245 µm in a 2.75 mm below-the-knee vessel — against measured values of order 100 µm by
-optical coherence tomography for a contemporary stent. The coronary DES anchor is
-modelled as ending year one at 52% diameter stenosis in a population that revascularised
-2% of lesions, and three anchors reach the lumen floor and are effectively modelled as
-occluded. **Γ_H sits at or near its numerical clip for nine of the twelve anchors at 365
-days**, so for most anchors τ_sc and the mismatch dose are reporting where a clip was
-hit rather than device–vessel physics.
+The single most useful thing in this paper may be the frontier in §4.2, so it is worth
+restating as a limitation rather than a finding. The operator can reproduce twelve
+published 12-month event rates to 1.18 points — while implying a millimetre of neointima
+per side and holding nine of twelve anchors against a numerical floor. Forced toward
+quantities an artery could actually have, it reaches 3.46 points, misses its worst
+anchor by 18, and pins nine of eleven constants at a bound.
 
-We report this rather than refitting around it, because it is the clearest available
-illustration of the paper's own argument. A model can match an endpoint through a path
-that is wrong, and a 12-month revascularisation endpoint cannot detect that; late lumen
-loss and follow-up percent diameter stenosis are published by these same trials and
-falsify it in one line. That is why it is now falsification item 6, and why nothing in
-this paper should be read as evidence that the operator's internals are right. A refit
-under a physiological bound is the obvious next step, and if the anchors cannot be
-reproduced under one, **that is the result**.
+**That is not a tuning problem, and we have not solved it.** It says the operator as
+specified cannot reproduce these outcomes through a physiologically defensible path.
+The shipped constants sit in the middle of the frontier, chosen because it is the only
+setting in which all four axes are identified — not because it is right.
+
+What would settle it is not another refit. Late lumen loss and follow-up percent
+diameter stenosis are published by the very trials these anchors come from, are free to
+check, and would either confirm the operator's internals or kill them in an afternoon.
+That is falsification item 6, and it is the first thing we intend to do.
 
 ## 9. Data and code availability
 
@@ -695,6 +744,16 @@ corrected value. Solid line identity, dashed lines 1.5-fold.
 held-out n = 400. **(b)** Cross-bed transfer, training on coronary and carotid, testing
 on four held-out beds. The operator does not beat raw features plus continuous bed
 physiology under a model class that can extrapolate.
+
+**Figure 4. The accuracy / plausibility frontier.** Eleven constants refitted from
+scratch at four settings of the two bounds that control how degenerate the operator's
+internal quantities may be. **(a)** Anchor error rises monotonically as the internals are
+forced toward plausibility. **(b)** What is bought: the worst implied neointimal
+thickness per side (blue, against the shaded range measured by optical coherence
+tomography for a contemporary stent) and the number of anchors whose hemodynamic axis
+sits at its numerical floor at 365 days (orange). **(c)** Whether the mechanical axis
+earns its place, as the error cost of removing it. It is identified only at the second
+setting, which is the one shipped.
 
 **Table 1. The anchor set, with provenance.** Every anchor with its bed, device class,
 value, audited trust weight, endpoint construct, trigger, adjudication, estimator,

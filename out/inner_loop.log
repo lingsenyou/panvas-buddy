@@ -1,48 +1,48 @@
 scoring the starting harness ...
-  dev  0.7309   test 0.7494
-  score lost to: antiproliferative=0.083, near_optimal=0.075, covered=0.039, apposition=0.029, prepared_calcium=0.027
+  dev  0.7131   test 0.7024
+  score lost to: antiproliferative=0.083, near_optimal=0.082, covered=0.046, apposition=0.033, prepared_calcium=0.027
 
 step 1: 4 candidates
-   ACCEPT antiproliferative: demand a drug once drive exceeds 1.2    dev 0.7977  delta +0.0668
-   ACCEPT antiproliferative: demand a drug once drive exceeds 0.9    dev 0.8033  delta +0.0724
-   ACCEPT near_optimal: consult the operator before choosing         dev 0.9374  delta +0.2065
-          covered: 3 mm edge margin                                  dev 0.7309  delta -0.0000
+   ACCEPT antiproliferative: demand a drug once drive exceeds 1.2    dev 0.7742  delta +0.0611
+   ACCEPT antiproliferative: demand a drug once drive exceeds 0.9    dev 0.7805  delta +0.0674
+   ACCEPT near_optimal: consult the operator before choosing         dev 0.9299  delta +0.2168
+          covered: 3 mm edge margin                                  dev 0.7131  delta -0.0000
 
 step 2: 4 candidates
-   ACCEPT prepared_calcium: score heavy calcium before implanting    dev 0.9527  delta +0.0154
-   ACCEPT prepared_calcium: lithotripsy from moderate calcium up     dev 0.9541  delta +0.0167
-   ACCEPT prepared_calcium: prepare, then post-dilate                dev 0.9512  delta +0.0138
-   ACCEPT covered: 5 mm edge margin                                  dev 0.9391  delta +0.0017
+   ACCEPT prepared_calcium: score heavy calcium before implanting    dev 0.9473  delta +0.0174
+   ACCEPT prepared_calcium: lithotripsy from moderate calcium up     dev 0.9518  delta +0.0219
+   ACCEPT prepared_calcium: prepare, then post-dilate                dev 0.9447  delta +0.0148
+          covered: 5 mm edge margin                                  dev 0.9299  delta -0.0000
 
 step 3: 4 candidates
-          small_vessel: leave nothing behind below 2.5 mm            dev 0.9515  delta -0.0026
-          small_vessel: leave nothing behind below 2.75 mm           dev 0.9487  delta -0.0054
-   ACCEPT apposition: size 5% over reference                         dev 0.9542  delta +0.0002
-          apposition: size 10% over reference                        dev 0.9540  delta -0.0001
+          small_vessel: leave nothing behind below 2.5 mm            dev 0.9493  delta -0.0026
+          small_vessel: leave nothing behind below 2.75 mm           dev 0.9453  delta -0.0065
+   ACCEPT apposition: size 5% over reference                         dev 0.9535  delta +0.0016
+   ACCEPT apposition: size 10% over reference                        dev 0.9541  delta +0.0023
 
 step 4: 4 candidates
-          apposition: size to the proximal reference                 dev 0.9539  delta -0.0003
-          not_oversized: back to 1:1 sizing                          dev 0.9541  delta -0.0002
-          not_oversized: size to the distal reference                dev 0.9514  delta -0.0028
-          branch_kept: never cover a branch that matters             dev 0.9542  delta +0.0000
+          apposition: size to the proximal reference                 dev 0.9461  delta -0.0080
+          not_oversized: back to 1:1 sizing                          dev 0.9518  delta -0.0023
+          not_oversized: size to the distal reference                dev 0.9496  delta -0.0045
+          branch_kept: never cover a branch that matters             dev 0.9541  delta +0.0000
    no candidate improved; trying the next criterion
 
 step 5: 2 candidates
-          flexion_safe: no fatigue-prone implant beyond 150 mm of SFA dev 0.9542  delta +0.0000
-          flexion_safe: no fatigue-prone implant beyond 120 mm of SFA dev 0.9542  delta +0.0000
+          flexion_safe: no fatigue-prone implant beyond 150 mm of SFA dev 0.9541  delta +0.0000
+          flexion_safe: no fatigue-prone implant beyond 120 mm of SFA dev 0.9541  delta +0.0000
    no candidate improved; trying the next criterion
 
 step 6: the diagnoser has no untried edit left
 
 ============================================================================
-held-out test rubric score  0.7494 -> 0.9484   (+0.1990)
-dev rubric score            0.7309 -> 0.9542
+held-out test rubric score  0.7024 -> 0.9453   (+0.2429)
+dev rubric score            0.7131 -> 0.9541
 
 harness trajectory
-   step 0  dev 0.7309  H0 (starting harness)
-   step 1  dev 0.9374  near_optimal: consult the operator before choosing
-   step 2  dev 0.9541  prepared_calcium: lithotripsy from moderate calcium up
-   step 3  dev 0.9542  apposition: size 5% over reference
+   step 0  dev 0.7131  H0 (starting harness)
+   step 1  dev 0.9299  near_optimal: consult the operator before choosing
+   step 2  dev 0.9518  prepared_calcium: lithotripsy from moderate calcium up
+   step 3  dev 0.9541  apposition: size 10% over reference
 
 final skills: size_from_reference, cover_the_lesion, score_and_rank, prepare_calcium
 
