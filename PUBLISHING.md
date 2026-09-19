@@ -35,7 +35,7 @@ Still open, and each of these needs a person, not a script:
       paper and each verified against its public ORCID record. Prof. Shen has none.
 - [x] **Prof. Ge's email:** jbge@zs-hospital.sh.cn
 - [x] **Corresponding authors.** Prof. Ge and Prof. Shen, both, as on the EHJ paper.
-- [ ] **Your own institutional email** — use the Fudan address, not a personal one.
+- [x] **Emails.** L.Y. lingsenyou@fudan.edu.cn; L.S. shen_li@fudan.edu.cn; J.G. jbge@zs-hospital.sh.cn
 - [ ] **Institutional policy.** Check whether Zhongshan Hospital / Fudan requires
       internal clearance before a preprint is posted. Some Chinese institutions do.
 

@@ -4,8 +4,8 @@ Open <https://submit.biorxiv.org>, sign in as yourself, and work down this page.
 heading is a field on the submission form; paste the block under it. Nothing here needs
 composing, only checking.
 
-One item is still blank: your own institutional email address. Everything else is
-filled in or checked.
+Every field below is filled in and checked. The only thing still missing from the
+package is the Zenodo DOI, which has to exist before you submit (field 9).
 
 ---
 
@@ -30,7 +30,7 @@ already stripped of markdown). bioRxiv's box accepts it at this length.
 
 | # | Name | Affiliations | ORCID | Email | Role |
 |---|---|---|---|---|---|
-| 1 | Lingsen You | 1,2,3,4,5 | 0000-0003-0794-5907 | **[YOU]** — use your Fudan address, not a personal one | first author |
+| 1 | Lingsen You | 1,2,3,4,5 | 0000-0003-0794-5907 | lingsenyou@fudan.edu.cn | first author |
 | 2 | Li Shen | 1,2,3,4,5 | none | shen_li@fudan.edu.cn | **corresponding** |
 | 3 | Junbo Ge | 1,2,3,4,5 | 0000-0002-9360-7332 | jbge@zs-hospital.sh.cn | **corresponding** |
 
@@ -44,10 +44,10 @@ Affiliations, exactly as they appear on *Eur Heart J* 2025;46(35):3400–3403:
 5  NHC Key Laboratory of Ischemic Heart Diseases, No. 1609 Xietu Road, Xuhui District, Shanghai 200032, China
 ```
 
-**A note on the email.** bioRxiv emails every listed author to tell them they have been
-named on a preprint. Use institutional addresses, and expect Prof. Shen and Prof. Ge to
-receive that message within minutes of you pressing submit — which is a good reason for
-them to have read the paper first.
+**A note on the emails.** bioRxiv writes to every listed author to tell them they have
+been named on a preprint. Prof. Shen and Prof. Ge will receive that message within
+minutes of you pressing submit — which is the practical reason for them to have read the
+paper first, quite apart from the affirmation you have to make on the form.
 
 **Corresponding authors: Prof. Ge and Prof. Shen**, both of them, as on the EHJ paper.
 
