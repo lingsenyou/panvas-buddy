@@ -42,9 +42,7 @@ CASES = [
 
 SNIPPET = """const CASES=%s;
 const out = CASES.map(c => {
-  const les = Object.assign({bed:c.bed, stenosis:0.8, diabetes:false, bifurcation:false,
-    side_branch:false, cto:false, inflammation:0.2, runoff:3, calcium:0.2,
-    tortuosity:0.2}, c.les);
+  const les = Object.assign({bed:c.bed}, c.les);   // c.les carries every field
   const r = evaluateCase(les, c.plan, 5, 730);
   const d = (a,b) => +Math.abs(a-b).toExponential(2);
   return {bed:c.bed, dev:c.plan.device,
@@ -61,8 +59,14 @@ console.table(out);
 def main():
     out = []
     for bed, lk, pk in CASES:
-        r = evaluate(Lesion(bed=bed, **lk), Plan(**pk), horizon=730, dt=5.0)
-        out.append(dict(bed=bed, les=lk, plan=pk,
+        les = Lesion(bed=bed, **lk)
+        # emit EVERY field, defaults included. The JS side builds its lesion from
+        # this dict, so any field left to a default on one side and set on the other
+        # is a silent mismatch -- which is exactly what happened on 2026-09-19 once
+        # `stenosis` started reaching the operator.
+        full = {f: getattr(les, f) for f in Lesion.__dataclass_fields__ if f != "bed"}
+        r = evaluate(les, Plan(**pk), horizon=730, dt=5.0)
+        out.append(dict(bed=bed, les=full, plan=pk,
                         g0=round(r.gamma0, 6), gend=round(r.gamma_end, 6),
                         tau=round(r.tau_sc, 3), deficit=round(r.deficit, 6),
                         risk12=round(r.risk_12m, 6)))
