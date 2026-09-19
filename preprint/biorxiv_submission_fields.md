@@ -31,7 +31,7 @@ already stripped of markdown). bioRxiv's box accepts it at this length.
 | # | Name | Affiliations | ORCID | Email |
 |---|---|---|---|---|
 | 1 | Lingsen You | 1,2,3,4,5 | **[YOU]** | magnus0912@proton.me (or your institutional address — see note) |
-| 2 | Li Shen | 1,2,3,4,5 | **[YOU]** | **[YOU]** |
+| 2 | Li Shen | 1,2,3,4,5 | **[YOU]** | shen_li@fudan.edu.cn |
 | 3 | Junbo Ge | 1,2,3,4,5 | **[YOU]** | **[YOU]** |
 
 Affiliations, exactly as they appear on *Eur Heart J* 2025;46(35):3400–3403:
@@ -72,30 +72,30 @@ Note that since January 2026 you can loosen a licence later without posting a ne
 version, but you cannot tighten one, so starting at CC BY and relaxing is not available
 in reverse: choose deliberately.
 
-## 7. Competing interests **[YOU]**
-
-This field is the one a reader will look at first on a paper that ranks device classes.
-Declare, for all three authors, any consulting, speaking fees, research funding, equity
-or family interest involving manufacturers of the modelled device classes: drug-eluting
-stents, bioresorbable scaffolds (including XINSORB), drug-coated balloons, nitinol and
-covered peripheral stents.
-
-If there are none, the text is:
+## 7. Competing interests — confirmed none
 
 ```
 The authors declare no competing interests.
 ```
 
-If there are, say so plainly. An undeclared industry relationship on this particular
-paper would be the fastest way to lose it.
+Confirmed by the first author, 19 September 2026. Worth one last look before you submit,
+because this is the field a reader checks first on a paper that ranks device classes:
+it covers consulting, speaking fees, research funding, equity and family interests
+involving manufacturers of drug-eluting stents, bioresorbable scaffolds (XINSORB
+included), drug-coated balloons, and nitinol or covered peripheral stents, for all
+three authors and not only the first.
 
-## 8. Funding **[YOU]**
-
-Template — fill in the grant numbers:
+## 8. Funding — carried from the EHJ paper, **confirm which apply here**
 
 ```
-This work was supported by the National Natural Science Foundation of China Basic Science Center for panvascular interventional complex systems (grant no. ______). [Add any other grants.]
+This work was supported by the National Natural Science Foundation of China (T2288101, 82170342), the AI for Science Foundation of Fudan University (FudanX24AI003), and the Medical Engineering Joint Fund of Fudan University (yg2023-01).
 ```
+
+These are the four grants indexed against *Eur Heart J* 2025;46(35):3400–3403
+(T2288101 is the NSFC Basic Science Center award; the others are the group's project
+and Fudan medical-engineering funds). I have carried them across because this work sits
+in the same programme, but a funding statement should list what funded **this** work,
+not everything the group holds. Strike any that do not apply.
 
 ## 9. Data and code availability
 
@@ -128,7 +128,8 @@ pan-vascular intervention; device–vessel matching; endpoint definition; calibr
 - [ ] Every red block deleted from the Word file (the author-block note at the top, the
       one in §9, and the reference-list note).
 - [ ] Reference 2 (Trends in Molecular Medicine) has its DOI, or is removed.
-- [ ] Competing interests and funding filled in.
+- [x] Competing interests: none declared.
+- [ ] Funding: four grants carried from the EHJ paper — confirm each applies to this work.
 - [ ] Corresponding author agreed.
 
 ## What I could not do

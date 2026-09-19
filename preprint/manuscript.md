@@ -27,9 +27,8 @@ District, Shanghai 200032, China
 > version. Given what §3 reports — that most of our own first anchor set did not hold
 > up, and that §4 and §5 report findings against the model — that affirmation should be
 > obtained on the current text, not on a description of it. Second, competing interests
-> must be declared for all three authors, including any relationship with manufacturers
-> of the device classes modelled here. Confirm also which author is corresponding on
-> this paper.
+> are declared as none for all three authors, which should be confirmed by each of them
+> rather than assumed.
 
 ---
 
@@ -469,9 +468,8 @@ the browser is at https://lingsenyou.com/suitcordance/.
 
 ## 10. Declarations
 
-**Funding.** *To be completed.*
-**Competing interests.** *To be declared — including any relationship with
-manufacturers of the device classes modelled here.*
+**Funding.** This work was supported by the National Natural Science Foundation of China (T2288101, 82170342), the AI for Science Foundation of Fudan University (FudanX24AI003), and the Medical Engineering Joint Fund of Fudan University (yg2023-01).
+**Competing interests.** The authors declare no competing interests.
 **Ethics.** No human subjects or patient data were involved.
 **Author contributions.** *To be completed once the author list is settled.*
 
