@@ -743,17 +743,21 @@ the browser is at https://lingsenyou.com/suitcordance/.
 **Competing interests.** L.Y. and L.S. serve as Executive Secretaries of the National
 Basic Science Center for Panvascular Interventional Complex Systems, and J.G. serves as
 its Director. The framework this paper operationalises is that centre's research
-programme [1], and the work was supported by that centre's award (T2288101). The authors
-declare no other competing interests, and no consulting income, speaking fees, equity,
-patents or family interests involving any manufacturer of the device classes evaluated
-here.
+programme [1], and the work was supported by that centre's award (T2288101). The device
+catalogue includes a poly-L-lactide bioresorbable scaffold entry labelled
+"XINSORB-class"; the authors' individual relationships to the developers of that device
+class are being confirmed and will be stated in full before any journal submission. No
+other competing interests are known to the corresponding author at the time of posting.
+
 **Ethics.** No human subjects or patient data were involved.
+
 **Use of AI.** The operator, the calibration and the in-silico experiments were
 implemented with the assistance of a large language model (Claude Opus 5), which also
 performed the citation audit of §3 and drafted portions of this manuscript. The authors
 directed the work, chose the modelling commitments, and take responsibility for the
 content. The audit's raw agent-by-agent record is released with the code so that its
 provenance can be inspected rather than taken on trust.
+
 **Author contributions.** L.Y. conceived the operator, wrote the code, performed the
 citation audit, the calibration and the in-silico experiments, and wrote the manuscript.
 L.S. and J.G. supervised the work and revised the manuscript.
