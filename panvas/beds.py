@@ -23,7 +23,15 @@ class Bed:
     cyclic_strain: float            # bending/torsion/compression burden, SFA = 1.0
     tau_endo: float                 # endothelialisation time constant, days (bare metal)
     tau_remodel: float              # vessel remodelling / embedding time constant, days
-    lambda0: float                  # 12-month target-lesion-failure hazard at perfect match
+    # 12-month clinically driven TLR of the REFERENCE ARM named for this bed in
+    # suitcordance.REFERENCE_CASE. Two things it is not. It is not the rate at a
+    # perfect match: in evaluate(), lambda == lambda0 when Gamma_sc == Gamma*(bed),
+    # which is 0.21-0.74 depending on the bed, not 1. And it is not a statement that
+    # the reference device is good care -- the below-the-knee arm is IN.PACT DEEP's
+    # drug-eluting balloon, from a trial that missed its endpoints, carried a major
+    # amputation signal, and whose device was withdrawn in 2013. It is used because
+    # it is the best-adjudicated 12-month CD-TLR available in that bed. See anchors.py.
+    lambda0: float
     oversize_band: Tuple[float, float]   # device:vessel diameter ratio that is "right"
     # relative weight of the four suitcordance axes (G, M, H, B); normalised on use
     w_axes: Tuple[float, float, float, float] = (0.30, 0.25, 0.20, 0.25)

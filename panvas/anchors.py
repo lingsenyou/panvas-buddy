@@ -234,7 +234,13 @@ A: List[Anchor] = [
         "CD-TLR", "clinical", "independent CEC", "crude", "patient", 365,
         "randomised trial, drug-eluting balloon arm",
         "Old anchor 12%, which is the midpoint of this trial's two arms (9.2 and "
-        "13.1). Averaging two arms is not an anchor. Rutherford 4-6 CLI, so "
+        "13.1). Averaging two arms is not an anchor. IN.PACT DEEP was NEGATIVE: it "
+        "missed its primary efficacy endpoints, showed no benefit over plain "
+        "angioplasty, carried a major-amputation signal (8.8% against 3.6%, "
+        "p = 0.080), and IN.PACT Amphirion was withdrawn worldwide in November 2013. "
+        "This arm is used because it is the best-adjudicated 12-month CD-TLR in this "
+        "bed, not because it is good care, and lambda0(btk) inherits that. "
+        "Rutherford 4-6 CLI, so "
         "death and major amputation compete with revascularisation and pull "
         "CD-TLR down for reasons that are not device-vessel matching.",
     ),

@@ -76,8 +76,11 @@ CATALOG: List[Device] = [
            "paclitaxel", 3.0, 120, None, 0.02, 1.85, ""),
     Device("se_interwoven", "Interwoven nitinol stent", "SE", "self",
            ("sfa",), (4.5, 7.5), 150, 250, 0.60, 1.10, 0.70, 0.96,
-           "none", 0.0, 1, None, 2.00, 2.10,
-           "Built for the flexion zone: highest fatigue resistance in the catalogue."),
+           "none", 0.0, 1, None, 0.02, 2.10,
+           "Built for the flexion zone: highest fatigue resistance in the catalogue. "
+           "The recoil field read 2.00 until 2026-09-19 -- a hundredfold typo in a "
+           "fraction, inert because the self-expanding branch of deployed_diameter "
+           "never reads recoil, but it shipped in out/model.json to the browser."),
     Device("covered", "ePTFE covered stent-graft", "COVERED", "self",
            ("sfa", "iliac"), (5.0, 13.0), 250, 300, 0.45, 0.60, 0.65, 0.80,
            "none", 0.0, 1, None, 0.02, 2.60,

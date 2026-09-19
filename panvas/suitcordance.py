@@ -87,7 +87,15 @@ THETA = load_theta()
 # The hazard link is anchored, per bed, at the device whose published rate
 # defines that bed's lambda0.  Without this the operator would be forced to
 # reach the same absolute Gamma in every bed before it could reproduce that
-# bed's best-practice event rate, which it cannot and should not.
+# bed's reference-arm event rate, which it cannot and should not.
+#
+# WARNING about the below-the-knee entry. IN.PACT DEEP missed its primary efficacy
+# endpoints (CD-TLR 9.2% against 13.1% for plain angioplasty, p = 0.291), carried a
+# major-amputation signal (8.8% against 3.6%, p = 0.080), and IN.PACT Amphirion was
+# withdrawn from all markets in November 2013. It is used here because it is the
+# best-adjudicated 12-month CD-TLR available in that bed, NOT because it is good
+# care. Gamma*(btk) comes out at 0.21 against 0.47-0.74 for the other five beds;
+# read that gap as a property of the anchor, not of the bed.
 # Each entry is the trial arm whose published CD-TLR defines that bed's lambda0,
 # so the reference case and the bed's baseline rate always describe the same
 # population. Changing one without the other silently breaks the hazard link.

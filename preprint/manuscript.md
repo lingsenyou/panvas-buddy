@@ -569,7 +569,47 @@ Stated before any patient data are analysed:
 - **The carotid anchor is 0.6%**, indistinguishable from zero on a CD-TLR scale. That
   bed's informative endpoint is duplex restenosis, which is not in the retained
   construct, so the carotid bed may simply not be calibratable here.
+- **The below-the-knee baseline is a withdrawn device from a negative trial.** λ₀(btk)
+  and that bed's reference case are IN.PACT DEEP's drug-eluting balloon arm: the trial
+  missed its primary endpoints (CD-TLR 9.2% against 13.1% for plain angioplasty), carried
+  a major-amputation signal (8.8% against 3.6%), and IN.PACT Amphirion was withdrawn
+  worldwide in 2013. It is used because it is the best-adjudicated 12-month CD-TLR in
+  that bed, not because it is good care, and Γ*(btk) = 0.21 against 0.47–0.74 elsewhere
+  is a property of that anchor rather than of the bed. Four of the twelve retained
+  anchors are paclitaxel-balloon arms from two trials by one manufacturer.
+- **The mechanical axis cannot penalise a balloon.** Γ_M is exactly 1 for every
+  balloon anchor at every timepoint, because overstretch strain is computed after recoil
+  and recoil always puts the balloon below the reference diameter. There is no
+  dissection, bailout-stenting or perforation term. In the femoropopliteal bed this hands
+  36% of the weight to a drug-coated balloon at a perfect score before any physiology is
+  evaluated, and the device setting Γ*(sfa) is itself a balloon.
+- **Stenosis severity is ignored.** `Lesion.stenosis` is never read by the operator: a
+  40% and a 95% stenosis give bit-identical output. A 1:1 balloon therefore delivers an
+  injury index of exactly zero, which deletes the mechanism of post-angioplasty
+  restenosis.
+- **The model reproduces the endpoint through a physically wrong path.** See §8.1.
 - **Not a clinical decision tool** and must not be used as one.
+
+### 8.1 The neointima is not physiological, and it matters
+
+The fitted neointimal constant implies 12-month per-side thicknesses of 0.5 to 2.2 mm —
+528 µm for the contemporary drug-eluting stent anchor whose observed CD-TLR is 2.0%,
+2,245 µm in a 2.75 mm below-the-knee vessel — against measured values of order 100 µm by
+optical coherence tomography for a contemporary stent. The coronary DES anchor is
+modelled as ending year one at 52% diameter stenosis in a population that revascularised
+2% of lesions, and three anchors reach the lumen floor and are effectively modelled as
+occluded. **Γ_H sits at or near its numerical clip for nine of the twelve anchors at 365
+days**, so for most anchors τ_sc and the mismatch dose are reporting where a clip was
+hit rather than device–vessel physics.
+
+We report this rather than refitting around it, because it is the clearest available
+illustration of the paper's own argument. A model can match an endpoint through a path
+that is wrong, and a 12-month revascularisation endpoint cannot detect that; late lumen
+loss and follow-up percent diameter stenosis are published by these same trials and
+falsify it in one line. That is why it is now falsification item 6, and why nothing in
+this paper should be read as evidence that the operator's internals are right. A refit
+under a physiological bound is the obvious next step, and if the anchors cannot be
+reproduced under one, **that is the result**.
 
 ## 9. Data and code availability
 
