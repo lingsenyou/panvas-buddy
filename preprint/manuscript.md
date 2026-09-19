@@ -733,9 +733,11 @@ record, the fitted constants, and the scripts that reproduce every number and fi
 are released with the paper. An interactive workbench running the operator entirely in
 the browser is at https://lingsenyou.com/suitcordance/.
 
-> The code, the anchor set with its provenance, the citation-audit record and the
-> scripts that regenerate every figure are archived under a Zenodo concept DOI, which
-> resolves to the latest version. The version described here is v0.1.0.
+The code, the anchor set with its provenance, the citation-audit record and the scripts
+that regenerate every figure are archived at Zenodo under the concept DOI
+[10.5281/zenodo.22846540](https://doi.org/10.5281/zenodo.22846540), which always resolves to the latest
+version. The version described in this paper is v0.1.0, 10.5281/zenodo.22846541, built from
+commit 6aa1684 of https://github.com/lingsenyou/panvas-buddy.
 
 ## 10. Declarations
 

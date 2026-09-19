@@ -42,6 +42,11 @@
       "identifier": "https://github.com/lingsenyou/panvas-buddy",
       "relation": "isSupplementTo",
       "scheme": "url"
+    },
+    {
+      "identifier": "https://lingsenyou.com/suitcordance/",
+      "relation": "isDocumentedBy",
+      "scheme": "url"
     }
   ]
 }

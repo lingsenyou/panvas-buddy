@@ -36,6 +36,14 @@ keywords:
   - bioresorbable scaffold
   - mechanistic model
   - calibration
+doi: "10.5281/zenodo.22846540"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.22846540"
+    description: "Concept DOI - always resolves to the latest version"
+  - type: doi
+    value: "10.5281/zenodo.22846541"
+    description: "Version DOI for v0.1.0"
 license: MIT
 version: "0.1.0"
 date-released: "2026-09-19"

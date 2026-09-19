@@ -1,5 +1,11 @@
 # PanVas-Buddy
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22846540.svg)](https://doi.org/10.5281/zenodo.22846540)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+Archived at Zenodo under the concept DOI [10.5281/zenodo.22846540](https://doi.org/10.5281/zenodo.22846540), which always
+resolves to the latest version. v0.1.0 is [10.5281/zenodo.22846541](https://doi.org/10.5281/zenodo.22846541).
+
 A pan-vascular interventional counterpart to ScienceBuddy (PhAI Labs, arXiv 2609.17523):
 a domain **operator** that can be calibrated and refitted, and an editable **harness**
 that decides how the operator gets used, with the two improved in separate loops.
