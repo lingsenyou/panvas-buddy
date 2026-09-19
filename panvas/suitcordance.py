@@ -516,13 +516,27 @@ def evaluate(les: Lesion, plan: Plan, horizon: int = T_HORIZON, dt: float = 5.0,
     w = w / w.sum()
     gamma = G ** w[0] * M ** w[1] * H ** w[2] * B ** w[3]
 
-    # effective time constant: 63.2% of the trajectory total variation
+    # Effective time constant: the time at which 63.2% of the trajectory's TOTAL
+    # VARIATION has accumulated. 0.632 = 1 - 1/e, borrowed from the first-order time
+    # constant, and that is the only thing borrowed: on a total-variation scale the
+    # coefficient has no independent justification, and it makes tau_sc depend on the
+    # horizon (the fig1 ultrathin DES gives 249 d at T=365 and 287 d at T=730), so T
+    # must be quoted with any tau_sc. Total variation rather than a monotone approach
+    # is what keeps it defined for the non-monotone trajectories this model produces --
+    # but it also means a device that worsens then recovers accumulates large variation
+    # with zero net change, so tau_sc conflates volatility with adaptation. Neither
+    # direction is claimed to be the better property, and tau_sc does not enter the
+    # hazard. Whether it carries information beyond gamma(0) is untested.
     tv = np.concatenate([[0.0], np.cumsum(np.abs(np.diff(gamma)))])
     tau_sc = float(np.interp(0.632 * tv[-1], tv, t)) if tv[-1] > 1e-9 else float("nan")
 
     deficit = float(np.trapezoid(1.0 - gamma, t) / (t[-1] - t[0]))
 
-    # hazard link: lambda0 is the bed's published best-practice 12-month rate,
+    # Hazard link. lambda0 is the 12-month CD-TLR of the bed's REFERENCE TRIAL ARM --
+    # not 'best practice'. For btk it is the drug-eluting balloon arm of IN.PACT DEEP,
+    # a trial that missed its primary endpoints and whose device was withdrawn in 2013
+    # (KNOWN_DEFECTS D1). It is the best-adjudicated rate available in that bed, which
+    # is a different claim.
     # observed at the match level the reference device actually achieves
     lam0 = -math.log(max(1e-6, 1.0 - bed.lambda0)) / 365.0
     g_star = th["gamma_star"] if _in_reference_eval else gamma_star(les.bed, th)

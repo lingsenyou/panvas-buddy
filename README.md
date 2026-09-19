@@ -50,9 +50,11 @@ Two scalars come off the trajectory, and one link turns it into risk:
     D_T     the time-averaged mismatch dose, (1/T)∫(1 − Γ_sc)dt
     λ(t)    = λ0(bed) · exp(β·(Γ*_bed − Γ_sc(t)))
 
-λ0 is that bed's published best-practice 12-month event rate, and **Γ\*_bed is the match
+λ0 is the published 12-month event rate of that bed's **reference trial arm** — not of
+best practice; for the below-knee bed it is a withdrawn device from a negative trial, see
+`KNOWN_DEFECTS.md` D1 — and **Γ\*_bed is the match
 level the bed's own reference device achieves** — not a global constant. Anchoring per
-bed was necessary: best practice does not reach the same absolute Γ in every bed, and a
+bed was necessary: the reference arms do not reach the same absolute Γ in every bed, and a
 global Γ\* forced the fit to over-predict in the beds where it is lowest.
 
 ### What this fixes in the standing framework
@@ -61,10 +63,16 @@ global Γ\* forced the fit to over-predict in the beds where it is lowest.
   named sub-terms and within-axis weights declared in one place (`W_G, W_M, W_H, W_B`).
 - **Γ_sc had never actually been computed** — it now is, numerically, for any lesion and
   plan, and it is calibrated against published outcomes rather than asserted.
-- **there was no time constant** — τ_sc is defined, computed, and reported; it separates
-  devices that look identical at implantation. A PLLA BRS and a thin-strut DES in the same
-  lesion differ in τ_sc by hundreds of days, because the scaffold's compliance converges
-  on the wall's while the stent's never does.
+- **there was no time constant** — τ_sc is defined, computed and reported. In the fig1
+  coronary lesion at T = 730 d: paclitaxel DCB 128 d, bare-metal stent 133 d, PLLA BRS
+  270 d, ultrathin DES 287 d. The separation it adds is between the DCB and the two
+  permanent-implant arms; it does **not** separate the BRS from the DES (17 d apart), and
+  it does not separate the DCB from the bare-metal stent (5 d apart) although the model
+  regards those two as very different (Γ_sc(0) 0.719 against 0.392, predicted risk 0.118
+  against 0.207). τ_sc is also horizon-dependent — 0.632 = 1 − 1/e is borrowed from the
+  first-order constant and has no independent justification on a total-variation scale, so
+  the DES gives 249 d at T = 365 — and neither direction of τ_sc is claimed to be the
+  better property. Whether it carries information beyond Γ_sc(0) is falsification item 2.
 
 ## 2. Calibration, and the audit behind it
 
@@ -116,8 +124,8 @@ Three things to hold against that number:
 - **It is not performance.** Eleven free constants against six informative comparisons
   is under-determined; a low residual is what one should expect. Worse, six of the twelve
   anchors ARE their bed's reference case and reproduce its baseline rate by construction
-  (their residual is 0.4 points); on the six genuinely informative anchors the error is
-  **2.3 points**, not 1.4. Carotid,
+  (their residual is 0.38 points); on the six genuinely informative anchors the error is
+  **2.63 points**, not the headline 1.51. Carotid,
   iliac and renal contribute one anchor each, which is also that bed's lambda0, so
   those beds are fitted trivially; four anchors are two arms each of two trials that
   share sites, adjudication and endpoint trigger.

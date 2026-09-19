@@ -6,6 +6,12 @@ so in this project: a workbench built before a refit that still carried the old
 baseline rates, a Word file whose competing-interests field was an unfilled
 instruction to the authors, and a release archive containing both.
 
+A fourth has since been caught: after the Route B refit the figures were regenerated
+but the sentences quoting them were not, so the manuscript printed tau_sc = 124 and 261
+days beside a figure printing 128 and 287. Regenerating artefacts cannot fix prose, so
+the last step now re-derives every number the prose quotes and compares it with what is
+written -- see tests/check_prose.py.
+
     python rebuild_all.py            # everything except the calibration
     python rebuild_all.py --refit    # calibration too (several minutes)
 
@@ -33,27 +39,34 @@ STEPS = [
     ("make_docx.py", "the submission Word file", False),
     ("tests/make_js_reference.py", "reference values for the JS parity check", False),
     ("tests/test_operator.py", "property tests, including the structural ones", False),
+    ("tests/check_prose.py", "the numbers quoted in prose still match the code", False),
+    ("make_bundle.py", "reassemble the folder that goes to the supervisor", False),
 ]
 
 
 def run(script: str, why: str) -> float:
     print(f"\n=== {script}  ({why})", flush=True)
     t0 = time.time()
+    # The children are told to emit UTF-8, so decode as UTF-8 here too. Without the
+    # explicit encoding, subprocess falls back to the locale codec -- gbk on this
+    # machine -- and the first step that printed a Chinese filename crashed the whole
+    # rebuild on a decode error rather than reporting the step's result.
     r = subprocess.run([sys.executable, "-u", os.path.join(HERE, script)],
                        cwd=HERE, capture_output=True, text=True,
+                       encoding="utf-8", errors="replace",
                        env={**os.environ, "PYTHONIOENCODING": "utf-8"})
     dt = time.time() - t0
     log = os.path.join(HERE, "out", os.path.basename(script).replace(".py", ".log"))
     os.makedirs(os.path.dirname(log), exist_ok=True)
     with open(log, "w", encoding="utf-8") as fh:
-        fh.write(r.stdout)
-        if r.stderr.strip():
+        fh.write(r.stdout or "")
+        if (r.stderr or "").strip():
             fh.write(os.linesep + "--- stderr ---" + os.linesep + r.stderr)
-    tail = [ln for ln in r.stdout.strip().splitlines() if ln.strip()][-4:]
+    tail = [ln for ln in (r.stdout or "").strip().splitlines() if ln.strip()][-4:]
     for ln in tail:
         print("   " + ln)
     if r.returncode != 0:
-        print(r.stderr.strip()[-1500:])
+        print((r.stderr or "").strip()[-1500:])
         raise SystemExit(f"{script} failed after {dt:.0f}s")
     print(f"   [{dt:.0f}s]")
     return dt

@@ -34,9 +34,15 @@ angioplasty, p = 0.291; late lumen loss 0.61 against 0.62 mm, p = 0.950), carrie
 **major-amputation signal** (8.8% against 3.6%, p = 0.080), and IN.PACT Amphirion was
 **withdrawn from all markets in November 2013**.
 
-The code and the public page called this "best practice" until today. That wording is
-now removed everywhere, and the arm is labelled for what it is: the best-adjudicated
-12-month CD-TLR available in that bed, which is not the same thing.
+The code and the public page called this "best practice" until today. The public page was
+corrected first; **this entry then claimed the wording was "removed everywhere", and that
+claim was false for two more days** — it survived in `suitcordance.py`, `README.md` and
+`manuscript.md` until a cold-read test of the supervisor's briefing document went looking
+for it. All four are now corrected, and the arm is labelled for what it is: the
+best-adjudicated 12-month CD-TLR available in that bed, which is not the same thing.
+
+The lesson is recorded because it is the same one as the stale τ_sc values: a claim that a
+fix is complete is itself a claim, and nothing was checking it.
 
 Γ*(btk) = 0.21 against 0.47–0.74 for the other five beds. That gap is a property of the
 anchor, not of the bed, and every below-the-knee number the operator produces inherits
@@ -106,8 +112,10 @@ into it". Half of it is written in, by the `compliance_dev = None` convention.
 inflation. Γ_M for a plain balloon in a 2.9 mm below-knee artery: 1.0000 at 1:1 (correct
 — nothing beyond the reference), 0.865 at 1.3:1, 0.505 at 1.55:1. The fix had a second
 effect that matters more: with balloons chargeable, the mechanical axis became
-identifiable for the first time — removing it now costs 0.45 points of MAE, where before
-it *improved* the fit by 0.05. **Still open:** there is no dissection, bailout-stenting
+identifiable for the first time — removing it now costs 0.451 points of MAE, where before
+it *improved* the fit by 0.05. **But 0.412 of that 0.451 (91%) is the single SFA-nitinol
+anchor, and four of the five balloon anchors contribute exactly zero**, so the repair made
+the axis identifiable without making the balloons carry it. **Still open:** there is no dissection, bailout-stenting
 or perforation term, so oversizing is charged through wall stress alone.
 
 ## D4. FIXED. Stenosis severity was ignored
@@ -150,9 +158,10 @@ and a 1:1 balloon in a tight lesion delivers real injury.
   twelve retained primary sources**. Now stated in §3.2 and §10, and falsification
   item 7.
 - Six of the twelve anchors are their own bed's reference case and reproduce λ₀ by
-  construction. The informative-subset error is 2.3 points, not 1.4.
+  construction. The informative-subset error is 2.63 points, not the headline 1.51.
 - Removing Γ_M improved the fit before the repairs (1.37 → 1.32). After them it costs
-  0.45 points, which is the first evidence in this project that the axis is real.
+  0.451 points — but 91% of that is one anchor (SFA-nitinol), which makes it the first
+  *suggestion* that the axis is real rather than evidence.
 - The cross-bed transfer result does not survive a seed sweep and the bootstrap was
   resampling procedures rather than beds.
 
