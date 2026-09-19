@@ -34,8 +34,8 @@ thumb that are not commensurable across arterial beds and carry no explicit time
 course. We formalise device–vessel failure as a property of the *agreement*
 between device and vessel rather than of either alone, and define a suitcordance
 operator Γ_sc on four axes: geometric, mechanical, hemodynamic and biological. The
-axes combine as a bed-weighted geometric mean, so that a collapse on any one axis
-cannot be compensated by the other three. Every axis is a function of time, which
+axes combine as a bed-weighted geometric mean, so that a collapse on any one axis drags
+the composite down instead of being averaged away by the other three. Every axis is a function of time, which
 yields two scalars the static formulation lacked: a time constant τ_sc, the time by
 which the trajectory has accumulated 63.2% of its total variation, and a
 time-averaged mismatch dose. Risk is linked through λ(t) = λ₀·exp(β·(Γ*−Γ_sc(t))),
@@ -59,18 +59,22 @@ We therefore report the corrected calibration: 12 anchors, all
 revascularisation constructs, each carrying seven declared provenance fields, with
 four further anchors excluded and listed. Eleven free constants fit these with a
 mean absolute error of 1.4 percentage points — which we report as a consistency check
-and not as performance, because eleven constants against roughly seven informative
-comparisons is under-determined. Seven of the eleven land on their bounds, and two of
-those are the compliance-mismatch and overstretch kernels: once the anchors are
-corrected, the fit no longer needs the mechanical axis. We read that as a 12-month
-revascularisation endpoint having no power over slow-acting mechanics rather than as
-the axis being empty, and §7 states the test that would decide it. In a 9,000-procedure simulation
+and not as performance, because eleven constants against six informative
+comparisons is under-determined, and because six of the twelve anchors are their own
+bed's reference case and reproduce its baseline rate by construction: on the six
+genuinely informative anchors the error is 2.3 points. Seven of the eleven constants land
+on their bounds, and **removing the mechanical axis entirely improves the fit** (1.37 to
+1.32 points), so that axis is not merely unused but currently harmful. Whether it is
+empty, wrongly specified, or simply invisible to a 12-month revascularisation endpoint is
+not decidable here; §7 states the test. In a 9,000-procedure simulation
 with an unobserved frailty term and realistic measurement error, the operator's
 four-number summary reached AUC 0.790 at n = 100, a level 44 raw
 features had not reached by n = 800. The pan-vascular transfer claim did not survive
-its own test: against a linear model given the same continuous bed physiology, the
-operator's cross-bed advantage was -0.024 AUC (95% bootstrap -0.041 to -0.010),
-an interval that excludes zero: it is worse.
+its own test either way: against a linear model given the same continuous bed
+physiology, the operator's cross-bed difference was −0.024 AUC at the first seed we
+ran, but the sign flips across simulation seeds (−0.024 to +0.037), and a bootstrap over
+the four held-out beds — the actual unit of the claim — covers zero at every seed. With
+four beds the design has no power to decide, which is itself the finding.
 No patient-level data were used. This is a modelling, calibration and
 evidence-audit report, not a validation.
 
@@ -97,13 +101,23 @@ discussed as a property of the moment of implantation, and two devices that look
 identical on the table can diverge over the following two years for reasons that are
 predictable from their materials.
 
-The framework this paper operationalises was set out by our group as the research
-programme of China's National Basic Science Center for panvascular interventional
-complex systems [1]. That statement names device–vessel suitcordance as the object of
-study; what it does not do — what no statement of the idea has done — is compute it.
-Γ_sc has been a concept with no numerical value, no time course, and therefore nothing
-that could be checked against an outcome. This paper is an attempt to close that gap
-and to report honestly what happens when one does.
+The framework this paper operationalises is our group's own. Device–vessel suitcordance
+was named as the object of study of China's National Basic Science Center for
+panvascular interventional complex systems [1], developed as a tri-ecological balance
+[2], extended to full-watershed organs [3], given an experimental platform in a
+panvascular-on-a-chip system [4], and connected to intravascular imaging and digital
+twins [5]. What none of those papers does — and what we had not done — is **compute** it:
+Γ_sc has been specified verbally, without a numerical value, a time course, fitted
+constants, or anything that could be checked against an outcome. This paper is the first
+executable implementation, and it reports what happened when we tried.
+
+Related mechanistic work exists and is in some respects ahead of this one. Multiscale
+models of in-stent restenosis couple haemodynamics to agent-based tissue growth and
+predict at this same 12-month horizon, and the femoropopliteal ones have been calibrated
+against per-patient lumen area at one month and one year — patient-level validation this
+operator does not have. What is different here is scope rather than depth: one operator
+applied across six arterial beds from a single parameter set, with a device-selection
+layer on top, and with its calibration evidence published field by field.
 
 This paper does four things. It defines an operator that computes the agreement
 between a device and a vessel on four axes, as a function of time, in any of six
@@ -111,8 +125,8 @@ arterial beds from one parameter set (§2). It reports an adversarial audit of t
 literature values such an operator has to be calibrated against, which found most of
 our own first attempt to be wrong (§3) — a result we believe generalises well beyond
 this model. It fits the operator to the corrected values (§4) and tests, in
-simulation, the claim that motivated the construction, reporting that the claim
-failed (§5). And it states what would falsify the operator on real data before
+simulation, the claim that motivated the construction, reporting that the design turns
+out to have no power to decide it (§5). And it states what would falsify the operator on real data before
 anyone runs it (§7).
 
 ## 2. The operator
@@ -159,7 +173,7 @@ and healing timescales.
 
 The four axes are a refinement of the three ecological balances — mechanical,
 cellular, and physicochemical–immune — in which the framework was originally stated
-[1] and subsequently developed [2]. The mapping is not one to one, and the difference is deliberate: the geometric
+[1] and subsequently developed [2, 3]. The mapping is not one to one, and the difference is deliberate: the geometric
 and hemodynamic axes separate two things the mechanical balance conflated, namely
 whether the device fits the vessel and whether the lumen it leaves carries flow. §4
 reports that the corrected calibration does not currently need the mechanical axis,
@@ -169,9 +183,15 @@ which is a result about this operator and this endpoint, not about the balances.
 
     Γ_sc(x, a, t) = Π_i Γ_i(x, a, t)^{w_i(bed)},   Σ_i w_i = 1
 
-The geometric mean is the modelling commitment, not a convenience. A device fails
-along its worst-matched axis, and a product cannot be rescued by a high score
-elsewhere the way a sum can. Weights are bed-specific and declared: the mechanical
+The geometric mean is the modelling commitment, not a convenience — but it has to be
+stated precisely, because the strong version of the claim is false. A weighted geometric
+mean is still compensatory: with exponents between 0.16 and 0.36, a collapse on one axis
+is attenuated by a root rather than preserved. BTK-POBA has Γ_H = 5.1 × 10⁻⁴ and
+Γ_sc = 0.056, so a two-thousand-fold collapse on one axis becomes an eighteen-fold
+reduction in the composite. What can honestly be claimed is that the product is *less*
+compensatory than a weighted sum — a bad axis drags the composite down instead of being
+averaged away — and that is the property we want. Genuine non-compensation would need a
+minimum, or a CES aggregator with ρ → −∞. Weights are bed-specific and declared: the mechanical
 axis carries the largest weight in the femoropopliteal artery, where stent fracture
 is a real failure mode; the geometric axis carries it in the carotid, where large
 deliberate oversizing is the technique.
@@ -220,7 +240,19 @@ source words them. Every citation that came back was then attacked by two furthe
 independent checkers with different briefs — one asked only whether the citation
 exists and says this, the other only whether the endpoint, timepoint and population
 are the ones claimed — each instructed to default to refutation when unsure.
-Forty-nine agents, 696 source lookups.
+**The audit was run by large language model agents, not by people**, and that has to be
+stated plainly because it changes how much weight the result can carry. Forty-nine agents
+(Claude Opus 5, with web search and page-fetch tools) performed 696 source lookups; each
+was instructed to open the primary source, forbidden from inventing an identifier, and
+required to quote the sentence or name the table carrying the number. The original
+sixteen anchors were themselves assembled with the same class of assistance. So the
+honest statement of what happened is that an LLM-assisted workflow produced sixteen
+values, a second, adversarial LLM-assisted workflow found fourteen of them wrong, and
+**the corrected values have not yet been confirmed by a human opening the papers.** Until
+that human pass exists, the corrected set is better documented than the first one but
+not, on its own authority, better grounded. Doing that pass — twelve papers, an hour —
+is the single highest-value thing anyone could do to this manuscript, and it is listed in
+§7 as such.
 
 ### 3.2 What the audit found
 
@@ -311,39 +343,51 @@ Eleven of the thirteen free constants were fitted to the 12 retained anchors
 by least squares on log-odds, weighted by audited evidence quality. One shared
 parameter set; no per-bed tuning.
 
-**Mean absolute error 1.4 percentage points**, worst residual 4.3 points on
-BTK-POBA (Figure 2).
+**Mean absolute error 1.4 percentage points** over the twelve retained anchors, worst
+residual 4.3 points on BTK-POBA (Figure 2). **Half of that figure is an identity.** Six
+of the twelve anchors — COR-DES-modern, SFA-DCB, BTK-DCB, CAR-stent, ILIAC-stent and
+RENAL-stent — *are* their bed's reference case, the case used to compute Γ*(bed), so for
+them λ(t) = λ₀·exp(β(Γ*−Γ_sc(t))) returns λ₀ up to a small Jensen gap whatever the eleven
+constants are. Their mean residual is 0.4 points. On the six anchors that are genuinely
+informative — COR-BRS-plla, COR-BMS, COR-POBA, SFA-POBA, SFA-nitinol, BTK-POBA — the mean
+absolute error is **2.3 percentage points**, and that is the number a reader should hold
+us to.
 
-What that number is not. Carotid, iliac and renal contribute exactly one anchor each,
-which is also that bed's λ₀, so those three beds are fitted trivially and constrain
-nothing about the operator's shape. Four of the retained anchors are two arms each of
+What that number is not. Six of the twelve anchors are their bed's reference case, as
+above. Carotid, iliac and renal contribute exactly one anchor each, which is also that
+bed's λ₀, so those three beds are fitted trivially and constrain nothing about the
+operator's shape. Four of the retained anchors are two arms each of
 two trials (IN.PACT SFA, IN.PACT DEEP), both Medtronic paclitaxel DCB randomised
 trials sharing sites, adjudication committee and CD-TLR trigger definition, so their
 errors are correlated and they are not four independent residuals. The fit is really
-driven by about seven informative comparisons — against eleven free constants. **An MAE
+driven by six informative comparisons — against eleven free constants. **An MAE
 of 1.4 points is therefore not evidence that the operator is right.** With more free
 parameters than informative constraints, a low residual is what one should expect, and
 we report it as a consistency check rather than as performance.
 
 **Seven of the eleven fitted constants sit on their bounds**, which is the clearest
-signal in the fit and points at the model rather than at the data. Two of the seven
-matter more than the rest: the compliance-mismatch kernel and the overstretch-stress
-kernel both collapse to their floors. In plain terms, **once the anchors are corrected,
-the fit no longer needs the mechanical axis at all.** The retained anchors are explained
-almost entirely by Γ_H (lumen restored, strut burden) and Γ_B (antiproliferative supply
-against drive); the weakest axis is Γ_H for ten of the twelve anchors and Γ_B for the
-other two, and Γ_M is never binding.
+signal in the fit and points at the model rather than at the data. Γ_M is built from
+three kernels and all three are degenerate: the compliance-mismatch and overstretch
+kernels collapse to their floors, and the cyclic-fatigue kernel is pinned at its
+*ceiling* (11.999 against a bound of 12.0). We report the ceiling as well as the floors,
+because omitting it would be exactly the selective reading of a bounds table that this
+paper otherwise argues against.
 
-We take that seriously rather than tuning around it. Two readings are available and the
-data here cannot separate them. Either the mechanical axis is not doing real work and
-the operator should be three axes, or — the reading we find more likely and which the
-falsification plan in §7 is designed to test — a 12-month revascularisation endpoint has
-no power to identify it. Compliance mismatch, fatigue and resorption are all
-slow-acting: fatigue accrues across the first year, a poly-L-lactide scaffold's
-compliance converges on the wall's only over two to three years. An axis whose
-predictions live in years 2 to 5 cannot be identified from year-one revascularisation,
-and a fit that switches it off is behaving correctly given what it was shown. Either way,
-the four-axis structure should not be presented as established by this calibration.
+We then did the obvious test and it went against us. **Setting Γ_M ≡ 1 for every anchor
+improves the fit**: mean absolute error falls from 1.37 to 1.32 points, and the residual
+on SFA-nitinol — the one anchor the fatigue term exists to explain — falls from 1.39 to
+0.54 points. The saturated fatigue term is pushing its own anchor the wrong way. The
+mechanical axis is therefore not merely never binding; on this endpoint it is actively
+harmful.
+
+Three readings are available and these data cannot separate them. The axis may be empty.
+Its functional forms may be wrong, which the pinned bounds independently suggest. Or — the
+reading we find most likely, and which §7 is designed to test — a 12-month
+revascularisation endpoint simply cannot see it: compliance convergence, fatigue accrual
+and resorption are slow, a poly-L-lactide scaffold's compliance approaches the wall's
+only over two to three years, and an axis whose predictions live in years 2 to 5 cannot
+be identified from year-one revascularisation. What is not available is presenting the
+four-axis structure as established by this calibration. It is not.
 
 Within a bed, the device-versus-balloon contrast is same-trial and self-consistent.
 Across beds it is not: coronary POBA is 1991–93, symptom-driven, without routine
@@ -391,18 +435,34 @@ For single-centre cohorts, where the number of procedures is the binding constra
 this is the operator's only demonstrated practical advantage — and it is the one that
 survived the recalibration, in a sharper form.
 
-**Cross-bed transfer: the claim failed, and after the refit it failed clearly
-(Figure 3b).** Training on coronary and carotid and testing on femoropopliteal,
-below-the-knee, renal and iliac, the operator reached AUC 0.610
-against 0.635 for raw features plus continuous bed physiology
-under a linear model — a difference of **-0.024 (95% bootstrap -0.041 to
--0.010)**. On the uncorrected anchor set this difference was −0.014 with a confidence
-interval spanning zero; on the corrected one **the interval excludes zero and the
-operator is worse.** The apparent advantage over tree models
-(0.571) was never the operator: it was that a linear model
-extrapolates along a continuous bed parameter and a tree, which can only interpolate
-between values it has seen, cannot. Representations (A) and (A′) were numerically
-identical, for the same reason.
+**Cross-bed transfer: the experiment cannot answer the question (Figure 3b).** Training on coronary and carotid and testing on femoropopliteal, below-the-knee, renal
+and iliac, the operator reached AUC 0.610 against 0.635 for raw features plus continuous
+bed physiology under a linear model — a difference of −0.024, with a case-level bootstrap
+interval of (−0.041, −0.010) that excludes zero.
+
+**That result does not survive its own robustness check, and we report the check rather
+than the result.** Repeating the whole experiment at five simulation seeds gives
+differences of −0.024, +0.024, +0.037, +0.003 and −0.005: the sign flips, the mean is
++0.007, and the case-level interval excludes zero in three of the five seeds — in both
+directions. The case-level bootstrap is also resampling the wrong unit. The claim is
+about four arterial beds; resampling 6,041 individual procedures treats them as 6,041
+independent observations of bed-to-bed transfer, which they are not. Resampling the four
+**beds** instead gives intervals that cover zero at every seed, including the seed that
+produced the headline number: (−0.036, +0.035).
+
+Within the seed we first ran, three of the four held-out beds in fact favour the operator
+(below-the-knee 0.576 against 0.549, renal 0.676 against 0.644, femoropopliteal 0.692
+against 0.646); only the iliac bed goes the other way (0.704 against 0.730), and the
+pooled figure reverses because pooling across beds with different event rates is not the
+same as averaging discrimination within them.
+
+The honest conclusion is therefore neither that the operator transfers nor that it fails
+to: **with four held-out beds this design has no power to decide**, and a study that
+wanted to decide it would need many more beds, or many centres within beds, and would
+have to treat the bed as the unit of analysis. The apparent advantage over tree models
+(0.571) is a separate and more robust point: a linear model extrapolates along a
+continuous bed parameter and a tree, which can only interpolate between values it has
+seen, cannot. Representations (A) and (A′) were numerically identical, for that reason.
 
 **The risk scale does not transfer, and an offset does not fix it.** The operator's raw
 cross-bed Brier score was 0.249, far worse than predicting the test
@@ -423,15 +483,25 @@ does not, and it is over-dispersed rather than merely offset. A new bed needs a 
 well as a level, which is a two-parameter recalibration on real events, not a constant
 anyone can look up.
 
-## 6. A harness that improves without retraining the operator
+## 6. A harness that recovers the operator's own preferences
 
 Device selection needs a policy deciding how the operator is used — the sizing rule,
 when to prepare calcium, when to demand an antiproliferative device. Following the
-separation used in recent interactive scientific agents [3], we hold that policy as
+separation used in recent interactive scientific agents [6], we hold that policy as
 data rather than code, score candidate plans against a fixed rubric composer, and
-improve the policy with the operator's constants frozen. Across 60 development tasks
-with 120 held out, the held-out rubric score rose from 0.749 to 0.948 with no
-change to the operator; two edits accounted for almost all of it. One negative finding is
+improve the policy with the operator's constants frozen. Across 60 development tasks with
+120 held out, the held-out rubric score rose from 0.749 to 0.948 with no change to the
+operator.
+
+**This is an internal-consistency result and must not be read as evidence that the policy
+got clinically better.** The rubric's heaviest criterion is the operator's own optimum,
+its second-heaviest is Γ_G at deployment, and the single edit producing almost the whole
+gain is "consult the operator before choosing". A policy instructed to optimise the
+operator scores better against a rubric the operator computes. What the loop demonstrates
+is that harness search recovers the operator's preference ordering without touching its
+constants, and that the machinery works. Demonstrating that it *helps* requires at least
+one criterion the operator does not compute — guideline concordance, or an
+interventionalist's judgement on a sample of plans — scored separately. One negative finding is
 worth recording: a diagnoser restricted to *atomic* edits stalls immediately, because
 enabling a skill whose threshold still excludes every case and moving a threshold for
 a skill that is off are both no-ops. Edits have to be compound to be testable.
@@ -454,14 +524,22 @@ Stated before any patient data are analysed:
    §5.3 result is an artefact of the simulator.
 5. **The cross-bed null must be retested, not quietly dropped**, against continuous bed
    physiology under a model class that can extrapolate.
-6. **The endpoint must be fixed in advance** — one construct, one trigger, one
+6. **The model's intermediate quantities must match published imaging.** Late lumen loss
+   and percent diameter stenosis at follow-up are reported by the anchor trials and are
+   free to check. The current fit implies neointimal thicknesses up to 2.4 mm and fails
+   this immediately; any version that is to be taken seriously must pass it before its
+   endpoint agreement means anything.
+7. **A human must open the twelve retained primary sources** and record, for each, the
+   page or table and the verbatim sentence carrying the number. Until then the corrected
+   anchor set is better documented than the first one, not better grounded.
+8. **The endpoint must be fixed in advance** — one construct, one trigger, one
    adjudication standard, one analysis unit, one window — and any anchor that cannot
    supply it must be excluded rather than converted.
 
 ## 8. Limitations
 
 - **No patient-level data.** Nothing here has seen a patient.
-- **The calibration rests on about seven informative comparisons**, three beds are
+- **The calibration rests on six informative comparisons**, three beds are
   fitted trivially, and four anchors are two arms of two trials.
 - **Three revascularisation constructs remain mixed** in the retained set (CD-TLR,
   all-cause TLR, symptom-driven TLR). They are labelled and weighted, not unified.
@@ -474,8 +552,18 @@ Stated before any patient data are analysed:
   specifications; radial force, device compliance and fatigue resistance are
   order-of-magnitude estimates.
 - **Bed parameters are declared priors, not measurements.**
-- **Seven of eleven constants are on their bounds, and the mechanical axis is switched
-  off by the fit.** The four-axis structure is not established by this calibration.
+- **Seven of eleven constants are on their bounds, and removing the mechanical axis
+  improves the fit.** The four-axis structure is not established by this calibration.
+- **Half the headline calibration error is an identity.** Six of the twelve anchors are
+  their own bed's reference case; on the six informative ones the error is 2.3 points.
+- **The model's intermediate quantities are not physiological.** The fitted neointimal
+  asymptote implies per-side thicknesses of 0.4 to 2.4 mm — up to 2,358 µm in a 2.75 mm
+  below-the-knee vessel, against published in-stent late lumen loss of order 0.1 mm — and
+  Γ_H spends much of year one at its numerical floor in the balloon anchors. The operator
+  reproduces the endpoint while getting the path to it wrong, which is the failure a
+  12-month endpoint cannot detect and an imaging endpoint would.
+- **The audit was performed by language-model agents and has not been checked by a human
+  opening the papers.**
 - **Correlated penalties compound.** A badly oversized device is charged on both the
   geometric and mechanical axes; intentional, but the axes are not independent.
 - **The carotid anchor is 0.6%**, indistinguishable from zero on a CD-TLR scale. That
@@ -503,6 +591,12 @@ declare no other competing interests, and no consulting income, speaking fees, e
 patents or family interests involving any manufacturer of the device classes evaluated
 here.
 **Ethics.** No human subjects or patient data were involved.
+**Use of AI.** The operator, the calibration and the in-silico experiments were
+implemented with the assistance of a large language model (Claude Opus 5), which also
+performed the citation audit of §3 and drafted portions of this manuscript. The authors
+directed the work, chose the modelling commitments, and take responsibility for the
+content. The audit's raw agent-by-agent record is released with the code so that its
+provenance can be inspected rather than taken on trust.
 **Author contributions.** L.Y. conceived the operator, wrote the code, performed the
 citation audit, the calibration and the in-silico experiments, and wrote the manuscript.
 L.S. and J.G. supervised the work and revised the manuscript.
@@ -522,9 +616,22 @@ L.S. and J.G. supervised the work and revised the manuscript.
 
 2. You L, et al. Vascular–device suitcordance: a tri-ecological framework for
    eco-rebalancing. *Trends Mol Med*. In press (accepted 14 September 2026).
-   *[DOI to be added once assigned — do not post without it.]*
+   *[DOI to be added before posting.]*
 
-3. Xue S, Zhong J, Nan Z, et al. ScienceBuddy: recursive-in-recursive self-improvement
+3. You L, Chen Y, Zhang Z, Wang Y, Shen L, Ge J. High suitcordance for panvascular
+   full-watershed organs: a new interventional perspective. *Research (Wash D C)*.
+   2025. doi:10.34133/research.0974
+
+4. You L, Chen Y, Zhang Z, Wang Y, Gu Z, Shen L, Ge J. The FLOW framework: a
+   panvascular-on-a-chip platform to model systemic disease and guide panvascular
+   interventional device suitcordance. *Sci Bull*. 2026.
+   doi:10.1016/j.scib.2025.12.051
+
+5. You L, Yao J, Qiu Y, Wang Y, Sun Y, Zhang R, Shen L, Ge J. From intravascular
+   imaging to adaptive vascular care: intelligent photonics and digital twins in
+   panvascular disease. *Light Sci Appl*. 2026. doi:10.1038/s41377-026-02410-6
+
+6. Xue S, Zhong J, Nan Z, et al. ScienceBuddy: recursive-in-recursive self-improvement
    for interactive scientific agents. *arXiv*:2609.17523. 2026.
 
 ---

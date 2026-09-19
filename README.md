@@ -113,8 +113,11 @@ sixteen uncorrected ones).
 
 Three things to hold against that number:
 
-- **It is not performance.** Eleven free constants against roughly seven informative
-  comparisons is under-determined; a low residual is what one should expect. Carotid,
+- **It is not performance.** Eleven free constants against six informative comparisons
+  is under-determined; a low residual is what one should expect. Worse, six of the twelve
+  anchors ARE their bed's reference case and reproduce its baseline rate by construction
+  (their residual is 0.4 points); on the six genuinely informative anchors the error is
+  **2.3 points**, not 1.4. Carotid,
   iliac and renal contribute one anchor each, which is also that bed's lambda0, so
   those beds are fitted trivially; four anchors are two arms each of two trials that
   share sites, adjudication and endpoint trigger.
