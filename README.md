@@ -77,8 +77,10 @@ only whether the citation exists and says this, the other only whether the endpo
 timepoint and population match - each told to default to refutation. 49 agents, 696
 source lookups.
 
-**Three of sixteen survived, and two of those three were the two arms of one trial.**
-Thirteen values were wrong, every one of them too high, by factors of 1.02 to 5.83.
+**Three of sixteen survived on value support, two of them the two arms of one trial —
+and then applying our own CD-TLR preference moved the third, so two values survived
+into the final set. One trial, two numbers.** Fourteen values changed, every one of them
+downward, by factors of 1.02 to 5.83.
 Five were endpoint substitutions, recoverable exactly from a different endpoint in the
 correctly cited paper:
 
@@ -91,7 +93,7 @@ correctly cited paper:
 | ILIAC-stent | 0.045 | midpoint of CD-TLR and duplex restenosis | 0.028 |
 
 and a sixth, BTK-DCB, was the midpoint of two *arms* of one trial. Coronary anchors
-survived 1 of 7; femoropopliteal 3 of 4 - the opposite of what was expected. About 74
+survived 1 of 7; femoropopliteal 3 of 4 on citation integrity, 0 of 7 against 2 of 4 on value support - the opposite of what was expected. About 74
 percent of the original calibration weight rested on values the sources do not report.
 
 The old claim that "the endpoint is held constant throughout" was false and has been
@@ -103,7 +105,8 @@ Every anchor now declares seven provenance fields - construct, trigger, adjudica
 estimator, analysis unit, actual window in days, design. One construct is preferred
 (12-month clinically driven TLR); all-cause and symptom-driven TLR are labelled and
 down-weighted; four anchors are excluded from the fit and kept in the table so that
-what was dropped stays visible. All six bed baseline rates were revised downward.
+what was dropped stays visible. Five of the six bed baseline rates were revised downward; the femoropopliteal
+baseline was unchanged, because its reference arm is the one that survived the audit.
 
 **Refit: MAE 1.4 percentage points over 12 anchors** (it was 3.5 over the
 sixteen uncorrected ones).
@@ -157,12 +160,15 @@ anchor audit and refit; both headline findings sharpened.
 
 **E1 — cross-bed transfer. Train on coronary + carotid, test on SFA, BTK, renal, iliac.**
 
-| representation | in-bed AUC | cross-bed AUC | cross Brier | after recalibration |
-|---|---|---|---|---|
-| A   raw + bed one-hot (tree) | 0.765 | 0.571 | 0.151 | 0.133 |
-| A'  raw + bed physiology (tree) | 0.765 | 0.571 | 0.151 | 0.133 |
-| A'' raw + bed physiology (linear) | 0.792 | 0.635 | 0.164 | 0.131 |
-| B   suitcordance, 4 numbers (linear) | 0.820 | 0.610 | 0.249 | 0.132 |
+| representation | in-bed AUC | cross-bed AUC | cross Brier | intercept-only | slope + intercept |
+|---|---|---|---|---|---|
+| A   raw + bed one-hot (tree) | 0.765 | 0.571 | 0.151 | 0.163 | 0.133 |
+| A'  raw + bed physiology (tree) | 0.765 | 0.571 | 0.151 | 0.163 | 0.133 |
+| A'' raw + bed physiology (linear) | 0.792 | 0.635 | 0.164 | 0.149 | 0.131 |
+| B   suitcordance, 4 numbers (linear) | 0.820 | 0.610 | 0.249 | 0.151 | 0.132 |
+
+Base-rate-only Brier on the test beds is 0.135. Both recalibration columns use the
+test labels, so both are ceilings.
 
 **The pan-vascular transfer claim did not survive its own test, and after the refit it
 fails clearly.** Against a linear model given the same bed physiology, the operator's
@@ -174,10 +180,13 @@ parameter and a tree cannot. Do not write the transfer claim into a paper.
 
 Two further findings:
 
-- **Γ_sc transfers in ranking but not in level.** B's raw cross-bed Brier
-  (0.249) is worse than predicting the base rate (0.135);
-  after a single intercept shift every arm lands near 0.132. Cross-bed you get an
-  ordering, and absolute risk needs bed-level recalibration.
+- **The risk scale does not transfer, and an offset does not fix it.** B's raw cross-bed
+  Brier (0.249) is far worse than the base rate (0.135). An
+  intercept-only shift leaves every arm worse than the base rate
+  (0.151 for the operator); only refitting the slope repairs
+  them, and the slope the operator needs is 0.26 — its
+  log-odds are about four times too steep across beds. Ordering carries; the scale is
+  over-dispersed, not merely offset.
 - A and A' are identical by construction. With a handful of training beds, continuous
   bed parameters carry exactly the information of a one-hot, and a tree can only
   interpolate between values it has seen. Reported rather than engineered away.
@@ -191,7 +200,7 @@ Two further findings:
 | B   suitcordance, 4 numbers | 0.790 | 0.797 | 0.794 | 0.797 |
 
 This is the result worth building on, and the refit strengthened it: four
-physics-derived numbers sit at 0.790 from n = 100, a level 55 raw
+physics-derived numbers sit at 0.790 from n = 100, a level 44 raw
 features have not reached by n = 800. For single-centre cohorts, where n is always the
 binding constraint, that is the whole argument for the operator.
 

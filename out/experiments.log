@@ -4,11 +4,11 @@ building cohort ...
 E1  cross-bed transfer   train n=2959 ('coronary', 'carotid')  test n=6041 ('sfa', 'btk', 'renal', 'iliac')
     event rate  train 0.065  test 0.160
     (base-rate-only Brier on the test beds: 0.1346)
-    representation                        in-bed AUC  cross AUC  cross Brier  recalibrated
-    A   raw + bed one-hot (tree)               0.765      0.571       0.1510        0.1333
-    A'  raw + bed physiology (tree)            0.765      0.571       0.1510        0.1333
-    A'' raw + bed physiology (linear)          0.792      0.635       0.1636        0.1314
-    B   suitcordance, 4 numbers (linear)       0.820      0.610       0.2491        0.1324
+    representation                        in-bed AUC  cross AUC  cross Brier intercept-only   slope+int   slope
+    A   raw + bed one-hot (tree)               0.765      0.571       0.1510         0.1628      0.1333   0.143
+    A'  raw + bed physiology (tree)            0.765      0.571       0.1510         0.1628      0.1333   0.143
+    A'' raw + bed physiology (linear)          0.792      0.635       0.1636         0.1492      0.1314   0.316
+    B   suitcordance, 4 numbers (linear)       0.820      0.610       0.2491         0.1510      0.1324   0.262
     cross-bed AUC advantage of B over A'':  -0.024 (95% bootstrap -0.041 to -0.010)
 
 E2  sample efficiency, coronary only, held-out n=400

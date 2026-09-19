@@ -9,26 +9,39 @@ Work down the list in order. Step 3 depends on step 2, and step 2 depends on ste
 
 ---
 
-## 0. Blockers — resolve before anything else
+## 0. Status, 19 September 2026
 
-- [ ] **Author list.** The manuscript currently carries one author. Decide who else
-      belongs on it, in what order, and get each person's **written agreement to this
-      specific version being posted as a preprint**. bioRxiv makes the corresponding
-      author affirm that all authors agree. Do not add a senior author without their
-      explicit sign-off — the framing of this paper (a calibration with a reported null
-      result) is exactly the kind of thing a co-author may have views about.
-- [ ] **Competing interests.** Declare any relationship — consulting, speaking,
-      research funding, equity, family — with manufacturers of the device classes
-      modelled here: drug-eluting stents, bioresorbable scaffolds, drug-coated balloons,
-      nitinol and covered peripheral stents. A device-selection model with an
-      undeclared industry relationship is the single fastest way to lose the paper.
-- [ ] **Funding statement.**
+Settled:
+
+- [x] **Author list.** You, Shen, Ge — the order of *Eur Heart J* 2025;46(35):3400–3403,
+      with that paper's five affiliations carried across verbatim.
+- [x] **Competing interests.** No financial interests, confirmed by the first author.
+      The statement is **not** "none", though: the EHJ paper that is reference 1 here
+      already discloses that L.Y. and L.S. are Executive Secretaries of the National
+      Basic Science Center and J.G. its Director. That sentence is carried across, and
+      still ends in "no other competing interests".
+- [x] **Funding.** The four grants indexed against the EHJ paper: NSFC T2288101 and
+      82170342, FudanX24AI003, yg2023-01. Confirm each applies to *this* work.
+- [x] Li Shen: shen_li@fudan.edu.cn
+
+Still open, and each of these needs a person, not a script:
+
+- [ ] **Prof. Shen and Prof. Ge have read this version.** bioRxiv makes the submitting
+      author affirm it, and the paper reports that thirteen of our own sixteen first
+      anchors did not hold up, that the cross-bed transfer claim is refuted, and that
+      the fit switches off the mechanical axis. Those are three sentences they should
+      read themselves.
+- [ ] **ORCIDs** for all three, and Prof. Ge's institutional email.
+- [x] **Corresponding authors.** Prof. Ge and Prof. Shen, both, as on the EHJ paper.
+- [ ] **Prof. Ge's email** — the one field in the package that is still a placeholder.
 - [ ] **Institutional policy.** Check whether Zhongshan Hospital / Fudan requires
       internal clearance before a preprint is posted. Some Chinese institutions do.
 
 ## 1. Publish the code (GitHub)
 
-`gh` is not installed on this machine, so create the repository in the browser.
+Full instructions with every Zenodo field pre-filled are in `ZENODO.md`; the short
+version follows. `gh` is not installed on this machine, so the repository has to be
+created in the browser.
 
 1. Go to <https://github.com/new>. Owner `lingsenyou`, name `panvas-buddy`,
    **Public**, and do **not** initialise with a README, licence or .gitignore —

@@ -28,11 +28,11 @@ already stripped of markdown). bioRxiv's box accepts it at this length.
 
 ## 4. Authors, in order
 
-| # | Name | Affiliations | ORCID | Email |
-|---|---|---|---|---|
-| 1 | Lingsen You | 1,2,3,4,5 | **[YOU]** | magnus0912@proton.me (or your institutional address — see note) |
-| 2 | Li Shen | 1,2,3,4,5 | **[YOU]** | shen_li@fudan.edu.cn |
-| 3 | Junbo Ge | 1,2,3,4,5 | **[YOU]** | **[YOU]** |
+| # | Name | Affiliations | ORCID | Email | Role |
+|---|---|---|---|---|---|
+| 1 | Lingsen You | 1,2,3,4,5 | **[YOU]** | **[YOU]** — use your Fudan address, not a personal one | first author |
+| 2 | Li Shen | 1,2,3,4,5 | **[YOU]** | shen_li@fudan.edu.cn | **corresponding** |
+| 3 | Junbo Ge | 1,2,3,4,5 | **[YOU]** | **[YOU]** | **corresponding** |
 
 Affiliations, exactly as they appear on *Eur Heart J* 2025;46(35):3400–3403:
 
@@ -49,8 +49,12 @@ named on a preprint. Use institutional addresses, and expect Prof. Shen and Prof
 receive that message within minutes of you pressing submit — which is a good reason for
 them to have read the paper first.
 
-**Corresponding author: [YOU]** — on the EHJ paper this is Prof. Ge. Decide whether
-that holds here; you are the one who did the work and will field the questions.
+**Corresponding authors: Prof. Ge and Prof. Shen**, both of them — that is how the EHJ
+paper is set, and you asked for the same arrangement. Prof. Shen's address is known;
+Prof. Ge's is the one item in this whole package I could not find. The manuscript
+currently carries the placeholder `<GE_EMAIL>` in the corresponding-author footnote, and
+it must be filled or that author dropped from the footnote before the file is uploaded.
+Do not leave a dagger with nothing behind it.
 
 ## 5. Category
 
@@ -72,18 +76,35 @@ Note that since January 2026 you can loosen a licence later without posting a ne
 version, but you cannot tighten one, so starting at CC BY and relaxing is not available
 in reverse: choose deliberately.
 
-## 7. Competing interests — confirmed none
+## 7. Competing interests — not "none"; use your own published wording
 
 ```
-The authors declare no competing interests.
+L.Y. and L.S. serve as Executive Secretaries of the National Basic Science Center for Panvascular Interventional Complex Systems, and J.G. serves as its Director. The framework this paper operationalises is that centre's research programme, and the work was supported by that centre's award (T2288101). The authors declare no other competing interests, and no consulting income, speaking fees, equity, patents or family interests involving any manufacturer of the device classes evaluated here.
 ```
 
-Confirmed by the first author, 19 September 2026. Worth one last look before you submit,
-because this is the field a reader checks first on a paper that ranks device classes:
-it covers consulting, speaking fees, research funding, equity and family interests
-involving manufacturers of drug-eluting stents, bioresorbable scaffolds (XINSORB
-included), drug-coated balloons, and nitinol or covered peripheral stents, for all
-three authors and not only the first.
+You said there is no competing interest, and financially that is what I have recorded:
+no consulting income, speaking fees, equity, patents or family interests involving any
+device manufacturer. But **you three already published a disclosure five months ago**, in
+what is reference 1 of this very paper. *Eur Heart J* 2025;46(35):3400–3403 states,
+verbatim:
+
+> "The authors declare the following relationships: L.Y. and L.S. serve as Executive
+> Secretaries of the National Basic Science Center for Panvascular Interventional
+> Complex Systems, while Junbo Ge serves as Director of the same center. No other
+> competing interests exist."
+
+This paper says in §1 that it operationalises that centre's research programme, lists
+that centre's NSFC award (T2288101) as its funding, and ranks commercial device classes.
+A reader who clicks reference 1 sees the disclosure in thirty seconds. Institutional
+office is a declarable non-financial interest under ICMJE, and the text above is simply
+your own EHJ sentence carried across — which is also what "same as EHJ" means. It still
+ends in "no other competing interests".
+
+**One thing to ask Prof. Shen and Prof. Ge rather than decide:** the device catalogue
+contains an entry named "PLLA BRS, 150 um (XINSORB-class)", and the repository names the
+XINSORB five-year cohort as the dataset that would test the resorption term. If either
+of them has a role in that scaffold's development or trials, it belongs in this
+statement. Ask; do not assume.
 
 ## 8. Funding — carried from the EHJ paper, **confirm which apply here**
 
@@ -128,9 +149,9 @@ pan-vascular intervention; device–vessel matching; endpoint definition; calibr
 - [ ] Every red block deleted from the Word file (the author-block note at the top, the
       one in §9, and the reference-list note).
 - [ ] Reference 2 (Trends in Molecular Medicine) has its DOI, or is removed.
-- [x] Competing interests: none declared.
+- [ ] Competing interests: use the EHJ disclosure above, not "none" — and ask about XINSORB.
 - [ ] Funding: four grants carried from the EHJ paper — confirm each applies to this work.
-- [ ] Corresponding author agreed.
+- [ ] `<GE_EMAIL>` filled in, in the manuscript and in the form.
 
 ## What I could not do
 

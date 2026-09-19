@@ -1,7 +1,7 @@
 # Suitcordance: a calibrated, time-resolved operator for device–vessel matching across the arterial tree, and an audit of the literature values it was calibrated against
 
-**Lingsen You**<sup>1,2,3,4,5</sup>, **Li Shen**<sup>1,2,3,4,5</sup>,
-**Junbo Ge**<sup>1,2,3,4,5</sup> ‡
+**Lingsen You**<sup>1,2,3,4,5</sup>, **Li Shen**<sup>1,2,3,4,5</sup>‡,
+**Junbo Ge**<sup>1,2,3,4,5</sup>‡
 
 <sup>1</sup> Department of Cardiology, Zhongshan Hospital, Fudan University, Shanghai
 Institute of Cardiovascular Diseases, No. 180 Fenglin Road, Xuhui District, Shanghai
@@ -20,15 +20,10 @@ University, No. 1609 Xietu Road, Xuhui District, Shanghai 200032, China
 <sup>5</sup> NHC Key Laboratory of Ischemic Heart Diseases, No. 1609 Xietu Road, Xuhui
 District, Shanghai 200032, China
 
-‡ Corresponding author.
+‡ Corresponding authors. Email: shen_li@fudan.edu.cn (L.S.);
+&lt;GE_EMAIL&gt; (J.G.).
 
-> **BEFORE POSTING — two things only the authors can do.** bioRxiv makes the submitting
-> author affirm that **every** listed author has seen and agreed to this specific
-> version. Given what §3 reports — that most of our own first anchor set did not hold
-> up, and that §4 and §5 report findings against the model — that affirmation should be
-> obtained on the current text, not on a description of it. Second, competing interests
-> are declared as none for all three authors, which should be confirmed by each of them
-> rather than assumed.
+
 
 ---
 
@@ -51,11 +46,12 @@ turned out to be the hardest and most instructive part of the work. Our first
 anchor set of sixteen literature values was subjected to an adversarial citation
 audit in which every value was independently hunted and then attacked by two
 skeptics. **Only three of the sixteen were values the primary source actually
-reports at a commensurable endpoint, and two of those three were the two arms of a
-single trial.** The remaining thirteen were stated high, by factors of 1.0 to 5.8,
-and five could be reverse-engineered exactly from a *different* endpoint reported
-in the correctly cited paper — endpoint substitution rather than transcription
-error. Within a single trial, target lesion failure and clinically driven target
+reports at a commensurable 12-month endpoint; two of those three were the two arms of a
+single trial, and fixing our own stated endpoint preference then moved the third, so two
+values survived into the final set — one trial, two numbers.** Fourteen values changed,
+every one of them downward, by factors of 1.02 to 5.83, and five could be
+reverse-engineered exactly from a *different* endpoint reported in the correctly cited
+paper — endpoint substitution rather than transcription error. Within a single trial, target lesion failure and clinically driven target
 lesion revascularisation differ by two- to threefold, so a claim that the endpoint
 is "held constant" while either may be used holds nothing constant.
 
@@ -70,7 +66,7 @@ corrected, the fit no longer needs the mechanical axis. We read that as a 12-mon
 revascularisation endpoint having no power over slow-acting mechanics rather than as
 the axis being empty, and §7 states the test that would decide it. In a 9,000-procedure simulation
 with an unobserved frailty term and realistic measurement error, the operator's
-four-number summary reached AUC 0.790 at n = 100, a level 55 raw
+four-number summary reached AUC 0.790 at n = 100, a level 44 raw
 features had not reached by n = 800. The pan-vascular transfer claim did not survive
 its own test: against a linear model given the same continuous bed physiology, the
 operator's cross-bed advantage was -0.024 AUC (95% bootstrap -0.041 to -0.010),
@@ -163,7 +159,7 @@ and healing timescales.
 
 The four axes are a refinement of the three ecological balances — mechanical,
 cellular, and physicochemical–immune — in which the framework was originally stated
-[2]. The mapping is not one to one, and the difference is deliberate: the geometric
+[1] and subsequently developed [2]. The mapping is not one to one, and the difference is deliberate: the geometric
 and hemodynamic axes separate two things the mechanical balance conflated, namely
 whether the device fits the vessel and whether the lumen it leaves carries flow. §4
 reports that the corrected calibration does not currently need the mechanical axis,
@@ -190,9 +186,11 @@ deliberate oversizing is the technique.
 τ_sc is defined on total variation rather than on a monotone approach to an
 asymptote, so it stays well defined when the trajectory is non-monotone, which it
 routinely is. It separates devices that are indistinguishable at implantation
-(Figure 1b): in the same coronary lesion a paclitaxel-coated balloon has τ_sc ≈ 132
-days while a thin-strut drug-eluting stent has τ_sc ≈ 265 days — the balloon's fate
-is settled in the first four months, the stent's is not.
+(Figure 1b): in the same coronary lesion a paclitaxel-coated balloon has τ_sc = 124
+days while an ultrathin-strut drug-eluting stent has τ_sc = 261 days — the balloon's
+fate is largely settled in the first four months, the stent's is not. The two are not
+indistinguishable at implantation (Γ_sc(0) 0.801 against 0.857), but the gap at
+implantation is small next to the difference in how fast each one gets there.
 
 ### 2.4 Hazard link
 
@@ -226,15 +224,27 @@ Forty-nine agents, 696 source lookups.
 
 ### 3.2 What the audit found
 
-**Three of the sixteen survived.** COR-BRS-plla, SFA-DCB and SFA-POBA were values the
-primary source reports at a commensurable endpoint — and two of those three are the
-two arms of one trial. The evidence base of the original calibration was two papers
-and three numbers.
+**Three of the sixteen survived, and then one of those three moved too.** Two criteria
+have to be kept apart here, because conflating them is the very failure this section is
+about. On *citation integrity* — the paper exists, the identifier resolves, the value is
+transcribed correctly — the per-bed flags were coronary 1 of 7, femoropopliteal 3 of 4,
+carotid 1 of 1, below-the-knee 1 of 2, iliac 0 of 1, renal 0 of 1: six of sixteen. On
+*value support* — the source reports this number at a commensurable 12-month endpoint —
+three survived: COR-BRS-plla, SFA-DCB and SFA-POBA, two of them the two arms of one
+trial.
 
-**Thirteen values were wrong, every one of them high**, by factors of 1.02 to 5.83.
-The direction is uniform, and the magnitudes are not, so this is not a scale factor a
-shared intercept can absorb: it distorts the ordering of the anchors relative to one
-another, which is exactly what a cross-bed shared-parameter fit depends on.
+Then applying our own stated preference for clinically driven TLR moved COR-BRS-plla as
+well, because its asserted 7.8% is ABSORB III's TLF composite and that trial's
+ischaemia-driven TLR is 3.0%. **Two values survived into the final anchor set unchanged:
+SFA-DCB and SFA-POBA. One trial, two numbers.** That is what the original calibration
+actually rested on.
+
+**Fourteen of the sixteen values changed, every one of them downward**, by factors of
+1.02 to 5.83 — thirteen because the source reports something else, and COR-BRS-plla
+because we fixed the endpoint. The direction is uniform and the magnitudes are not, so
+this is not a scale factor a shared intercept can absorb: it distorts the ordering of
+the anchors relative to one another, which is exactly what a cross-bed shared-parameter
+fit depends on.
 
 **Five were endpoint substitutions**, recoverable exactly from a different endpoint in
 the correctly cited paper (Table 1):
@@ -260,10 +270,11 @@ all-cause TLR, symptom-driven TLR and vessel-level TVF — and three time window
 365 and 390 days). That sentence has been deleted from this paper rather than
 repaired.
 
-**The survival pattern was the opposite of what we expected.** Coronary anchors
-survived 1 of 7; femoropopliteal 3 of 4. Roughly 74% of the original calibration
-weight rested on values the sources do not report, concentrated in the bed the author
-knows best.
+**The survival pattern was the opposite of what we expected.** On either criterion the
+direction is the same: coronary was the worst-sourced bed in the set and femoropopliteal
+the best — 1 of 7 against 3 of 4 on citation integrity, 0 of 7 against 2 of 4 on value
+support. Roughly 74% of the original calibration weight rested on values the sources do
+not report, concentrated in the bed the author knows best.
 
 ### 3.3 What we did about it
 
@@ -278,7 +289,9 @@ stays visible: COR-undersized (vessel-level TVF, and stent under-*expansion* aga
 an absolute area cut-off is not under-*sizing*), SFA-long-bare (surveillance-triggered
 all-cause TLR, single-arm), COR-DES-complex and COR-DCB-small (TLF composites,
 secondary or post hoc). Trust weight now encodes audited evidence quality rather than
-author confidence. Six of the beds' λ₀ values were revised downward accordingly.
+author confidence. **Five of the six beds' λ₀ values were revised downward; the
+femoropopliteal baseline was unchanged**, because its reference arm is the one that
+survived the audit — the asymmetry matters, and averaging it away would hide it.
 
 ### 3.4 What we take from it
 
@@ -360,7 +373,7 @@ proportional error, calcium and tortuosity coarsened to the grades actually reco
 in practice. Candidates saw only the re-measured lesion, so the operator arm had to
 recompute Γ_sc from noisy inputs.
 
-Four representations of the same information: (A) 55 raw lesion and device features
+Four representations of the same information: (A) 44 raw lesion and device features
 with bed as a one-hot category, gradient-boosted trees; (A′) the same with bed as six
 continuous physiological parameters, trees; (A″) the same continuous features under a
 linear model, which can extrapolate along them; and (B) the four numbers the operator
@@ -391,11 +404,24 @@ extrapolates along a continuous bed parameter and a tree, which can only interpo
 between values it has seen, cannot. Representations (A) and (A′) were numerically
 identical, for the same reason.
 
-**Level does not transfer, ordering does.** The operator's raw cross-bed Brier score
-was 0.249, worse than predicting the base rate (0.135). A
-single intercept recalibration brought every arm to ≈0.132. Across beds the operator
-supplies a ranking, and not a good one; absolute risk requires bed-level
-recalibration.
+**The risk scale does not transfer, and an offset does not fix it.** The operator's raw
+cross-bed Brier score was 0.249, far worse than predicting the test
+beds' base rate (0.135). Two different corrections get called "recalibration" and they
+are not interchangeable, so we report both. Shifting the intercept only — keeping the
+model's log-odds slope — leaves every arm *worse* than the base rate: 0.151
+for the operator, 0.149 for raw features plus bed physiology,
+0.163 for trees. What actually repairs them is refitting the
+slope as well (0.132, 0.131,
+0.133), and the slope the operator needs is
+0.26 — its log-odds are roughly four times too steep across
+beds. Both of these use the test labels and are therefore ceilings, not out-of-sample
+scores.
+
+The distinction matters for anyone who wants to use the operator in a new bed. Its
+*ordering* carries (AUC 0.610, poor but above chance); its *risk scale*
+does not, and it is over-dispersed rather than merely offset. A new bed needs a slope as
+well as a level, which is a two-parameter recalibration on real events, not a constant
+anyone can look up.
 
 ## 6. A harness that improves without retraining the operator
 
@@ -469,9 +495,17 @@ the browser is at https://lingsenyou.com/suitcordance/.
 ## 10. Declarations
 
 **Funding.** This work was supported by the National Natural Science Foundation of China (T2288101, 82170342), the AI for Science Foundation of Fudan University (FudanX24AI003), and the Medical Engineering Joint Fund of Fudan University (yg2023-01).
-**Competing interests.** The authors declare no competing interests.
+**Competing interests.** L.Y. and L.S. serve as Executive Secretaries of the National
+Basic Science Center for Panvascular Interventional Complex Systems, and J.G. serves as
+its Director. The framework this paper operationalises is that centre's research
+programme [1], and the work was supported by that centre's award (T2288101). The authors
+declare no other competing interests, and no consulting income, speaking fees, equity,
+patents or family interests involving any manufacturer of the device classes evaluated
+here.
 **Ethics.** No human subjects or patient data were involved.
-**Author contributions.** *To be completed once the author list is settled.*
+**Author contributions.** L.Y. conceived the operator, wrote the code, performed the
+citation audit, the calibration and the in-silico experiments, and wrote the manuscript.
+L.S. and J.G. supervised the work and revised the manuscript.
 
 ---
 

@@ -36,6 +36,7 @@ from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score, brier_score_loss
 from sklearn.preprocessing import StandardScaler
+from scipy.optimize import minimize_scalar
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -212,7 +213,7 @@ def e1_transfer(rows, y) -> Dict:
     print(f"    (base-rate-only Brier on the test beds: "
           f"{brier_score_loss(y[te], np.full(te.sum(), y[te].mean())):.4f})")
     print(f"    {'representation':36s} {'in-bed AUC':>11s} {'cross AUC':>10s} "
-          f"{'cross Brier':>12s} {'recalibrated':>13s}")
+          f"{'cross Brier':>12s} {'intercept-only':>14s} {'slope+int':>11s} {'slope':>7s}")
     res, preds = {}, {}
     for name, (fn, kind) in REPRESENTATIONS.items():
         X = fn(rows)
@@ -224,15 +225,32 @@ def e1_transfer(rows, y) -> Dict:
         preds[name] = p_out
         auc_out = roc_auc_score(y[te], p_out)
         br = brier_score_loss(y[te], p_out)
-        # an intercept shift is what bed-level recalibration would buy; it uses
-        # the test base rate, so read it as a ceiling, not an out-of-sample score
+        # Two different things get called "recalibration", and they are not
+        # interchangeable. An INTERCEPT-ONLY shift keeps the model's log-odds slope
+        # and only moves the level. A full logistic recalibration also refits the
+        # slope, which is a much stronger correction. Both use the test labels, so
+        # both are ceilings, not out-of-sample scores -- reported so that the
+        # difference between them is visible rather than hidden behind one word.
+        logit = np.log(p_out / (1 - p_out)).reshape(-1, 1)
         lr = LogisticRegression(max_iter=1000)
-        lr.fit(np.log(p_out / (1 - p_out)).reshape(-1, 1), y[te])
-        br_rc = brier_score_loss(
-            y[te], lr.predict_proba(np.log(p_out / (1 - p_out)).reshape(-1, 1))[:, 1])
-        print(f"    {name:36s} {auc_in:11.3f} {auc_out:10.3f} {br:12.4f} {br_rc:13.4f}")
+        lr.fit(logit, y[te])
+        br_full = brier_score_loss(y[te], lr.predict_proba(logit)[:, 1])
+        slope = float(lr.coef_[0][0])
+
+        def _nll(a):
+            q = 1.0 / (1.0 + np.exp(-(logit.ravel() + a)))
+            q = np.clip(q, 1e-9, 1 - 1e-9)
+            return -np.mean(y[te] * np.log(q) + (1 - y[te]) * np.log(1 - q))
+        shift = float(minimize_scalar(_nll, bounds=(-8, 8), method="bounded").x)
+        q = 1.0 / (1.0 + np.exp(-(logit.ravel() + shift)))
+        br_int = brier_score_loss(y[te], q)
+
+        print(f"    {name:36s} {auc_in:11.3f} {auc_out:10.3f} {br:12.4f} "
+              f"{br_int:14.4f} {br_full:11.4f} {slope:7.3f}")
         res[name] = dict(auc_in=auc_in, auc_cross=auc_out, brier_cross=br,
-                         brier_cross_recalibrated=br_rc)
+                         brier_intercept_only=br_int,
+                         brier_full_recalibration=br_full,
+                         recalibration_slope=slope)
 
     a_key = "A'' raw + bed physiology (linear)"
     b_key = "B   suitcordance, 4 numbers (linear)"

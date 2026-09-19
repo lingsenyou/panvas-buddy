@@ -4,25 +4,33 @@
       "auc_in": 0.7648168103448275,
       "auc_cross": 0.5714320914646166,
       "brier_cross": 0.15101580235522727,
-      "brier_cross_recalibrated": 0.13334764526915488
+      "brier_intercept_only": 0.16281257111249484,
+      "brier_full_recalibration": 0.13334764526915488,
+      "recalibration_slope": 0.1432867467366818
     },
     "A'  raw + bed physiology (tree)": {
       "auc_in": 0.7648168103448275,
       "auc_cross": 0.5714320914646166,
       "brier_cross": 0.15101580235522727,
-      "brier_cross_recalibrated": 0.13334764526915488
+      "brier_intercept_only": 0.16281257111249484,
+      "brier_full_recalibration": 0.13334764526915488,
+      "recalibration_slope": 0.1432867467366818
     },
     "A'' raw + bed physiology (linear)": {
       "auc_in": 0.79230342215256,
       "auc_cross": 0.6345687670750839,
       "brier_cross": 0.16356521617031677,
-      "brier_cross_recalibrated": 0.13140018073642948
+      "brier_intercept_only": 0.14923861846320888,
+      "brier_full_recalibration": 0.13140018073642948,
+      "recalibration_slope": 0.31623473067407665
     },
     "B   suitcordance, 4 numbers (linear)": {
       "auc_in": 0.8196757445141066,
       "auc_cross": 0.6104471818882334,
       "brier_cross": 0.249103252908185,
-      "brier_cross_recalibrated": 0.1324412588505484
+      "brier_intercept_only": 0.15103850677771655,
+      "brier_full_recalibration": 0.1324412588505484,
+      "recalibration_slope": 0.26186419845059433
     },
     "auc_diff_ci": [
       -0.04128801073754237,
