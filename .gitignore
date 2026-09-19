@@ -3,3 +3,17 @@ __pycache__/
 .ipynb_checkpoints/
 panvas/theta_real.json
 data/*.csv
+# Internal working files. These are NOT part of the public record: they are
+# operating notes and adversarial-review transcripts that discuss the authors'
+# own disclosure obligations, name third parties, and record that co-authors had
+# not yet approved a version. A pre-publication audit found them tracked and
+# bound for a permanent DOI; they are kept on disk and out of the release.
+PUBLISHING.md
+ZENODO.md
+make_bundle.py
+preprint/biorxiv_submission_fields.md
+out/review_*.txt
+out/llm_brief_facts.json
+out/*.log
+out/*.zip
+给沈老师_项目简报.md

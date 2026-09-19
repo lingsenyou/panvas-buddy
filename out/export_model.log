@@ -1,2 +1,0 @@
-out/model.json 9956 bytes
-gammaStar: {'coronary': 0.648, 'sfa': 0.631, 'btk': 0.186, 'carotid': 0.625, 'renal': 0.508, 'iliac': 0.621}

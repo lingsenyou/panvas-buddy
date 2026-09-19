@@ -733,7 +733,9 @@ record, the fitted constants, and the scripts that reproduce every number and fi
 are released with the paper. An interactive workbench running the operator entirely in
 the browser is at https://lingsenyou.com/suitcordance/.
 
-> **BEFORE POSTING:** deposit the code and replace this with the Zenodo concept DOI.
+> The code, the anchor set with its provenance, the citation-audit record and the
+> scripts that regenerate every figure are archived under a Zenodo concept DOI, which
+> resolves to the latest version. The version described here is v0.1.0.
 
 ## 10. Declarations
 
@@ -771,7 +773,6 @@ L.S. and J.G. supervised the work and revised the manuscript.
 
 2. You L, et al. Vascular–device suitcordance: a tri-ecological framework for
    eco-rebalancing. *Trends Mol Med*. In press (accepted 14 September 2026).
-   *[DOI to be added before posting.]*
 
 3. You L, Chen Y, Zhang Z, Wang Y, Shen L, Ge J. High suitcordance for panvascular
    full-watershed organs: a new interventional perspective. *Research (Wash D C)*.

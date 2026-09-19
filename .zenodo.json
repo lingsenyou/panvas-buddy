@@ -33,6 +33,15 @@
     "model calibration",
     "reproducible research"
   ],
-  "notes": "Funding: National Natural Science Foundation of China (T2288101, 82170342); AI for Science Foundation of Fudan University (FudanX24AI003); Medical Engineering Joint Fund of Fudan University (yg2023-01). TODO before publishing the record: add the preprint DOI as a related_identifiers entry with relation isSupplementTo once the preprint is posted.",
-  "version": "0.1.0"
+  "notes": "Funding: National Natural Science Foundation of China (T2288101, 82170342); AI for Science Foundation of Fudan University (FudanX24AI003); Medical Engineering Joint Fund of Fudan University (yg2023-01). Competing interests: L.Y. and L.S. serve as Executive Secretaries of the National Basic Science Center for Panvascular Interventional Complex Systems, and J.G. serves as its Director; the framework this software operationalises is that centre's research programme, and the work was supported by that centre's award (T2288101). See the Declarations section of the accompanying preprint for the full statement.",
+  "version": "0.1.0",
+  "language": "eng",
+  "publication_date": "2026-09-19",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/lingsenyou/panvas-buddy",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
 }

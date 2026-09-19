@@ -85,20 +85,37 @@ def rebuild_workbench() -> None:
 
 
 def rebuild_archive() -> None:
-    import zipfile
-    files = subprocess.run(["git", "ls-files"], cwd=HERE,
-                           capture_output=True, text=True).stdout.split()
-    out = os.path.join(HERE, "out", "panvas-buddy-v0.1.0.zip")
-    if os.path.exists(out):
-        os.remove(out)
-    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as zf:
-        for f in sorted(set(files)):
-            if f.startswith("out/") and f.endswith(".zip"):
-                continue
-            zf.write(os.path.join(HERE, f), arcname="panvas-buddy-0.1.0/" + f)
-    print(f"\n=== out/panvas-buddy-v0.1.0.zip  "
-          f"({os.path.getsize(out) / 1e6:.2f} MB, {len(files)} files)")
+    """Zip exactly what git tracks -- nothing more.
 
+    Two bugs lived here. `git ls-files` quotes non-ASCII paths and `.split()`
+    breaks on spaces, so the first filename of either kind raised AFTER the old
+    archive had already been deleted, leaving no archive at all. And because the
+    archive was itself tracked, every release contained a stale copy of itself.
+
+    Building from `git ls-files` is the point: a pre-publication audit found
+    internal review transcripts and operating notes inside this zip, bound for a
+    permanent DOI. They are now untracked, so they cannot reach the archive by
+    construction rather than by a hand-maintained filter -- and the guard below
+    fails the build if any of them is ever tracked again.
+    """
+    import zipfile
+    r = subprocess.run(["git", "-c", "core.quotepath=off", "ls-files", "-z"],
+                       cwd=HERE, capture_output=True, text=True,
+                       encoding="utf-8", check=True)
+    files = sorted({f for f in r.stdout.split(chr(0)) if f})
+    leaked = [f for f in files
+              if "review_" in f or f.endswith("biorxiv_submission_fields.md")
+              or f in ("PUBLISHING.md", "ZENODO.md", "make_bundle.py")]
+    if leaked:
+        raise SystemExit("internal files are tracked and would ship: " + ", ".join(leaked))
+    out = os.path.join(HERE, "out", "panvas-buddy-v0.1.0.zip")
+    tmp = out + ".part"
+    with zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as zf:
+        for f in files:
+            zf.write(os.path.join(HERE, f), arcname="panvas-buddy-0.1.0/" + f)
+    os.replace(tmp, out)
+    print("%s=== out/panvas-buddy-v0.1.0.zip  (%.2f MB, %d files)"
+          % (os.linesep, os.path.getsize(out) / 1e6, len(files)))
 
 def main() -> None:
     ap = argparse.ArgumentParser()

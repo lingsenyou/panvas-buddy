@@ -14,7 +14,7 @@ authors:
     given-names: "Junbo"
     orcid: "https://orcid.org/0000-0002-9360-7332"
     affiliation: "Department of Cardiology, Zhongshan Hospital, Fudan University, Shanghai Institute of Cardiovascular Diseases, Shanghai, China"
-repository-code: "https://github.com/lingsenyou/panvas-buddy"   # TODO: confirm once created
+repository-code: "https://github.com/lingsenyou/panvas-buddy"
 url: "https://lingsenyou.com/suitcordance/"
 abstract: >-
   A suitcordance operator that treats device-vessel failure as a property of the
@@ -38,4 +38,4 @@ keywords:
   - calibration
 license: MIT
 version: "0.1.0"
-date-released: "2026-09-18"
+date-released: "2026-09-19"

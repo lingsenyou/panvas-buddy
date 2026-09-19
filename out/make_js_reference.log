@@ -1,7 +1,0 @@
-coronary  des_ultrathin  g0=0.81962 tau= 287.18 risk12=0.01449
-coronary  brs_plla       g0=0.71059 tau= 370.86 risk12=0.01681
-sfa       se_nitinol     g0=0.36068 tau= 270.43 risk12=0.09742
-btk       dcb_periph     g0=0.51109 tau= 106.03 risk12=0.10398
-carotid   car_dual       g0=0.52564 tau= 189.47 risk12=0.00656
-
-out/js_reference.json and out/js_check.js written; paste the snippet into the workbench console
