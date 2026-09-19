@@ -20,8 +20,9 @@ University, No. 1609 Xietu Road, Xuhui District, Shanghai 200032, China
 <sup>5</sup> NHC Key Laboratory of Ischemic Heart Diseases, No. 1609 Xietu Road, Xuhui
 District, Shanghai 200032, China
 
-‡ Corresponding authors. Email: shen_li@fudan.edu.cn (L.S.);
-&lt;GE_EMAIL&gt; (J.G.).
+‡ Corresponding authors. Email: jbge@zs-hospital.sh.cn (J.G.); shen_li@fudan.edu.cn (L.S.).
+
+ORCID: L.Y. 0000-0003-0794-5907; J.G. 0000-0002-9360-7332.
 
 
 

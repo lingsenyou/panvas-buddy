@@ -7,7 +7,8 @@
   "creators": [
     {
       "name": "You, Lingsen",
-      "affiliation": "Department of Cardiology, Zhongshan Hospital, Fudan University, Shanghai Institute of Cardiovascular Diseases, Shanghai, China"
+      "affiliation": "Department of Cardiology, Zhongshan Hospital, Fudan University, Shanghai Institute of Cardiovascular Diseases, Shanghai, China",
+      "orcid": "0000-0003-0794-5907"
     },
     {
       "name": "Shen, Li",
@@ -15,7 +16,8 @@
     },
     {
       "name": "Ge, Junbo",
-      "affiliation": "Department of Cardiology, Zhongshan Hospital, Fudan University, Shanghai Institute of Cardiovascular Diseases, Shanghai, China"
+      "affiliation": "Department of Cardiology, Zhongshan Hospital, Fudan University, Shanghai Institute of Cardiovascular Diseases, Shanghai, China",
+      "orcid": "0000-0002-9360-7332"
     }
   ],
   "keywords": [
@@ -31,6 +33,6 @@
     "model calibration",
     "reproducible research"
   ],
-  "notes": "Funding: National Natural Science Foundation of China (T2288101, 82170342); AI for Science Foundation of Fudan University (FudanX24AI003); Medical Engineering Joint Fund of Fudan University (yg2023-01). TODO before publishing the record: add ORCIDs for all three authors, and add the preprint DOI as a related_identifiers entry with relation isSupplementTo once the preprint is posted.",
+  "notes": "Funding: National Natural Science Foundation of China (T2288101, 82170342); AI for Science Foundation of Fudan University (FudanX24AI003); Medical Engineering Joint Fund of Fudan University (yg2023-01). TODO before publishing the record: add the preprint DOI as a related_identifiers entry with relation isSupplementTo once the preprint is posted.",
   "version": "0.1.0"
 }

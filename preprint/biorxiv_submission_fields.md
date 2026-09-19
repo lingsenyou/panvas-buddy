@@ -4,8 +4,8 @@ Open <https://submit.biorxiv.org>, sign in as yourself, and work down this page.
 heading is a field on the submission form; paste the block under it. Nothing here needs
 composing, only checking.
 
-The only items still blank are the four marked **[YOU]** — they are facts about the
-three of you that I do not have.
+One item is still blank: your own institutional email address. Everything else is
+filled in or checked.
 
 ---
 
@@ -30,9 +30,9 @@ already stripped of markdown). bioRxiv's box accepts it at this length.
 
 | # | Name | Affiliations | ORCID | Email | Role |
 |---|---|---|---|---|---|
-| 1 | Lingsen You | 1,2,3,4,5 | **[YOU]** | **[YOU]** — use your Fudan address, not a personal one | first author |
-| 2 | Li Shen | 1,2,3,4,5 | **[YOU]** | shen_li@fudan.edu.cn | **corresponding** |
-| 3 | Junbo Ge | 1,2,3,4,5 | **[YOU]** | **[YOU]** | **corresponding** |
+| 1 | Lingsen You | 1,2,3,4,5 | 0000-0003-0794-5907 | **[YOU]** — use your Fudan address, not a personal one | first author |
+| 2 | Li Shen | 1,2,3,4,5 | none | shen_li@fudan.edu.cn | **corresponding** |
+| 3 | Junbo Ge | 1,2,3,4,5 | 0000-0002-9360-7332 | jbge@zs-hospital.sh.cn | **corresponding** |
 
 Affiliations, exactly as they appear on *Eur Heart J* 2025;46(35):3400–3403:
 
@@ -49,12 +49,19 @@ named on a preprint. Use institutional addresses, and expect Prof. Shen and Prof
 receive that message within minutes of you pressing submit — which is a good reason for
 them to have read the paper first.
 
-**Corresponding authors: Prof. Ge and Prof. Shen**, both of them — that is how the EHJ
-paper is set, and you asked for the same arrangement. Prof. Shen's address is known;
-Prof. Ge's is the one item in this whole package I could not find. The manuscript
-currently carries the placeholder `<GE_EMAIL>` in the corresponding-author footnote, and
-it must be filled or that author dropped from the footnote before the file is uploaded.
-Do not leave a dagger with nothing behind it.
+**Corresponding authors: Prof. Ge and Prof. Shen**, both of them, as on the EHJ paper.
+
+The two ORCID iDs are taken from the Europe PMC record of your own EHJ paper — the iDs
+the three of you supplied at submission — and each was then checked against its public
+ORCID record: 0000-0002-9360-7332 resolves to Junbo Ge, Zhongshan Hospital Fudan University, Director
+and Professor of Cardiology and Academician of the Chinese Academy of Sciences;
+0000-0003-0794-5907 resolves to Lingsen You and lists the EHJ paper. Prof. Shen has no ORCID, which is
+fine — the field is optional.
+
+Worth ten minutes separately: your own ORCID record lists **no employment or affiliation
+at all** and only six works, missing Light Science & Applications, Science Bulletin,
+Research, Biomarker Research, npj Flexible Electronics and Advanced Fiber Materials.
+That record is what a reader lands on from the preprint.
 
 ## 5. Category
 
@@ -151,7 +158,7 @@ pan-vascular intervention; device–vessel matching; endpoint definition; calibr
 - [ ] Reference 2 (Trends in Molecular Medicine) has its DOI, or is removed.
 - [ ] Competing interests: use the EHJ disclosure above, not "none" — and ask about XINSORB.
 - [ ] Funding: four grants carried from the EHJ paper — confirm each applies to this work.
-- [ ] `<GE_EMAIL>` filled in, in the manuscript and in the form.
+- [x] Corresponding authors, emails and ORCIDs filled in.
 
 ## What I could not do
 

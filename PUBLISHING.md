@@ -31,9 +31,11 @@ Still open, and each of these needs a person, not a script:
       anchors did not hold up, that the cross-bed transfer claim is refuted, and that
       the fit switches off the mechanical axis. Those are three sentences they should
       read themselves.
-- [ ] **ORCIDs** for all three, and Prof. Ge's institutional email.
+- [x] **ORCIDs.** L.Y. 0000-0003-0794-5907, J.G. 0000-0002-9360-7332, taken from the Europe PMC record of the EHJ
+      paper and each verified against its public ORCID record. Prof. Shen has none.
+- [x] **Prof. Ge's email:** jbge@zs-hospital.sh.cn
 - [x] **Corresponding authors.** Prof. Ge and Prof. Shen, both, as on the EHJ paper.
-- [ ] **Prof. Ge's email** — the one field in the package that is still a placeholder.
+- [ ] **Your own institutional email** — use the Fudan address, not a personal one.
 - [ ] **Institutional policy.** Check whether Zhongshan Hospital / Fudan requires
       internal clearance before a preprint is posted. Some Chinese institutions do.
 
