@@ -1,0 +1,130 @@
+[
+ {
+  "name": "COR-DES-simple",
+  "bed": "coronary",
+  "device": "des_ultrathin",
+  "observed": 0.045,
+  "weight": 1.0,
+  "source": "Contemporary thin-strut DES, type A/B1 lesion. ABSORB III metallic arm 1-y TLF 6.1% all-comers; simple-lesion subsets 3-5%."
+ },
+ {
+  "name": "COR-BRS-plla",
+  "bed": "coronary",
+  "device": "brs_plla",
+  "observed": 0.078,
+  "weight": 1.0,
+  "source": "ABSORB III, Absorb arm 1-y TLF 7.8% (NEJM 2015)."
+ },
+ {
+  "name": "COR-DES-complex",
+  "bed": "coronary",
+  "device": "des_ultrathin",
+  "observed": 0.12,
+  "weight": 0.7,
+  "source": "Long, calcified, diabetic DES: 1-y TLF clusters at 10-14%."
+ },
+ {
+  "name": "COR-BMS",
+  "bed": "coronary",
+  "device": "bms",
+  "observed": 0.16,
+  "weight": 0.7,
+  "source": "Bare-metal era 1-y TLR 15-20%."
+ },
+ {
+  "name": "COR-POBA",
+  "bed": "coronary",
+  "device": "poba",
+  "observed": 0.32,
+  "weight": 0.6,
+  "source": "Balloon-only era: 1-y restenosis 30-40%, TLR of that order."
+ },
+ {
+  "name": "COR-DCB-small",
+  "bed": "coronary",
+  "device": "dcb_ptx_cor",
+  "observed": 0.08,
+  "weight": 0.7,
+  "source": "Small-vessel DCB, non-inferior to DES in BASKET-SMALL 2; 1-y TLR ~8%."
+ },
+ {
+  "name": "COR-undersized",
+  "bed": "coronary",
+  "device": "des_ultrathin",
+  "observed": 0.2,
+  "weight": 0.4,
+  "source": "Severe underexpansion/malapposition. No clean trial; IVUS series put small minimum stent area at 2-4x the TLR of adequately expanded stents."
+ },
+ {
+  "name": "SFA-DCB",
+  "bed": "sfa",
+  "device": "dcb_periph",
+  "observed": 0.024,
+  "weight": 1.0,
+  "source": "IN.PACT SFA 12-month CD-TLR 2.4% (Circulation 2015)."
+ },
+ {
+  "name": "SFA-POBA",
+  "bed": "sfa",
+  "device": "poba",
+  "observed": 0.206,
+  "weight": 1.0,
+  "source": "IN.PACT SFA control arm 12-month CD-TLR 20.6%."
+ },
+ {
+  "name": "SFA-nitinol",
+  "bed": "sfa",
+  "device": "se_nitinol",
+  "observed": 0.13,
+  "weight": 0.7,
+  "source": "Bare nitinol stent trials in moderate-length SFA: 1-y TLR 10-15%."
+ },
+ {
+  "name": "SFA-long-bare",
+  "bed": "sfa",
+  "device": "se_nitinol",
+  "observed": 0.35,
+  "weight": 0.4,
+  "source": "Long bare nitinol across the flexion zone; fracture and restenosis both climb steeply with stented length."
+ },
+ {
+  "name": "BTK-DCB",
+  "bed": "btk",
+  "device": "dcb_periph",
+  "observed": 0.12,
+  "weight": 0.6,
+  "source": "Below-the-knee DCB in CLTI: 1-y CD-TLR around 10-15%."
+ },
+ {
+  "name": "BTK-POBA",
+  "bed": "btk",
+  "device": "poba",
+  "observed": 0.25,
+  "weight": 0.6,
+  "source": "Below-the-knee plain balloon: 1-y CD-TLR around 25%."
+ },
+ {
+  "name": "CAR-stent",
+  "bed": "carotid",
+  "device": "car_closed",
+  "observed": 0.035,
+  "weight": 0.8,
+  "source": "Carotid stenting: 1-y in-stent restenosis/TLR of a few percent."
+ },
+ {
+  "name": "ILIAC-stent",
+  "bed": "iliac",
+  "device": "se_nitinol",
+  "observed": 0.045,
+  "weight": 0.7,
+  "source": "Iliac stenting: 1-y patency loss around 5%."
+ },
+ {
+  "name": "RENAL-stent",
+  "bed": "renal",
+  "device": "bms",
+  "observed": 0.14,
+  "weight": 0.6,
+  "source": "Ostial renal stenting: 1-y restenosis 12-16%."
+ }
+]

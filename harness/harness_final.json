@@ -1,0 +1,22 @@
+{
+  "version": "v3",
+  "instructions": "Choose one device and size it. Prefer the smallest intervention that restores the lumen. Do not implant what the vessel cannot carry.",
+  "skills": [
+    "size_from_reference",
+    "cover_the_lesion",
+    "score_and_rank",
+    "prepare_calcium"
+  ],
+  "policy": {
+    "sizing_rule": "mean_ref",
+    "oversize_target": 1.05,
+    "length_margin_mm": 2.0,
+    "calcium_prep_threshold": 0.45,
+    "prep_choice": "ivl",
+    "postdilate_calcium": 1.1,
+    "small_vessel_no_implant_mm": 0.0,
+    "long_lesion_flexible_mm": 1000000000.0,
+    "require_drug_if_drive": 1000000000.0,
+    "search_top_k": 1
+  }
+}

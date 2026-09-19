@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suitcordance Bench — device–vessel matching across the arterial tree</title>
+<meta name="description" content="An open, calibrated operator for device–vessel matching in pan-vascular intervention. Four agreement axes, a time constant, and a ranked device shortlist for any lesion, in six arterial beds. Calibrated against 12 audited 12-month event rates, each carrying the endpoint it actually reports; a research prototype, not a clinical tool.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://lingsenyou.com/suitcordance/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Suitcordance Bench — device–vessel matching across the arterial tree">
+<meta property="og:description" content="Four agreement axes, a time constant, and a ranked device shortlist for any lesion in six arterial beds. Calibrated against published 12-month event rates. A research prototype, not a clinical tool.">
+<meta property="og:url" content="https://lingsenyou.com/suitcordance/">
+<meta name="theme-color" content="#f5f7f8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%F0%9F%A9%BA%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<script>
+  /* Theme is read before first paint, and shared with the radar page. */
+  try {
+    var t = localStorage.getItem("pv:theme");
+    if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Suitcordance Bench",
+  "url": "https://lingsenyou.com/suitcordance/",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Web",
+  "description": "A calibrated operator for device-vessel matching in pan-vascular intervention: four agreement axes, a time constant, and a ranked device shortlist, in six arterial beds. Research prototype, not a clinical decision tool.",
+  "author": { "@id": "https://lingsenyou.com/#person" },
+  "isPartOf": { "@id": "https://lingsenyou.com/#website" },
+  "publisher": { "@id": "https://lingsenyou.com/#person" }
+}
+</script>
+<style>
+html{color-scheme:light dark}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+__STYLE__
+/* site chrome */
+.topbar{border-bottom:1px solid var(--hair);background:var(--panel)}
+.topbar .in{max-width:1220px;margin:0 auto;padding:11px 0;display:flex;align-items:baseline;
+  justify-content:space-between;gap:14px;flex-wrap:wrap}
+.brand b{font-family:var(--cond);font-size:19px;letter-spacing:.01em}
+.brand small{color:var(--muted);font-size:12.5px;margin-left:8px}
+.chips{display:flex;gap:8px}
+.chip{font-family:var(--sans);font-size:13px;padding:5px 12px;border-radius:99px;cursor:pointer;
+  background:var(--panel-2);color:var(--ink-2);border:1px solid var(--hair);text-decoration:none}
+.chip:hover{background:var(--accent-soft);color:var(--accent)}
+.prose{max-width:68ch}
+.prose h3{font-family:var(--cond);text-transform:uppercase;letter-spacing:.08em;font-size:13px;
+  color:var(--muted);margin:20px 0 6px}
+.prose p{margin:0 0 10px;font-size:13.5px;color:var(--ink-2);line-height:1.62}
+.prose li{font-size:13.5px;color:var(--ink-2);line-height:1.6;margin-bottom:5px}
+.prose ul{margin:0 0 10px;padding-left:20px}
+.prose b{color:var(--ink)}
+details{margin-top:12px}
+summary{cursor:pointer;font-size:13.5px;color:var(--accent);font-weight:500}
+.anchors{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px}
+.anchors th{font-family:var(--cond);text-transform:uppercase;letter-spacing:.06em;font-size:11px}
+.anchors td{padding:5px 8px}
+.anchors td.s{color:var(--muted);font-size:11.5px;line-height:1.45}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="in" style="padding-left:16px;padding-right:16px">
+  <div class="brand"><b>Suitcordance Bench</b><small>device × vessel, across the arterial tree</small></div>
+  <div class="chips">
+    <a class="chip" href="https://lingsenyou.com/">Profile</a>
+    <a class="chip" href="https://lingsenyou.com/panvascular/">Radar</a>
+    <button class="chip" id="themeBtn" type="button" aria-pressed="false">Dark</button>
+  </div>
+</div></div>
+
+<div class="wrap">
+<header>
+  <h1>Device–vessel mismatch is one quantity on four axes.</h1>
+  <div class="sub">Describe a lesion and read Γ<sub>sc</sub>(t), its time constant τ<sub>sc</sub>, and the device
+    shortlist ranked by predicted 12-month event rate. Six arterial beds, one operator, calibrated against
+    published outcomes.</div>
+</header>
+<div class="warn">
+  <div><b>Research prototype. Not validated in patients.</b> The operator's free constants were fitted to
+    12 published 12-month event rates and nothing else; no patient-level data went into it. Every
+    number on this page is a model output and <b>must not be used for patient decisions</b>.<br>
+    <b>Revised 19 Sep 2026.</b> An adversarial citation audit found that 13 of the 16 anchors in the first
+    version of this page were not values the cited sources report. Every one was too high, by factors of 1.0
+    to 5.8, and five came from a different endpoint in the correctly cited paper. The anchors, the six bed
+    baseline rates and the fitted constants have all been replaced; the table below now shows what each
+    source actually measured.</div>
+</div>
+
+<div class="grid">
+  <aside class="panel">
+    <div class="eyebrow" style="margin-bottom:8px">Arterial bed</div>
+    <div class="beds" id="beds"></div>
+
+    <div class="field"><label>Proximal reference diameter <span class="v" id="lp">—</span></label>
+      <input type="range" id="d_prox" min="1.5" max="11" step="0.05"></div>
+    <div class="field"><label>Distal reference diameter <span class="v" id="ld">—</span></label>
+      <input type="range" id="d_dist" min="1.5" max="11" step="0.05"></div>
+    <div class="field"><label>Lesion length <span class="v" id="ll">—</span></label>
+      <input type="range" id="length" min="5" max="260" step="1"></div>
+    <div class="field"><label>Calcium <span class="v" id="lc">—</span></label>
+      <input type="range" id="calcium" min="0" max="1" step="0.02"></div>
+    <div class="field"><label>Tortuosity <span class="v" id="lt">—</span></label>
+      <input type="range" id="tortuosity" min="0" max="1" step="0.02"></div>
+    <div class="field"><label>Inflammatory burden <span class="v" id="li">—</span></label>
+      <input type="range" id="inflammation" min="0" max="1" step="0.02"></div>
+    <div class="field" id="runoffField"><label>Distal runoff <span class="v" id="lr">—</span></label>
+      <input type="range" id="runoff" min="0" max="3" step="1"></div>
+
+    <div class="eyebrow" style="margin:14px 0 6px">Lesion features</div>
+    <div class="toggles" id="flags"></div>
+
+    <div class="eyebrow" style="margin:16px 0 6px">Procedure</div>
+    <div class="field"><label for="prep">Lesion preparation</label><select id="prep"></select></div>
+    <div class="toggles"><button id="postdil" aria-pressed="false">High-pressure post-dilatation</button></div>
+
+    <p class="hint" id="bednote"></p>
+  </aside>
+
+  <main class="stack">
+    <div class="tiles">
+      <div class="tile"><div class="k">Γsc at deployment</div><div class="n" id="t_g0">—</div>
+        <div class="d" id="t_g0d">weighted geometric mean of four axes</div></div>
+      <div class="tile"><div class="k">τsc time constant</div><div class="n" id="t_tau">—</div>
+        <div class="d" id="t_taud">characteristic time of the mismatch</div></div>
+      <div class="tile risk"><div class="k">12-month event rate</div><div class="n" id="t_risk">—</div>
+        <div class="d" id="t_riskd">—</div></div>
+    </div>
+
+    <section class="panel">
+      <h2 class="eyebrow">Four axes, at deployment</h2>
+      <div id="axes" style="margin-top:10px"></div>
+      <p class="hint" id="axhint"></p>
+    </section>
+
+    <section class="panel">
+      <h2 class="eyebrow">Γ(t) trajectory · 0–24 months</h2>
+      <div class="chartbox" id="chartbox" style="margin-top:8px">
+        <svg id="chart" viewBox="0 0 720 300" role="img" aria-label="Trajectory of the four axes and the overall match over two years"></svg>
+        <div class="tip" id="tip" hidden></div>
+      </div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <section class="panel">
+      <h2 class="eyebrow">Device shortlist · ranked by predicted 12-month event rate</h2>
+      <div class="scroll"><table id="shortlist">
+        <thead><tr><th>Device</th><th>Size</th><th>Preparation</th><th>Γsc</th><th>τsc</th>
+          <th>Weakest axis</th><th style="width:158px">12-month event rate</th></tr></thead>
+        <tbody></tbody></table></div>
+      <p class="hint">Click any row to load that plan into the chart above. The blue rule marks the bed's
+        best-practice reference rate (λ₀).<br>
+        The operator carries <b>no term for cost, complication, procedure time or contrast load</b>, so it will
+        recommend maximal lesion preparation almost every time. That column is a gap in the model, not advice.</p>
+    </section>
+
+    <section class="panel prose">
+      <h2 class="eyebrow">How this page works</h2>
+      <p>Device–vessel failure is treated here as a property of the <b>agreement</b> between device and vessel
+        rather than of either alone, and the same operator is applied in six arterial beds with only the bed's own
+        parameters changed. Four axes, each mapped to [0,&nbsp;1]:</p>
+      <ul>
+        <li><b>Γ_G geometric</b> — sizing against the bed's band, edge coverage, conformability, taper.</li>
+        <li><b>Γ_M mechanical</b> — device/wall compliance mismatch, overstretch wall stress, cyclic fatigue.</li>
+        <li><b>Γ_H hemodynamic</b> — flow lumen restored, strut flow disturbance, side branches, runoff.</li>
+        <li><b>Γ_B biological</b> — antiproliferative supply against neointimal drive, healing window.</li>
+      </ul>
+      <p>They combine as a weighted geometric mean, Γ<sub>sc</sub> = Π Γ<sub>i</sub><sup>w<sub>i</sub></sup>,
+        with bed-specific weights. The geometric mean is the modelling commitment: a device fails along its
+        worst-matched axis, and a product cannot be rescued by a high score elsewhere the way a sum can.
+        Everything is a function of time, so two scalars come off the trajectory —
+        <b>τ<sub>sc</sub></b>, the time by which Γ<sub>sc</sub>(t) has accumulated 63.2% of its total variation,
+        and the time-averaged mismatch dose — and the hazard link is
+        λ(t) = λ₀ · exp(β·(Γ*−Γ<sub>sc</sub>(t))), anchored <b>per bed</b> at the match level that bed's own
+        reference device achieves.</p>
+
+      <h3>Calibration, and the audit behind it</h3>
+      <p>Eleven of the thirteen free constants were fitted against <b>12 audited 12-month event
+        rates</b> across six beds, by least squares on log-odds weighted by audited evidence quality — one
+        shared parameter set, no per-bed tuning. <b>Mean absolute error 1.4 percentage points.</b></p>
+      <p>The first version of this anchor set was audited adversarially: every value was independently
+        hunted, then attacked by two further checkers, one asking only whether the citation exists and says
+        this, the other only whether the endpoint, timepoint and population match. <b>Three of sixteen
+        survived, and two of those three were the two arms of one trial.</b> Thirteen were too high by
+        factors of 1.0 to 5.8, and five were recoverable exactly from a <i>different</i> endpoint in the
+        correctly cited paper — a patency loss read as a revascularisation rate, a confidence bound read as
+        a point estimate, a composite safety endpoint read as restenosis. Within one trial, target lesion
+        failure and clinically driven TLR differ two- to threefold, so an endpoint stated as "either" fixes
+        nothing.</p>
+      <p>What changed: one preferred construct (12-month clinically driven TLR), seven declared provenance
+        fields per anchor, four anchors excluded but kept visible, trust weights reset to audited evidence
+        quality rather than author confidence, and all six bed baseline rates revised downward.</p>
+      <details>
+        <summary>The anchor set, with what each source actually measured</summary>
+        __ANCHORS_TABLE__
+      </details>
+
+      <h3>What this cannot claim</h3>
+      <ul>
+        <li><b>Nothing here has seen a patient.</b> 12 anchors against eleven free constants is
+          calibration, not validation: it shows the operator <i>can</i> reproduce the published spread with one
+          parameter set, not that it is right.</li>
+        <li><b>The calibration rests on about seven informative comparisons.</b> Carotid, iliac and renal
+          contribute one anchor each, which is also that bed's baseline rate, so those beds are fitted
+          trivially. Four anchors are two arms each of two trials that share sites, adjudication committee
+          and endpoint trigger, so they are not four independent residuals.</li>
+        <li><b>Three revascularisation constructs remain mixed</b> in the retained set. Symptom-driven TLR
+          without routine angiography biases low; surveillance-triggered TLR biases high. They are labelled
+          and weighted, not unified.</li>
+        <li><b>The pan-vascular transfer claim is not supported — it is refuted.</b> In simulation, once the
+          comparison is against a linear model given the same continuous bed physiology, the operator's
+          cross-bed advantage in discrimination is -0.024 AUC (95% bootstrap -0.041 to -0.010), an
+          interval that excludes zero. What survives is sample efficiency: the four physics-derived numbers
+          sit at AUC 0.790 from n = 100 procedures, a level 55 raw features have not
+          reached by n = 800. For a single-centre cohort, where the number of procedures is the binding
+          constraint, that is the whole argument for the operator.</li>
+        <li><b>Across beds the operator transfers an ordering, not a level.</b> Absolute risk needs bed-level
+          recalibration before it means anything outside the bed it was fitted in.</li>
+        <li><b>Device entries are representative class parameters</b>, not specific commercial specifications,
+          and several — radial force, device compliance, fatigue resistance — are order-of-magnitude estimates.
+          Bed parameters are declared priors, not measurements.</li>
+        <li>Four of the fitted constants sit on their bounds, which says the drug and strut terms need
+          reformulating rather than refitting.</li>
+      </ul>
+
+      <h3>Next</h3>
+      <p>The operator is built to be refitted on real cohorts by maximum likelihood, and reported against a
+        logistic model on the same raw features as a floor. If the refitted operator does not beat that floor
+        out of sample, that is the finding.</p>
+    </section>
+  </main>
+</div>
+
+<footer>
+  Built by <a href="https://lingsenyou.com/" style="color:var(--accent)">Lingsen You</a>, Zhongshan Hospital,
+  Fudan University. The operator runs entirely in this page — nothing you enter is sent anywhere.
+  Device entries are representative class parameters, not commercial specifications.
+</footer>
+</div>
+
+<script>const MODEL = __MODEL__;</script>
+<script>
+"use strict";
+__OPERATOR__
+
+/* ---------------------------------------------------------------
+   state and UI
+   --------------------------------------------------------------- */
+const AXES = [
+  {k:"G", css:"--axis-g", cn:"geometric", en:"Γ_G", note:"sizing, coverage, conformability, taper"},
+  {k:"M", css:"--axis-m", cn:"mechanical", en:"Γ_M", note:"compliance mismatch, wall stress, fatigue"},
+  {k:"H", css:"--axis-h", cn:"hemodynamic", en:"Γ_H", note:"lumen restored, strut disturbance, branches"},
+  {k:"B", css:"--axis-b", cn:"biological", en:"Γ_B", note:"antiproliferative supply against drive, healing"}
+];
+const FLAGS = [["diabetes","Diabetes"],["bifurcation","Bifurcation"],
+               ["side_branch","Branch that matters"],["cto","CTO"]];
+const BEDNAME = {coronary:"Coronary", sfa:"Femoropopliteal", btk:"Below the knee",
+                 carotid:"Carotid", renal:"Renal", iliac:"Iliac"};
+const PREPNAME = {none:"None", noncomp:"Non-compliant balloon", scoring:"Scoring balloon",
+                  atherec:"Atherectomy", ivl:"Lithotripsy (IVL)"};
+const DEFAULTS = {
+  coronary:{d_prox:3.2,d_dist:2.95,length:22,calcium:0.30,tortuosity:0.20,inflammation:0.25,runoff:3},
+  sfa:{d_prox:5.8,d_dist:5.2,length:140,calcium:0.45,tortuosity:0.30,inflammation:0.25,runoff:2},
+  btk:{d_prox:2.9,d_dist:2.6,length:100,calcium:0.45,tortuosity:0.25,inflammation:0.35,runoff:1},
+  carotid:{d_prox:7.5,d_dist:5.0,length:20,calcium:0.30,tortuosity:0.20,inflammation:0.20,runoff:3},
+  renal:{d_prox:5.6,d_dist:5.2,length:15,calcium:0.30,tortuosity:0.15,inflammation:0.25,runoff:3},
+  iliac:{d_prox:8.2,d_dist:7.8,length:40,calcium:0.35,tortuosity:0.20,inflammation:0.20,runoff:3}
+};
+const les = Object.assign({bed:"coronary", stenosis:0.8, diabetes:true,
+  bifurcation:false, side_branch:false, cto:false}, DEFAULTS.coronary);
+let plan = null, list = [], picked = 0;
+
+const $ = id => document.getElementById(id);
+const pct = x => (100 * x).toFixed(1) + "%";
+
+$("beds").innerHTML = Object.values(MODEL.beds)
+  .map(b => `<button data-bed="${b.key}" aria-pressed="${b.key === les.bed}">${BEDNAME[b.key]}</button>`).join("");
+$("flags").innerHTML = FLAGS
+  .map(([k, t]) => `<button data-flag="${k}" aria-pressed="${!!les[k]}">${t}</button>`).join("");
+$("prep").innerHTML = Object.keys(MODEL.prep)
+  .map(k => `<option value="${k}">${PREPNAME[k]}</option>`).join("");
+$("legend").innerHTML = AXES.map(a =>
+  `<span><i class="swatch" style="background:var(${a.css})"></i>${a.en} ${a.cn}</span>`).join("")
+  + `<span><i class="swatch" style="background:var(--ink);height:4px"></i>Γ_sc overall</span>`
+  + `<span><i class="swatch" style="background:var(--muted);height:0;border-top:2px dashed var(--muted)"></i>τ_sc</span>`;
+
+$("beds").addEventListener("click", e => {
+  const b = e.target.closest("[data-bed]"); if (!b) return;
+  les.bed = b.dataset.bed;
+  Object.assign(les, DEFAULTS[les.bed]);
+  [...$("beds").children].forEach(x => x.setAttribute("aria-pressed", x.dataset.bed === les.bed));
+  syncInputs(); recompute(true);
+});
+$("flags").addEventListener("click", e => {
+  const b = e.target.closest("[data-flag]"); if (!b) return;
+  les[b.dataset.flag] = !les[b.dataset.flag];
+  b.setAttribute("aria-pressed", String(les[b.dataset.flag]));
+  recompute(true);
+});
+["d_prox","d_dist","length","calcium","tortuosity","inflammation","runoff"].forEach(k => {
+  $(k).addEventListener("input", () => { les[k] = +$(k).value; syncLabels(); recompute(true); });
+});
+$("prep").addEventListener("change", () => { if (plan){ plan.prep = $("prep").value; render(); } });
+$("postdil").addEventListener("click", () => {
+  const on = $("postdil").getAttribute("aria-pressed") !== "true";
+  $("postdil").setAttribute("aria-pressed", String(on));
+  if (plan){ plan.postdilate = on; render(); }
+});
+$("themeBtn").addEventListener("click", () => {
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
+  const next = dark ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  $("themeBtn").textContent = next === "dark" ? "Light" : "Dark";
+  $("themeBtn").setAttribute("aria-pressed", String(next === "dark"));
+  try { localStorage.setItem("pv:theme", next); } catch (e) {}
+  if (plan) render();
+});
+
+function syncInputs(){
+  ["d_prox","d_dist","length","calcium","tortuosity","inflammation","runoff"]
+    .forEach(k => $(k).value = les[k]);
+  [...$("flags").children].forEach(x => x.setAttribute("aria-pressed", String(!!les[x.dataset.flag])));
+  syncLabels();
+}
+function syncLabels(){
+  $("lp").textContent = les.d_prox.toFixed(2) + " mm";
+  $("ld").textContent = les.d_dist.toFixed(2) + " mm";
+  $("ll").textContent = les.length.toFixed(0) + " mm";
+  $("lc").textContent = les.calcium.toFixed(2);
+  $("lt").textContent = les.tortuosity.toFixed(2);
+  $("li").textContent = les.inflammation.toFixed(2);
+  $("lr").textContent = les.runoff + (les.runoff === 1 ? " vessel" : " vessels");
+  $("runoffField").hidden = !(les.bed === "sfa" || les.bed === "btk");
+  const b = MODEL.beds[les.bed];
+  $("bednote").textContent = `λ₀ ${pct(b.lambda0)} · wall compliance ${b.compliance} %/100 mmHg · `
+    + `neointimal drive ${b.k_neointima} · cyclic strain ${b.cyclic_strain} · target device:vessel `
+    + `${b.oversize_band[0]}–${b.oversize_band[1]}`;
+}
+
+function recompute(refresh){
+  if (refresh){ list = shortlist(les); picked = 0; plan = Object.assign({}, list[0].plan); }
+  $("prep").value = plan.prep;
+  $("postdil").setAttribute("aria-pressed", String(!!plan.postdilate));
+  render();
+}
+
+function render(){
+  const r = evaluateCase(les, plan, 5, 730);
+  const bed = MODEL.beds[les.bed];
+
+  $("t_g0").textContent = r.gamma[0].toFixed(3);
+  $("t_g0d").textContent = `${r.gamma[r.gamma.length-1].toFixed(3)} at 24 months · mismatch dose ${r.deficit.toFixed(3)}`;
+  $("t_tau").textContent = isNaN(r.tau_sc) ? "—" : Math.round(r.tau_sc);
+  $("t_taud").textContent = isNaN(r.tau_sc) ? "flat trajectory" : `days · about ${(r.tau_sc/30.4).toFixed(1)} months`;
+  const over = r.risk12 > bed.lambda0;
+  $("t_risk").textContent = pct(r.risk12);
+  $("t_risk").className = "n" + (over ? " over" : "");
+  $("t_riskd").textContent = `best practice in this bed: ${pct(bed.lambda0)}`;
+
+  $("axes").innerHTML = AXES.map((a, i) => {
+    const v = r[a.k][0];
+    return `<div class="axrow">
+      <div class="name"><b>${a.en}</b>${a.cn}<div class="wgt">weight ${r.weights[i].toFixed(2)}</div></div>
+      <div class="track"><div class="bar" style="width:${(100*v).toFixed(1)}%;background:var(${a.css})"></div></div>
+      <div class="val">${v.toFixed(3)}</div></div>`;
+  }).join("");
+  const wa = AXES.find(a => a.k === r.worst);
+  $("axhint").textContent = `Weakest axis: ${wa.en} ${wa.cn} (${wa.note}). `
+    + `Because the axes combine as a geometric mean, a collapse on any one of them cannot be compensated by the other three.`;
+
+  drawChart(r);
+  drawList();
+}
+
+function drawChart(r){
+  const W = 720, H = 300, m = {t:14, r:58, b:30, l:38};
+  const x = d => m.l + (d / 730) * (W - m.l - m.r);
+  const y = v => m.t + (1 - v) * (H - m.t - m.b);
+  const path = arr => arr.map((v, i) => (i ? "L" : "M") + x(r.t[i]).toFixed(1) + " " + y(v).toFixed(1)).join("");
+  let s = "";
+  for (let v = 0; v <= 1.0001; v += 0.25)
+    s += `<line x1="${m.l}" y1="${y(v)}" x2="${W-m.r}" y2="${y(v)}" stroke="var(--hair)" stroke-width="1"/>
+          <text x="${m.l-7}" y="${y(v)+4}" text-anchor="end" font-size="11" font-family="var(--mono)" fill="var(--muted)">${v.toFixed(2)}</text>`;
+  for (const d of [0, 180, 365, 545, 730])
+    s += `<text x="${x(d)}" y="${H-m.b+18}" text-anchor="middle" font-size="11" font-family="var(--mono)" fill="var(--muted)">${d}</text>`;
+  s += `<text x="${(m.l+W-m.r)/2}" y="${H-2}" text-anchor="middle" font-size="11" fill="var(--muted)">days</text>`;
+  s += `<line x1="${x(365)}" y1="${m.t}" x2="${x(365)}" y2="${H-m.b}" stroke="var(--hair)" stroke-width="1"/>`;
+  if (!isNaN(r.tau_sc))
+    s += `<line x1="${x(r.tau_sc)}" y1="${m.t}" x2="${x(r.tau_sc)}" y2="${H-m.b}" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <text x="${x(r.tau_sc)+5}" y="${m.t+11}" font-size="11" font-family="var(--mono)" fill="var(--muted)">τ ${Math.round(r.tau_sc)}d</text>`;
+  AXES.forEach(a => {
+    s += `<path d="${path(r[a.k])}" fill="none" stroke="var(${a.css})" stroke-width="2" stroke-linejoin="round"/>`;
+  });
+  s += `<path d="${path(r.gamma)}" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>`;
+
+  const last = a => a[a.length - 1];
+  const labels = AXES.map(a => ({txt:a.en, col:`var(${a.css})`, w:400, y:y(last(r[a.k]))}))
+    .concat([{txt:"Γsc", col:"var(--ink)", w:600, y:y(last(r.gamma))}])
+    .sort((p, q) => p.y - q.y);
+  for (let i = 1; i < labels.length; i++)
+    if (labels[i].y - labels[i-1].y < 13) labels[i].y = labels[i-1].y + 13;
+  const overflow = last(labels).y - (H - m.b);
+  if (overflow > 0) labels.forEach(l => l.y -= overflow);
+  labels.forEach(l => {
+    s += `<text x="${W-m.r+6}" y="${(l.y+4).toFixed(1)}" font-size="11" font-family="var(--mono)"`
+       + ` font-weight="${l.w}" fill="${l.col}">${l.txt}</text>`;
+  });
+  s += `<line id="cross" x1="0" y1="${m.t}" x2="0" y2="${H-m.b}" stroke="var(--accent)" stroke-width="1" opacity="0"/>`;
+  $("chart").innerHTML = s;
+
+  const tip = $("tip"), chart = $("chart");
+  chart.onmousemove = ev => {
+    const bb = chart.getBoundingClientRect();
+    const px = (ev.clientX - bb.left) / bb.width * W;
+    const day = clamp((px - m.l) / (W - m.l - m.r) * 730, 0, 730);
+    const i = clamp(Math.round(day / 5), 0, r.t.length - 1);
+    const cr = chart.querySelector("#cross");
+    cr.setAttribute("x1", x(r.t[i])); cr.setAttribute("x2", x(r.t[i])); cr.setAttribute("opacity", "1");
+    tip.hidden = false;
+    tip.innerHTML = `<div class="r"><span>day ${r.t[i]}</span></div>`
+      + AXES.map(a => `<div class="r"><span style="color:var(${a.css})">${a.en}</span><b>${r[a.k][i].toFixed(3)}</b></div>`).join("")
+      + `<div class="r" style="border-top:1px solid var(--hair);margin-top:3px;padding-top:3px"><span>Γsc</span><b>${r.gamma[i].toFixed(3)}</b></div>`
+      + `<div class="r"><span>cumulative events</span><b>${pct(r.risk[i])}</b></div>`;
+    tip.style.left = clamp(x(r.t[i]) / W * bb.width + 12, 0, bb.width - 160) + "px";
+    tip.style.top = "8px";
+  };
+  chart.onmouseleave = () => {
+    tip.hidden = true;
+    const cr = chart.querySelector("#cross"); if (cr) cr.setAttribute("opacity", "0");
+  };
+}
+
+function drawList(){
+  const bed = MODEL.beds[les.bed];
+  const max = Math.max(...list.map(o => o.r.risk12), bed.lambda0 * 1.4, 0.02);
+  $("shortlist").querySelector("tbody").innerHTML = list.map((o, i) => {
+    const d = DEV[o.plan.device], ax = AXES.find(a => a.k === o.r.worst);
+    const over = o.r.risk12 > bed.lambda0;
+    return `<tr data-i="${i}" class="${i === picked ? "pick" : ""}">
+      <td>${d.name}</td>
+      <td class="num">${o.plan.nominal_d.toFixed(2)}×${o.plan.length.toFixed(0)}${o.plan.n_devices > 1 ? " ×" + o.plan.n_devices : ""}</td>
+      <td>${PREPNAME[o.plan.prep]}${o.plan.postdilate ? " + post-dil" : ""}</td>
+      <td class="num">${o.r.gamma[0].toFixed(3)}</td>
+      <td class="num">${isNaN(o.r.tau_sc) ? "—" : Math.round(o.r.tau_sc)}</td>
+      <td><span class="chip" style="cursor:default"><i class="dot" style="background:var(${ax.css})"></i>${ax.en}</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div class="rbar"><i class="${over ? "over" : ""}" style="width:${(100*o.r.risk12/max).toFixed(1)}%"></i>
+        <u style="left:${(100*bed.lambda0/max).toFixed(1)}%"></u></div>
+        <span class="num" style="font-size:12.5px">${pct(o.r.risk12)}</span></div></td></tr>`;
+  }).join("");
+  $("shortlist").querySelector("tbody").onclick = e => {
+    const tr = e.target.closest("tr[data-i]"); if (!tr) return;
+    picked = +tr.dataset.i; plan = Object.assign({}, list[picked].plan);
+    $("prep").value = plan.prep;
+    $("postdil").setAttribute("aria-pressed", String(!!plan.postdilate));
+    render();
+  };
+}
+
+try {
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
+  $("themeBtn").textContent = dark ? "Light" : "Dark";
+  $("themeBtn").setAttribute("aria-pressed", String(dark));
+} catch (e) {}
+syncInputs();
+recompute(true);
+</script>
+</body>
+</html>

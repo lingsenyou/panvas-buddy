@@ -1,0 +1,771 @@
+<title>泛血管匹配度工作台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#f5f7f8; --panel:#ffffff; --panel-2:#eef1f3;
+  --ink:#10151b; --ink-2:#414c58; --muted:#6c7884; --hair:#dbe1e6;
+  --accent:#0a6d9e; --accent-soft:#e4eef4;
+  --axis-g:#0a6d9e; --axis-m:#c2692a; --axis-h:#7a5ea8; --axis-b:#2f8f5b;
+  --alarm:#a8332a; --alarm-soft:#f6e4e1;
+  --shadow:0 1px 2px rgba(16,21,27,.06), 0 8px 24px rgba(16,21,27,.05);
+  --sans:"Barlow","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --cond:"Barlow Condensed","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14181d; --panel:#1b2027; --panel-2:#222831;
+  --ink:#e7ebef; --ink-2:#b6c0ca; --muted:#8d98a5; --hair:#2b323b;
+  --accent:#2e93c4; --accent-soft:#1c2c38;
+  --axis-g:#2e93c4; --axis-m:#c87a35; --axis-h:#9179c4; --axis-b:#46a06b;
+  --alarm:#d9756a; --alarm-soft:#33211f;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+}}
+:root[data-theme="dark"]{
+  --bg:#14181d; --panel:#1b2027; --panel-2:#222831;
+  --ink:#e7ebef; --ink-2:#b6c0ca; --muted:#8d98a5; --hair:#2b323b;
+  --accent:#2e93c4; --accent-soft:#1c2c38;
+  --axis-g:#2e93c4; --axis-m:#c87a35; --axis-h:#9179c4; --axis-b:#46a06b;
+  --alarm:#d9756a; --alarm-soft:#33211f;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;
+  line-height:1.5;-webkit-font-smoothing:antialiased;padding:0 16px;margin:0}
+.wrap{max-width:1220px;margin:0 auto;padding-block:20px 56px}
+h1,h2,h3{margin:0;text-wrap:balance}
+.eyebrow{font-family:var(--cond);text-transform:uppercase;letter-spacing:.10em;
+  font-size:12px;font-weight:600;color:var(--muted)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* header */
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px;
+  padding-block:8px 14px;border-bottom:1px solid var(--hair)}
+header h1{font-family:var(--cond);font-size:clamp(26px,4.4vw,38px);font-weight:700;
+  letter-spacing:.01em;line-height:1.05}
+header .sub{color:var(--ink-2);font-size:14px;max-width:62ch}
+.warn{margin-top:14px;display:flex;gap:10px;align-items:flex-start;
+  background:var(--alarm-soft);border-left:3px solid var(--alarm);
+  padding:10px 14px;font-size:13.5px;color:var(--ink-2);border-radius:0 4px 4px 0}
+.warn b{color:var(--ink)}
+
+/* layout */
+.grid{display:grid;grid-template-columns:330px minmax(0,1fr);gap:20px;margin-top:20px}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--hair);border-radius:8px;
+  padding:16px;box-shadow:var(--shadow)}
+.stack{display:flex;flex-direction:column;gap:18px}
+
+/* form */
+.beds{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:16px}
+.beds button{font-family:var(--cond);font-size:14px;font-weight:600;letter-spacing:.02em;
+  padding:7px 4px;background:var(--panel-2);color:var(--ink-2);border:1px solid transparent;
+  border-radius:5px;cursor:pointer;transition:background .12s,color .12s}
+.beds button:hover{background:var(--accent-soft)}
+.beds button[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.field{margin-bottom:13px}
+.field label{display:flex;justify-content:space-between;align-items:baseline;
+  font-size:12.5px;color:var(--ink-2);margin-bottom:3px;gap:8px}
+.field label .v{font-family:var(--mono);font-size:12.5px;color:var(--ink);font-weight:500}
+input[type=range]{width:100%;accent-color:var(--accent);margin:0}
+.toggles{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.toggles button{font-size:12.5px;padding:5px 10px;border-radius:99px;cursor:pointer;
+  background:var(--panel-2);color:var(--ink-2);border:1px solid var(--hair);font-family:var(--sans)}
+.toggles button[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+select{width:100%;font-family:var(--sans);font-size:13.5px;padding:6px 8px;
+  background:var(--panel-2);color:var(--ink);border:1px solid var(--hair);border-radius:5px}
+.hint{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.45}
+
+/* headline tiles */
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair);
+  border:1px solid var(--hair);border-radius:8px;overflow:hidden}
+@media (max-width:560px){.tiles{grid-template-columns:1fr}}
+.tile{background:var(--panel);padding:14px 16px}
+.tile .k{font-family:var(--cond);text-transform:uppercase;letter-spacing:.09em;
+  font-size:11.5px;font-weight:600;color:var(--muted)}
+.tile .n{font-family:var(--mono);font-size:30px;font-weight:600;line-height:1.15;
+  margin-top:3px;font-variant-numeric:tabular-nums}
+.tile .d{font-size:12px;color:var(--ink-2);margin-top:2px}
+.tile.risk .n.over{color:var(--alarm)}
+
+/* axis bars */
+.axrow{display:grid;grid-template-columns:118px minmax(0,1fr) 54px;align-items:center;
+  gap:10px;padding:5px 0}
+.axrow .name{font-size:13px;color:var(--ink-2)}
+.axrow .name b{color:var(--ink);font-family:var(--mono);font-size:12.5px;margin-right:5px}
+.track{height:12px;background:var(--panel-2);border-radius:3px;position:relative;overflow:hidden}
+.bar{height:100%;border-radius:0 3px 3px 0}
+.axrow .val{font-family:var(--mono);font-size:13px;text-align:right;font-variant-numeric:tabular-nums}
+.wgt{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+
+/* chart */
+.chartbox{position:relative}
+svg{display:block;width:100%;height:auto;overflow:visible}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:8px;font-size:12px;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.swatch{width:14px;height:3px;border-radius:2px;display:inline-block}
+.tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--hair);
+  border-radius:5px;padding:7px 9px;font-size:12px;box-shadow:var(--shadow);min-width:132px;z-index:5}
+.tip .r{display:flex;justify-content:space-between;gap:12px}
+.tip .r b{font-family:var(--mono);font-weight:500}
+
+/* table */
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{font-family:var(--cond);text-transform:uppercase;letter-spacing:.07em;font-size:11.5px;
+  font-weight:600;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1px solid var(--hair);
+  white-space:nowrap}
+td{padding:7px 8px;border-bottom:1px solid var(--hair);vertical-align:middle}
+tbody tr.pick{background:var(--accent-soft)}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--panel-2)}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;padding:2px 7px;
+  border-radius:99px;background:var(--panel-2);color:var(--ink-2);white-space:nowrap}
+.dot{width:7px;height:7px;border-radius:50%;flex:none}
+.rbar{height:9px;background:var(--panel-2);border-radius:2px;position:relative;min-width:60px}
+.rbar i{position:absolute;left:0;top:0;bottom:0;background:var(--ink-2);border-radius:0 2px 2px 0}
+.rbar i.over{background:var(--alarm)}
+.rbar u{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--accent);opacity:.75}
+.scroll{overflow-x:auto}
+
+/* feedback */
+.fbform{display:none;margin-top:12px;gap:10px;flex-direction:column}
+.fbform.on{display:flex}
+textarea{width:100%;font-family:var(--sans);font-size:13.5px;padding:8px;border-radius:5px;
+  background:var(--panel-2);color:var(--ink);border:1px solid var(--hair);resize:vertical}
+.btn{font-family:var(--sans);font-size:13.5px;font-weight:500;padding:8px 16px;border-radius:5px;
+  border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn:disabled{opacity:.5;cursor:default}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cases{margin-top:12px;font-size:13px;color:var(--ink-2);display:flex;flex-direction:column;gap:7px}
+.case{border-left:2px solid var(--hair);padding-left:10px}
+.case .m{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--hair);
+  font-size:12.5px;color:var(--muted);line-height:1.6}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <h1>泛血管匹配度工作台</h1>
+  <div class="sub">器械与血管的失配是四条轴上的同一个量。输入病变，读 Γ<sub>sc</sub>(t)、时间常数 τ<sub>sc</sub>，和按预测 12 个月事件率排序的器械候选。</div>
+</header>
+<div class="warn">
+  <div><b>研究原型，未经临床验证。</b>算子的自由常数只拟合了 16 条已发表的 12 个月终点率，没有任何患者级数据参与。所有数字都是模型输出，<b>不得用于患者决策</b>。</div>
+</div>
+
+<div class="grid">
+  <aside class="panel">
+    <div class="eyebrow" style="margin-bottom:8px">血管床</div>
+    <div class="beds" id="beds"></div>
+
+    <div class="field"><label>近端参考直径 <span class="v" id="lp">—</span></label>
+      <input type="range" id="d_prox" min="1.5" max="11" step="0.05"></div>
+    <div class="field"><label>远端参考直径 <span class="v" id="ld">—</span></label>
+      <input type="range" id="d_dist" min="1.5" max="11" step="0.05"></div>
+    <div class="field"><label>病变长度 <span class="v" id="ll">—</span></label>
+      <input type="range" id="length" min="5" max="260" step="1"></div>
+    <div class="field"><label>钙化 <span class="v" id="lc">—</span></label>
+      <input type="range" id="calcium" min="0" max="1" step="0.02"></div>
+    <div class="field"><label>迂曲 <span class="v" id="lt">—</span></label>
+      <input type="range" id="tortuosity" min="0" max="1" step="0.02"></div>
+    <div class="field"><label>炎症负荷 <span class="v" id="li">—</span></label>
+      <input type="range" id="inflammation" min="0" max="1" step="0.02"></div>
+    <div class="field" id="runoffField"><label>远端流出道 <span class="v" id="lr">—</span></label>
+      <input type="range" id="runoff" min="0" max="3" step="1"></div>
+
+    <div class="eyebrow" style="margin:14px 0 6px">病变特征</div>
+    <div class="toggles" id="flags"></div>
+
+    <div class="eyebrow" style="margin:16px 0 6px">术式</div>
+    <div class="field"><label for="prep">病变预处理</label><select id="prep"></select></div>
+    <div class="toggles"><button id="postdil" aria-pressed="false">高压后扩张</button></div>
+
+    <p class="hint" id="bednote"></p>
+  </aside>
+
+  <main class="stack">
+    <div class="tiles">
+      <div class="tile"><div class="k">Γsc 即刻</div><div class="n" id="t_g0">—</div>
+        <div class="d" id="t_g0d">四轴加权几何平均</div></div>
+      <div class="tile"><div class="k">τsc 时间常数</div><div class="n" id="t_tau">—</div>
+        <div class="d" id="t_taud">失配演化的特征时间</div></div>
+      <div class="tile risk"><div class="k">12 个月事件率</div><div class="n" id="t_risk">—</div>
+        <div class="d" id="t_riskd">—</div></div>
+    </div>
+
+    <section class="panel">
+      <h2 class="eyebrow">四轴分解 · 即刻</h2>
+      <div id="axes" style="margin-top:10px"></div>
+      <p class="hint" id="axhint"></p>
+    </section>
+
+    <section class="panel">
+      <h2 class="eyebrow">Γ(t) 轨迹 · 0–24 个月</h2>
+      <div class="chartbox" id="chartbox" style="margin-top:8px">
+        <svg id="chart" viewBox="0 0 720 300" role="img" aria-label="四轴与总匹配度随时间的轨迹"></svg>
+        <div class="tip" id="tip" hidden></div>
+      </div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <section class="panel">
+      <h2 class="eyebrow">器械候选 · 按预测 12 个月事件率排序</h2>
+      <div class="scroll"><table id="shortlist">
+        <thead><tr><th>器械</th><th>规格</th><th>预处理</th><th>Γsc</th><th>τsc</th>
+          <th>最弱轴</th><th style="width:150px">12 个月事件率</th></tr></thead>
+        <tbody></tbody></table></div>
+      <p class="hint">点击任一行可把该方案载入上方的图表。蓝色竖线是该血管床最佳实践的参考事件率（λ₀）。<br>
+        算子里<b>没有费用、并发症、手术时间和造影剂量</b>这些项，所以它几乎总会建议最充分的预处理。
+        这是模型的缺口，不是临床建议——预处理那一列要按你自己的判断读。</p>
+    </section>
+
+    <section class="panel">
+      <h2 class="eyebrow">不同意？把它变成一条任务</h2>
+      <p style="font-size:13.5px;color:var(--ink-2);margin:8px 0 0">
+        ScienceBuddy 的循环是：研究者的反馈变成任务与评分标准，再回去训练。这里的入口就是这个按钮——你写下你会怎么做以及为什么，它会连同当前病变一起存下来，成为重新标定算子的一条真实病例。</p>
+      <div class="toggles" style="margin-top:10px">
+        <button id="fbtoggle" aria-pressed="false">我会选别的</button></div>
+      <div class="fbform" id="fbform">
+        <div class="row2">
+          <div class="field"><label for="fb_dev">你会用</label><select id="fb_dev"></select></div>
+          <div class="field"><label>规格 <span class="v" id="fb_sz">—</span></label>
+            <div class="row2">
+              <input type="range" id="fb_d" min="1.5" max="13" step="0.25">
+              <input type="range" id="fb_l" min="8" max="300" step="2"></div></div>
+        </div>
+        <textarea id="fb_why" rows="3" placeholder="为什么？算子在这个病变上错在哪一轴？"></textarea>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button class="btn" id="fb_save">存为病例</button>
+          <span class="hint" id="fb_status" style="margin:0"></span></div>
+      </div>
+      <div class="cases" id="cases"></div>
+    </section>
+  </main>
+</div>
+
+<footer>
+  算子、标定脚本与实验：<span class="num">panvas_buddy</span>。自由常数由 16 条已发表 12 个月终点率拟合，平均绝对误差 3.5 个百分点。
+  器械参数为各类器械的代表性公开数值，非具体商品规格。
+</footer>
+</div>
+
+<script>const MODEL = {"theta":{"s_under":0.1241174633783434,"s_over":0.11,"k_comp":2.004520358664538,"k_stress":0.05000000000000001,"k_fat":11.727596428322157,"drug_K":0.16073230776363256,"k_short":13.999999999999998,"need_scale":1.5364637767919531,"k_lumen":0.3275278902326173,"k_strut":1.9999999999999998,"nih_max_um":822.4122343888544,"beta":6.042386165197317,"gamma_star":0.9},"axisWeights":{"G":{"size":0.4,"coverage":0.24,"conform":0.18,"taper":0.18},"M":{"compliance":0.38,"stress":0.34,"fatigue":0.28},"H":{"lumen":0.5,"struts":0.32,"branch":0.18},"B":{"drug":0.58,"healing":0.42}},"tauNih":120.0,"tauDrive":210.0,"beds":{"coronary":{"key":"coronary","name_cn":"冠状动脉","d_ref":[2.25,4.0],"compliance":4.0,"wss0":15.0,"k_neointima":1.0,"cyclic_strain":0.55,"tau_endo":60.0,"tau_remodel":90.0,"lambda0":0.045,"oversize_band":[0.95,1.12],"w_axes":[0.3,0.22,0.2,0.28],"notes":"DES 12-mo TLF 4-6% in contemporary trials; cardiac-cycle bending only."},"sfa":{"key":"sfa","name_cn":"股浅动脉","d_ref":[4.5,7.0],"compliance":2.5,"wss0":8.0,"k_neointima":1.6,"cyclic_strain":1.0,"tau_endo":90.0,"tau_remodel":120.0,"lambda0":0.024,"oversize_band":[1.05,1.25],"w_axes":[0.24,0.36,0.16,0.24],"notes":"Worst mechanical environment: hip/knee flexion -> axial compression, torsion, bending. Stent fracture is a real failure mode, so the mechanical axis carries the largest weight here."},"btk":{"key":"btk","name_cn":"膝下动脉","d_ref":[2.0,3.5],"compliance":2.0,"wss0":5.0,"k_neointima":1.8,"cyclic_strain":0.8,"tau_endo":120.0,"tau_remodel":150.0,"lambda0":0.12,"oversize_band":[0.95,1.1],"w_axes":[0.22,0.24,0.26,0.28],"notes":"Low flow, small calibre, diffuse disease, CLTI patients. Restenosis rates are the highest of any bed."},"carotid":{"key":"carotid","name_cn":"颈动脉","d_ref":[4.5,9.0],"compliance":7.0,"wss0":12.0,"k_neointima":0.6,"cyclic_strain":0.15,"tau_endo":45.0,"tau_remodel":90.0,"lambda0":0.035,"oversize_band":[1.1,1.5],"w_axes":[0.34,0.18,0.24,0.24],"notes":"Deliberate large oversizing with self-expanding nitinol; dominant early risk is embolic, not restenotic."},"renal":{"key":"renal","name_cn":"肾动脉","d_ref":[4.0,7.0],"compliance":5.0,"wss0":12.0,"k_neointima":1.3,"cyclic_strain":0.4,"tau_endo":60.0,"tau_remodel":90.0,"lambda0":0.14,"oversize_band":[0.95,1.12],"w_axes":[0.32,0.22,0.2,0.26],"notes":"Ostial aorto-renal lesions; respiratory excursion drives cyclic strain."},"iliac":{"key":"iliac","name_cn":"髂动脉","d_ref":[6.0,10.0],"compliance":3.0,"wss0":10.0,"k_neointima":0.8,"cyclic_strain":0.2,"tau_endo":60.0,"tau_remodel":90.0,"lambda0":0.045,"oversize_band":[0.98,1.18],"w_axes":[0.32,0.24,0.2,0.24],"notes":"Large calibre, high flow; failures are mostly mechanical/edge."}},"gammaStar":{"coronary":0.7665797036297145,"sfa":0.7550389525496015,"btk":0.3758228311664221,"carotid":0.7157470644959747,"renal":0.5021896870738674,"iliac":0.6962503667577401},"devices":[{"key":"des_ultrathin","name":"Ultrathin-strut DES (60 um, sirolimus)","family":"DES","expansion":"balloon","beds":["coronary"],"d_range":[2.25,4.0],"l_max":40,"strut_um":60,"radial_force":1.0,"compliance_dev":0.3,"conformability":0.8,"fatigue_resist":0.9,"drug":"sirolimus","dose_ug_mm2":1.4,"drug_tau_d":90,"degrade_tau_d":null,"recoil":0.03,"crossing_mm":1.05,"note":"Contemporary workhorse; thin struts minimise flow disturbance."},{"key":"des_thin","name":"Thin-strut DES (81 um, everolimus)","family":"DES","expansion":"balloon","beds":["coronary","renal","btk"],"d_range":[2.25,4.0],"l_max":48,"strut_um":81,"radial_force":1.0,"compliance_dev":0.3,"conformability":0.75,"fatigue_resist":0.88,"drug":"everolimus","dose_ug_mm2":1.0,"drug_tau_d":90,"degrade_tau_d":null,"recoil":0.03,"crossing_mm":1.1,"note":""},{"key":"brs_plla","name":"PLLA BRS, 150 um (XINSORB-class)","family":"BRS","expansion":"balloon","beds":["coronary"],"d_range":[2.5,3.5],"l_max":33,"strut_um":150,"radial_force":0.62,"compliance_dev":0.8,"conformability":0.55,"fatigue_resist":0.7,"drug":"sirolimus","dose_ug_mm2":1.4,"drug_tau_d":90,"degrade_tau_d":900,"recoil":0.06,"crossing_mm":1.45,"note":"Compliance converges to the wall as the scaffold resorbs; the price is a thick strut for the first year."},{"key":"brs_thin","name":"Next-generation thin BRS (100 um)","family":"BRS","expansion":"balloon","beds":["coronary"],"d_range":[2.5,4.0],"l_max":36,"strut_um":100,"radial_force":0.72,"compliance_dev":0.7,"conformability":0.62,"fatigue_resist":0.75,"drug":"sirolimus","dose_ug_mm2":1.4,"drug_tau_d":90,"degrade_tau_d":730,"recoil":0.05,"crossing_mm":1.25,"note":""},{"key":"dcb_ptx_cor","name":"Coronary DCB (paclitaxel 3.0 ug/mm2)","family":"DCB","expansion":"none","beds":["coronary","btk"],"d_range":[2.0,4.0],"l_max":40,"strut_um":0,"radial_force":0.0,"compliance_dev":null,"conformability":1.0,"fatigue_resist":1.0,"drug":"paclitaxel","dose_ug_mm2":3.0,"drug_tau_d":45,"degrade_tau_d":null,"recoil":0.28,"crossing_mm":0.85,"note":"Leaves nothing behind: no compliance mismatch, no scaffolding either."},{"key":"dcb_siro_cor","name":"Coronary sirolimus DCB","family":"DCB","expansion":"none","beds":["coronary","btk"],"d_range":[2.0,4.0],"l_max":40,"strut_um":0,"radial_force":0.0,"compliance_dev":null,"conformability":1.0,"fatigue_resist":1.0,"drug":"sirolimus","dose_ug_mm2":3.5,"drug_tau_d":30,"degrade_tau_d":null,"recoil":0.28,"crossing_mm":0.9,"note":""},{"key":"bms","name":"Bare-metal stent","family":"BMS","expansion":"balloon","beds":["coronary","renal","iliac"],"d_range":[2.5,5.0],"l_max":38,"strut_um":110,"radial_force":1.0,"compliance_dev":0.3,"conformability":0.7,"fatigue_resist":0.85,"drug":"none","dose_ug_mm2":0.0,"drug_tau_d":1,"degrade_tau_d":null,"recoil":0.03,"crossing_mm":1.15,"note":"Comparator arm."},{"key":"se_nitinol","name":"Self-expanding nitinol stent","family":"SE","expansion":"self","beds":["sfa","iliac","renal"],"d_range":[5.0,10.0],"l_max":200,"strut_um":200,"radial_force":0.28,"compliance_dev":1.5,"conformability":0.85,"fatigue_resist":0.72,"drug":"none","dose_ug_mm2":0.0,"drug_tau_d":1,"degrade_tau_d":null,"recoil":0.02,"crossing_mm":1.8,"note":""},{"key":"se_ptx","name":"Paclitaxel-eluting nitinol stent","family":"SE-DES","expansion":"self","beds":["sfa","iliac"],"d_range":[5.0,8.0],"l_max":200,"strut_um":200,"radial_force":0.3,"compliance_dev":1.5,"conformability":0.85,"fatigue_resist":0.74,"drug":"paclitaxel","dose_ug_mm2":3.0,"drug_tau_d":120,"degrade_tau_d":null,"recoil":0.02,"crossing_mm":1.85,"note":""},{"key":"se_interwoven","name":"Interwoven nitinol stent","family":"SE","expansion":"self","beds":["sfa"],"d_range":[4.5,7.5],"l_max":150,"strut_um":250,"radial_force":0.6,"compliance_dev":1.1,"conformability":0.7,"fatigue_resist":0.96,"drug":"none","dose_ug_mm2":0.0,"drug_tau_d":1,"degrade_tau_d":null,"recoil":2.0,"crossing_mm":2.1,"note":"Built for the flexion zone: highest fatigue resistance in the catalogue."},{"key":"covered","name":"ePTFE covered stent-graft","family":"COVERED","expansion":"self","beds":["sfa","iliac"],"d_range":[5.0,13.0],"l_max":250,"strut_um":300,"radial_force":0.45,"compliance_dev":0.6,"conformability":0.65,"fatigue_resist":0.8,"drug":"none","dose_ug_mm2":0.0,"drug_tau_d":1,"degrade_tau_d":null,"recoil":0.02,"crossing_mm":2.6,"note":"Excludes the wall from the lumen: no in-stent neointima, but edge hyperplasia and side-branch loss."},{"key":"dcb_periph","name":"Peripheral DCB (paclitaxel 3.5 ug/mm2)","family":"DCB","expansion":"none","beds":["sfa","btk","iliac"],"d_range":[2.0,7.0],"l_max":250,"strut_um":0,"radial_force":0.0,"compliance_dev":null,"conformability":1.0,"fatigue_resist":1.0,"drug":"paclitaxel","dose_ug_mm2":3.5,"drug_tau_d":90,"degrade_tau_d":null,"recoil":0.3,"crossing_mm":1.1,"note":""},{"key":"poba","name":"Plain balloon angioplasty","family":"POBA","expansion":"none","beds":["coronary","sfa","btk","iliac","renal"],"d_range":[1.5,12.0],"l_max":300,"strut_um":0,"radial_force":0.0,"compliance_dev":null,"conformability":1.0,"fatigue_resist":1.0,"drug":"none","dose_ug_mm2":0.0,"drug_tau_d":1,"degrade_tau_d":null,"recoil":0.32,"crossing_mm":0.8,"note":""},{"key":"car_closed","name":"Closed-cell carotid nitinol stent","family":"SE","expansion":"self","beds":["carotid"],"d_range":[6.0,10.0],"l_max":40,"strut_um":180,"radial_force":0.32,"compliance_dev":1.4,"conformability":0.6,"fatigue_resist":0.9,"drug":"none","dose_ug_mm2":0.0,"drug_tau_d":1,"degrade_tau_d":null,"recoil":0.02,"crossing_mm":1.7,"note":""},{"key":"car_dual","name":"Dual-layer micromesh carotid stent","family":"SE","expansion":"self","beds":["carotid"],"d_range":[6.0,10.0],"l_max":60,"strut_um":200,"radial_force":0.34,"compliance_dev":1.3,"conformability":0.7,"fatigue_resist":0.9,"drug":"none","dose_ug_mm2":0.0,"drug_tau_d":1,"degrade_tau_d":null,"recoil":0.02,"crossing_mm":1.9,"note":"Micromesh traps plaque; denser mesh is a hemodynamic cost."}],"prep":{"none":{"ca_relief":0.0,"injury":0.0,"label":"无预处理"},"noncomp":{"ca_relief":0.2,"injury":0.05,"label":"非顺应性球囊"},"scoring":{"ca_relief":0.45,"injury":0.1,"label":"切割/棘突球囊"},"atherec":{"ca_relief":0.65,"injury":0.18,"label":"旋磨/旋切"},"ivl":{"ca_relief":0.75,"injury":0.04,"label":"血管内冲击波(IVL)"}}};</script>
+<script>
+"use strict";
+/* ---------------------------------------------------------------
+   suitcordance operator, ported 1:1 from panvas/suitcordance.py
+   --------------------------------------------------------------- */
+const TAU_NIH = MODEL.tauNih, TAU_DRIVE = MODEL.tauDrive, TH = MODEL.theta;
+const WG = MODEL.axisWeights.G, WM = MODEL.axisWeights.M,
+      WH = MODEL.axisWeights.H, WB = MODEL.axisWeights.B;
+const DEV = {}; MODEL.devices.forEach(d => DEV[d.key] = d);
+const POTENCY = {none:0, paclitaxel:1.0, sirolimus:1.25, everolimus:1.20};
+
+const dRef = l => 0.5 * (l.d_prox + l.d_dist);
+const taper = l => Math.max(0, (l.d_prox - l.d_dist) / Math.max(l.d_prox, 1e-6));
+const clamp = (x, a, b) => Math.min(Math.max(x, a), b);
+
+function caEff(les, plan){ return les.calcium * (1 - MODEL.prep[plan.prep].ca_relief); }
+
+function deployed(les, plan, t){
+  const dev = DEV[plan.device], bed = MODEL.beds[les.bed];
+  const dv = dRef(les), ca = caEff(les, plan);
+  const resist = 1 - 0.22 * Math.pow(ca, 1.5) * (plan.postdilate ? 0.55 : 1);
+  let d0, dInf, tau;
+  if (dev.expansion === "balloon"){
+    d0 = plan.nominal_d * resist * (1 - dev.recoil);
+    if (dev.degrade_tau_d){ dInf = d0 * 1.05; tau = dev.degrade_tau_d; }
+    else { dInf = d0 * 1.01; tau = bed.tau_remodel; }
+  } else if (dev.expansion === "self"){
+    const gap = Math.max(0, plan.nominal_d - dv);
+    d0 = dv + gap * 0.55 * (1 - 0.40 * ca);
+    dInf = dv + gap * 0.90; tau = 60;
+  } else {
+    const elastic = bed.compliance / 4;
+    const recoil = Math.min(0.55, dev.recoil * (0.75 + 0.45 * elastic) * (1 - 0.35 * ca));
+    d0 = plan.nominal_d * resist * (1 - recoil);
+    dInf = d0 * 0.96; tau = 90;
+  }
+  return t.map(x => dInf + (d0 - dInf) * Math.exp(-x / tau));
+}
+
+function injuryIndex(les, plan){
+  const dev = DEV[plan.device];
+  const strain = Math.max(0, (plan.nominal_d - dRef(les)) / dRef(les));
+  const ca = caEff(les, plan);
+  return clamp(strain * (1 + 1.2 * ca) * 2.2 + MODEL.prep[plan.prep].injury
+               + 0.10 * (plan.postdilate ? 1 : 0) + 0.25 * (dev.strut_um / 150), 0, 1.5);
+}
+
+function driveOf(les, injury){
+  const bed = MODEL.beds[les.bed];
+  return bed.k_neointima * (1 + 0.35 * (les.diabetes ? 1 : 0))
+       * (1 + 0.60 * injury) * (1 + 0.40 * les.inflammation);
+}
+
+function drugEffect(les, plan, t){
+  const dev = DEV[plan.device];
+  if (dev.drug === "none" || dev.dose_ug_mm2 <= 0) return t.map(() => 0);
+  const bed = MODEL.beds[les.bed];
+  const drive = bed.k_neointima * (1 + 0.35 * (les.diabetes ? 1 : 0));
+  const scale = (dev.family === "DCB" || dev.family === "POBA") ? 0.85 : 1;
+  return t.map(x => {
+    const conc = dev.dose_ug_mm2 * POTENCY[dev.drug] * Math.exp(-x / dev.drug_tau_d) * scale;
+    const a = Math.pow(conc / (TH.drug_K * drive), 1.2);
+    return a / (a + 1);
+  });
+}
+
+function gammaG(les, plan, dd){
+  const dev = DEV[plan.device], bed = MODEL.beds[les.bed], dv = dRef(les);
+  let lo = bed.oversize_band[0], hi = bed.oversize_band[1], ratio = null;
+  if (dev.expansion === "none"){ lo = 0.95; hi = 1.10; ratio = plan.nominal_d / dv; }
+  const margin = (plan.length * plan.n_devices - les.length) / 2;
+  const cov = margin < 0 ? Math.exp(-Math.pow(margin / 1.8, 2))
+            : margin > 5 ? Math.exp(-Math.pow((margin - 5) / 9, 2)) : 1;
+  const conf = Math.exp(-2.6 * Math.pow(les.tortuosity * (1 - dev.conformability), 2));
+  const tl = taper(les) * (1 - 0.45 * (dev.expansion === "self" ? 1 : 0))
+           * Math.min(1, plan.length / 40);
+  const tap = Math.exp(-5 * tl * tl);
+  const k = Math.pow(cov, WG.coverage) * Math.pow(conf, WG.conform) * Math.pow(tap, WG.taper);
+  return dd.map(d => {
+    const r = ratio === null ? d / dv : ratio;
+    const size = r < lo ? Math.exp(-Math.pow((lo - r) / TH.s_under, 2))
+               : r > hi ? Math.exp(-Math.pow((r - hi) / TH.s_over, 2)) : 1;
+    return Math.pow(size, WG.size) * k;
+  });
+}
+
+function gammaM(les, plan, t, dd){
+  const dev = DEV[plan.device], bed = MODEL.beds[les.bed];
+  const cWall = bed.compliance * (1 - 0.60 * caEff(les, plan));
+  const epsTol = 0.115 * Math.sqrt(Math.max(cWall, 0.4) / 4);
+  let fatLoad = 0;
+  if (dev.expansion !== "none")
+    fatLoad = bed.cyclic_strain * (1 - dev.fatigue_resist)
+            * (0.6 + 0.4 * Math.min(1, plan.length * plan.n_devices / 120));
+  return t.map((x, i) => {
+    let comp = 1;
+    if (dev.compliance_dev !== null){
+      let cDev = dev.compliance_dev;
+      if (dev.degrade_tau_d)
+        cDev += (cWall - dev.compliance_dev) * (1 - Math.exp(-x / dev.degrade_tau_d));
+      const mm = Math.abs(cDev - cWall) / (cDev + cWall);
+      comp = Math.exp(-TH.k_comp * mm * mm);
+    }
+    const eps = Math.max(0, (dd[i] - dRef(les)) / dRef(les));
+    const stress = Math.exp(-Math.pow(eps / epsTol, 2) * TH.k_stress);
+    const fat = dev.expansion === "none" ? 1
+      : Math.exp(-TH.k_fat * fatLoad * fatLoad * (1 - Math.exp(-x / 365)));
+    return Math.pow(comp, WM.compliance) * Math.pow(stress, WM.stress) * Math.pow(fat, WM.fatigue);
+  });
+}
+
+function gammaH(les, plan, t, dd, nih){
+  const dev = DEV[plan.device], bed = MODEL.beds[les.bed], dv = dRef(les);
+  const rawStrut = (dev.strut_um / 100) * Math.sqrt(3 / Math.max(dv, 1))
+                 * Math.sqrt(15 / bed.wss0);
+  const tauCov = bed.tau_endo * (1 + 0.9 * (dev.drug !== "none" ? 1 : 0));
+  let branch = 1;
+  if (les.side_branch && dev.family === "COVERED") branch = 0.35;
+  else if (les.bifurcation && dev.strut_um > 0) branch = 0.80 - 0.10 * (dev.strut_um > 120 ? 1 : 0);
+  if ((les.bed === "sfa" || les.bed === "btk") && les.runoff <= 1) branch *= 0.80;
+  const kBranch = Math.pow(branch, WH.branch);
+  return t.map((x, i) => {
+    const dl = Math.max(dd[i] - 2 * (dev.strut_um + nih[i]) / 1000, 0.25);
+    const resid = clamp(1 - dl / dv, 0, 1);
+    const lumen = Math.exp(-Math.pow(resid / TH.k_lumen, 2));
+    const struts = dev.strut_um <= 0 ? 1
+      : Math.exp(-TH.k_strut * rawStrut * (1 - 0.75 * (1 - Math.exp(-x / tauCov))));
+    return Math.pow(lumen, WH.lumen) * Math.pow(struts, WH.struts) * kBranch;
+  });
+}
+
+function gammaB(les, plan, t, injury, de){
+  const dev = DEV[plan.device], bed = MODEL.beds[les.bed];
+  const drive = driveOf(les, injury);
+  let healing = 1;
+  if (dev.strut_um > 0){
+    const w = bed.tau_endo * (1 + 0.90 * (dev.drug !== "none" ? 1 : 0))
+            * (1 + 0.55 * (dev.strut_um / 150));
+    healing = Math.exp(-Math.pow(w / 260, 2));
+    if (dev.degrade_tau_d)
+      healing *= Math.exp(-0.45 * Math.pow(Math.abs(Math.log(dev.degrade_tau_d / (6 * w))), 2));
+  }
+  const kh = Math.pow(healing, WB.healing);
+  return t.map((x, i) => {
+    const driveT = 0.30 * drive + 0.70 * drive * Math.exp(-x / TAU_DRIVE);
+    const need = Math.max(driveT / TH.need_scale, 0.02);
+    const sf = Math.max(need - de[i], 0) / (1 + need);
+    return Math.pow(Math.exp(-TH.k_short * sf * sf), WB.drug) * kh;
+  });
+}
+
+function evaluateCase(les, plan, dt, horizon){
+  dt = dt || 5; horizon = horizon || 730;
+  const n = Math.round(horizon / dt) + 1;
+  const t = Array.from({length:n}, (_, i) => i * dt);
+  const bed = MODEL.beds[les.bed];
+
+  const dd = deployed(les, plan, t);
+  const injury = injuryIndex(les, plan);
+  const de = drugEffect(les, plan, t);
+  const nSix = Math.max(1, Math.round(180 / dt));
+  const deMean = de.slice(0, nSix).reduce((a, b) => a + b, 0) / nSix;
+  const nihMax = TH.nih_max_um * driveOf(les, injury) * (1 - 0.68 * deMean);
+  const nih = t.map(x => nihMax * (1 - Math.exp(-x / TAU_NIH)));
+
+  const cl = a => a.map(v => clamp(v, 1e-4, 1));
+  const G = cl(gammaG(les, plan, dd)), M = cl(gammaM(les, plan, t, dd));
+  const H = cl(gammaH(les, plan, t, dd, nih)), B = cl(gammaB(les, plan, t, injury, de));
+
+  const ws = bed.w_axes.reduce((a, b) => a + b, 0);
+  const w = bed.w_axes.map(v => v / ws);
+  const gamma = t.map((_, i) => Math.pow(G[i], w[0]) * Math.pow(M[i], w[1])
+                              * Math.pow(H[i], w[2]) * Math.pow(B[i], w[3]));
+
+  let tv = 0; const tvc = [0];
+  for (let i = 1; i < n; i++){ tv += Math.abs(gamma[i] - gamma[i-1]); tvc.push(tv); }
+  let tau_sc = NaN;
+  if (tv > 1e-9){
+    const target = 0.632 * tv;
+    for (let i = 1; i < n; i++)
+      if (tvc[i] >= target){
+        const f = (target - tvc[i-1]) / Math.max(tvc[i] - tvc[i-1], 1e-12);
+        tau_sc = t[i-1] + f * dt; break;
+      }
+  }
+  let area = 0;
+  for (let i = 1; i < n; i++) area += 0.5 * ((1 - gamma[i]) + (1 - gamma[i-1])) * dt;
+  const deficit = area / (t[n-1] - t[0]);
+
+  const lam0 = -Math.log(Math.max(1e-6, 1 - bed.lambda0)) / 365;
+  const gStar = MODEL.gammaStar[les.bed];
+  const lam = gamma.map(g => lam0 * Math.exp(TH.beta * (gStar - g)));
+  const risk = [0]; let ch = 0;
+  for (let i = 1; i < n; i++){ ch += 0.5 * (lam[i] + lam[i-1]) * dt; risk.push(1 - Math.exp(-ch)); }
+  const i365 = Math.min(n - 1, Math.floor(365 / dt));
+  const f365 = (365 - t[i365]) / dt;
+  const risk12 = i365 + 1 < n ? risk[i365] + f365 * (risk[i365+1] - risk[i365]) : risk[n-1];
+
+  const mean = a => a.reduce((x, y) => x + y, 0) / a.length;
+  const worst = ["G","M","H","B"][[mean(G), mean(M), mean(H), mean(B)]
+    .reduce((bi, v, i, arr) => v < arr[bi] ? i : bi, 0)];
+
+  return {t, G, M, H, B, gamma, tau_sc, deficit, risk, risk12, worst, weights:w};
+}
+
+/* candidate devices for a bed and calibre, same rule as devices.py */
+function candidates(bed, dv){
+  return MODEL.devices.filter(d => d.beds.includes(bed)
+    && d.d_range[0] <= dv * 1.45 && d.d_range[1] >= dv * 0.95);
+}
+const snap = (x, dev) => clamp(Math.round(x * 4) / 4, dev.d_range[0], dev.d_range[1]);
+
+function shortlist(les){
+  const dv = dRef(les), bed = MODEL.beds[les.bed], out = [];
+  for (const dev of candidates(les.bed, dv)){
+    let best = null;
+    const mults = dev.expansion === "self"
+      ? [bed.oversize_band[0], (bed.oversize_band[0] + bed.oversize_band[1]) / 2, bed.oversize_band[1]]
+      : [0.95, 1.0, 1.05, 1.12];
+    for (const m of mults){
+      const nd = snap(dv * m, dev);
+      for (const margin of [0, 2, 4]){
+        const want = les.length + 2 * margin;
+        const nDev = want > dev.l_max ? Math.max(1, Math.round(want / dev.l_max)) : 1;
+        const L = Math.min(dev.l_max, want / nDev);
+        for (const prep of ["none", "scoring", "ivl"]){
+          for (const pd of [false, true]){
+            const plan = {device:dev.key, nominal_d:nd, length:L, prep, postdilate:pd, n_devices:nDev};
+            const r = evaluateCase(les, plan, 10, 380);
+            if (!best || r.risk12 < best.r.risk12) best = {plan, r};
+          }
+        }
+      }
+    }
+    if (best) out.push(best);
+  }
+  out.sort((a, b) => a.r.risk12 - b.r.risk12);
+  return out;
+}
+
+/* ---------------------------------------------------------------
+   state and UI
+   --------------------------------------------------------------- */
+const AXES = [
+  {k:"G", css:"--axis-g", cn:"几何 / 贴壁", en:"Γ_G", note:"尺寸、覆盖、顺形、锥度"},
+  {k:"M", css:"--axis-m", cn:"力学 / 顺应性", en:"Γ_M", note:"顺应性失配、管壁应力、疲劳"},
+  {k:"H", css:"--axis-h", cn:"血流动力学", en:"Γ_H", note:"管腔恢复、支架梁扰流、分支"},
+  {k:"B", css:"--axis-b", cn:"生物 / 药物", en:"Γ_B", note:"抗增殖剂量对增生驱动、愈合窗"}
+];
+const FLAGS = [["diabetes","糖尿病"],["bifurcation","分叉"],["side_branch","重要分支"],["cto","CTO"]];
+const DEFAULTS = {
+  coronary:{d_prox:3.2,d_dist:2.95,length:22,calcium:0.30,tortuosity:0.20,inflammation:0.25,runoff:3},
+  sfa:{d_prox:5.8,d_dist:5.2,length:140,calcium:0.45,tortuosity:0.30,inflammation:0.25,runoff:2},
+  btk:{d_prox:2.9,d_dist:2.6,length:100,calcium:0.45,tortuosity:0.25,inflammation:0.35,runoff:1},
+  carotid:{d_prox:7.5,d_dist:5.0,length:20,calcium:0.30,tortuosity:0.20,inflammation:0.20,runoff:3},
+  renal:{d_prox:5.6,d_dist:5.2,length:15,calcium:0.30,tortuosity:0.15,inflammation:0.25,runoff:3},
+  iliac:{d_prox:8.2,d_dist:7.8,length:40,calcium:0.35,tortuosity:0.20,inflammation:0.20,runoff:3}
+};
+const les = Object.assign({bed:"coronary", stenosis:0.8, diabetes:true,
+  bifurcation:false, side_branch:false, cto:false}, DEFAULTS.coronary);
+let plan = null, list = [], picked = 0;
+
+const $ = id => document.getElementById(id);
+const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const pct = x => (100 * x).toFixed(1) + "%";
+
+/* --- build static controls --- */
+$("beds").innerHTML = Object.values(MODEL.beds)
+  .map(b => `<button data-bed="${b.key}" aria-pressed="${b.key === les.bed}">${b.name_cn}</button>`).join("");
+$("flags").innerHTML = FLAGS
+  .map(([k, t]) => `<button data-flag="${k}" aria-pressed="${!!les[k]}">${t}</button>`).join("");
+$("prep").innerHTML = Object.entries(MODEL.prep)
+  .map(([k, v]) => `<option value="${k}">${v.label}</option>`).join("");
+$("legend").innerHTML = AXES.map(a =>
+  `<span><i class="swatch" style="background:var(${a.css})"></i>${a.en} ${a.cn}</span>`).join("")
+  + `<span><i class="swatch" style="background:var(--ink);height:4px"></i>Γ_sc 总匹配度</span>`
+  + `<span><i class="swatch" style="background:var(--muted);height:0;border-top:2px dashed var(--muted)"></i>τ_sc</span>`;
+
+$("beds").addEventListener("click", e => {
+  const b = e.target.closest("[data-bed]"); if (!b) return;
+  les.bed = b.dataset.bed;
+  Object.assign(les, DEFAULTS[les.bed]);
+  [...$("beds").children].forEach(x => x.setAttribute("aria-pressed", x.dataset.bed === les.bed));
+  syncInputs(); recompute(true);
+});
+$("flags").addEventListener("click", e => {
+  const b = e.target.closest("[data-flag]"); if (!b) return;
+  les[b.dataset.flag] = !les[b.dataset.flag];
+  b.setAttribute("aria-pressed", String(les[b.dataset.flag]));
+  recompute(true);
+});
+["d_prox","d_dist","length","calcium","tortuosity","inflammation","runoff"].forEach(k => {
+  $(k).addEventListener("input", () => { les[k] = +$(k).value; syncLabels(); recompute(true); });
+});
+$("prep").addEventListener("change", () => { if (plan){ plan.prep = $("prep").value; render(); } });
+$("postdil").addEventListener("click", () => {
+  const on = $("postdil").getAttribute("aria-pressed") !== "true";
+  $("postdil").setAttribute("aria-pressed", String(on));
+  if (plan){ plan.postdilate = on; render(); }
+});
+
+function syncInputs(){
+  ["d_prox","d_dist","length","calcium","tortuosity","inflammation","runoff"]
+    .forEach(k => $(k).value = les[k]);
+  [...$("flags").children].forEach(x => x.setAttribute("aria-pressed", String(!!les[x.dataset.flag])));
+  syncLabels();
+}
+function syncLabels(){
+  $("lp").textContent = les.d_prox.toFixed(2) + " mm";
+  $("ld").textContent = les.d_dist.toFixed(2) + " mm";
+  $("ll").textContent = les.length.toFixed(0) + " mm";
+  $("lc").textContent = les.calcium.toFixed(2);
+  $("lt").textContent = les.tortuosity.toFixed(2);
+  $("li").textContent = les.inflammation.toFixed(2);
+  $("lr").textContent = les.runoff + " 支";
+  $("runoffField").hidden = !(les.bed === "sfa" || les.bed === "btk");
+  const b = MODEL.beds[les.bed];
+  $("bednote").textContent = `λ₀ ${pct(b.lambda0)} · 顺应性 ${b.compliance} %/100mmHg · `
+    + `增生驱动 ${b.k_neointima} · 循环形变 ${b.cyclic_strain} · 目标扩张比 `
+    + `${b.oversize_band[0]}–${b.oversize_band[1]}`;
+}
+
+/* --- rendering --- */
+function recompute(refresh){
+  if (refresh){ list = shortlist(les); picked = 0; plan = Object.assign({}, list[0].plan); }
+  $("prep").value = plan.prep;
+  $("postdil").setAttribute("aria-pressed", String(!!plan.postdilate));
+  render();
+}
+
+function render(){
+  const r = evaluateCase(les, plan, 5, 730);
+  const bed = MODEL.beds[les.bed];
+
+  $("t_g0").textContent = r.gamma[0].toFixed(3);
+  $("t_g0d").textContent = `24 个月末 ${r.gamma[r.gamma.length-1].toFixed(3)} · 失配剂量 ${r.deficit.toFixed(3)}`;
+  $("t_tau").textContent = isNaN(r.tau_sc) ? "—" : Math.round(r.tau_sc);
+  $("t_taud").textContent = isNaN(r.tau_sc) ? "轨迹平直" : `天 · 约 ${(r.tau_sc/30.4).toFixed(1)} 个月`;
+  const over = r.risk12 > bed.lambda0;
+  $("t_risk").textContent = pct(r.risk12);
+  $("t_risk").className = "n" + (over ? " over" : "");
+  $("t_riskd").textContent = `该血管床最佳实践参考 ${pct(bed.lambda0)}`;
+
+  $("axes").innerHTML = AXES.map((a, i) => {
+    const v = r[a.k][0];
+    return `<div class="axrow">
+      <div class="name"><b>${a.en}</b>${a.cn}<div class="wgt">权重 ${r.weights[i].toFixed(2)}</div></div>
+      <div class="track"><div class="bar" style="width:${(100*v).toFixed(1)}%;background:var(${a.css})"></div></div>
+      <div class="val">${v.toFixed(3)}</div></div>`;
+  }).join("");
+  const wa = AXES.find(a => a.k === r.worst);
+  $("axhint").textContent = `最弱轴是 ${wa.en} ${wa.cn}（${wa.note}）。`
+    + `几何平均意味着任何一轴塌陷都无法被其它三轴补偿。`;
+
+  drawChart(r);
+  drawList();
+  buildFeedbackControls();
+}
+
+function drawChart(r){
+  const W = 720, H = 300, m = {t:14, r:58, b:30, l:38};
+  const x = d => m.l + (d / 730) * (W - m.l - m.r);
+  const y = v => m.t + (1 - v) * (H - m.t - m.b);
+  const path = arr => arr.map((v, i) => (i ? "L" : "M") + x(r.t[i]).toFixed(1) + " " + y(v).toFixed(1)).join("");
+  let s = "";
+  for (let v = 0; v <= 1.0001; v += 0.25)
+    s += `<line x1="${m.l}" y1="${y(v)}" x2="${W-m.r}" y2="${y(v)}" stroke="var(--hair)" stroke-width="1"/>
+          <text x="${m.l-7}" y="${y(v)+4}" text-anchor="end" font-size="11" font-family="var(--mono)" fill="var(--muted)">${v.toFixed(2)}</text>`;
+  for (const d of [0, 180, 365, 545, 730])
+    s += `<text x="${x(d)}" y="${H-m.b+18}" text-anchor="middle" font-size="11" font-family="var(--mono)" fill="var(--muted)">${d}</text>`;
+  s += `<text x="${(m.l+W-m.r)/2}" y="${H-2}" text-anchor="middle" font-size="11" fill="var(--muted)">天</text>`;
+  s += `<line x1="${x(365)}" y1="${m.t}" x2="${x(365)}" y2="${H-m.b}" stroke="var(--hair)" stroke-width="1"/>`;
+  if (!isNaN(r.tau_sc))
+    s += `<line x1="${x(r.tau_sc)}" y1="${m.t}" x2="${x(r.tau_sc)}" y2="${H-m.b}" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <text x="${x(r.tau_sc)+5}" y="${m.t+11}" font-size="11" font-family="var(--mono)" fill="var(--muted)">τ ${Math.round(r.tau_sc)}d</text>`;
+  AXES.forEach(a => {
+    s += `<path d="${path(r[a.k])}" fill="none" stroke="var(${a.css})" stroke-width="2" stroke-linejoin="round"/>`;
+  });
+  s += `<path d="${path(r.gamma)}" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>`;
+
+  // end-of-line labels, pushed apart so they never sit on top of one another
+  const last = a => a[a.length - 1];
+  const labels = AXES.map(a => ({txt:a.en, col:`var(${a.css})`, w:400, y:y(last(r[a.k]))}))
+    .concat([{txt:"Γsc", col:"var(--ink)", w:600, y:y(last(r.gamma))}])
+    .sort((p, q) => p.y - q.y);
+  for (let i = 1; i < labels.length; i++)
+    if (labels[i].y - labels[i-1].y < 13) labels[i].y = labels[i-1].y + 13;
+  const over = last(labels).y - (H - m.b);
+  if (over > 0) labels.forEach(l => l.y -= over);
+  labels.forEach(l => {
+    s += `<text x="${W-m.r+6}" y="${(l.y+4).toFixed(1)}" font-size="11" font-family="var(--mono)"`
+       + ` font-weight="${l.w}" fill="${l.col}">${l.txt}</text>`;
+  });
+  s += `<line id="cross" x1="0" y1="${m.t}" x2="0" y2="${H-m.b}" stroke="var(--accent)" stroke-width="1" opacity="0"/>`;
+  $("chart").innerHTML = s;
+
+  const box = $("chartbox"), tip = $("tip"), chart = $("chart");
+  chart.onmousemove = ev => {
+    const bb = chart.getBoundingClientRect();
+    const px = (ev.clientX - bb.left) / bb.width * W;
+    const day = clamp((px - m.l) / (W - m.l - m.r) * 730, 0, 730);
+    const i = clamp(Math.round(day / 5), 0, r.t.length - 1);
+    const cr = chart.querySelector("#cross");
+    cr.setAttribute("x1", x(r.t[i])); cr.setAttribute("x2", x(r.t[i])); cr.setAttribute("opacity", "1");
+    tip.hidden = false;
+    tip.innerHTML = `<div class="r"><span>第 ${r.t[i]} 天</span></div>`
+      + AXES.map(a => `<div class="r"><span style="color:var(${a.css})">${a.en}</span><b>${r[a.k][i].toFixed(3)}</b></div>`).join("")
+      + `<div class="r" style="border-top:1px solid var(--hair);margin-top:3px;padding-top:3px"><span>Γsc</span><b>${r.gamma[i].toFixed(3)}</b></div>`
+      + `<div class="r"><span>累计事件率</span><b>${pct(r.risk[i])}</b></div>`;
+    const left = clamp(x(r.t[i]) / W * bb.width + 12, 0, bb.width - 150);
+    tip.style.left = left + "px"; tip.style.top = "8px";
+  };
+  chart.onmouseleave = () => {
+    tip.hidden = true;
+    const cr = chart.querySelector("#cross"); if (cr) cr.setAttribute("opacity", "0");
+  };
+}
+
+function drawList(){
+  const bed = MODEL.beds[les.bed];
+  const max = Math.max(...list.map(o => o.r.risk12), bed.lambda0 * 1.4, 0.02);
+  $("shortlist").querySelector("tbody").innerHTML = list.map((o, i) => {
+    const d = DEV[o.plan.device], ax = AXES.find(a => a.k === o.r.worst);
+    const over = o.r.risk12 > bed.lambda0;
+    return `<tr data-i="${i}" class="${i === picked ? "pick" : ""}">
+      <td>${d.name}</td>
+      <td class="num">${o.plan.nominal_d.toFixed(2)}×${o.plan.length.toFixed(0)}${o.plan.n_devices > 1 ? " ×" + o.plan.n_devices : ""}</td>
+      <td>${MODEL.prep[o.plan.prep].label}${o.plan.postdilate ? " + 后扩" : ""}</td>
+      <td class="num">${o.r.gamma[0].toFixed(3)}</td>
+      <td class="num">${isNaN(o.r.tau_sc) ? "—" : Math.round(o.r.tau_sc)}</td>
+      <td><span class="chip"><i class="dot" style="background:var(${ax.css})"></i>${ax.en}</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div class="rbar"><i class="${over ? "over" : ""}" style="width:${(100*o.r.risk12/max).toFixed(1)}%"></i>
+        <u style="left:${(100*bed.lambda0/max).toFixed(1)}%"></u></div>
+        <span class="num" style="font-size:12.5px">${pct(o.r.risk12)}</span></div></td></tr>`;
+  }).join("");
+  $("shortlist").querySelector("tbody").onclick = e => {
+    const tr = e.target.closest("tr[data-i]"); if (!tr) return;
+    picked = +tr.dataset.i; plan = Object.assign({}, list[picked].plan);
+    $("prep").value = plan.prep;
+    $("postdil").setAttribute("aria-pressed", String(!!plan.postdilate));
+    render();
+  };
+}
+
+/* --- feedback: a disagreement becomes a recorded case --- */
+let db = null;
+function buildFeedbackControls(){
+  const pool = candidates(les.bed, dRef(les));
+  const sel = $("fb_dev");
+  if (sel.dataset.bed !== les.bed){
+    sel.innerHTML = pool.map(d => `<option value="${d.key}">${d.name}</option>`).join("");
+    sel.dataset.bed = les.bed;
+    sel.value = plan.device;
+    $("fb_d").value = plan.nominal_d; $("fb_l").value = plan.length;
+  }
+  $("fb_sz").textContent = (+$("fb_d").value).toFixed(2) + "×" + (+$("fb_l").value).toFixed(0);
+}
+["fb_d","fb_l"].forEach(k => $(k).addEventListener("input", buildFeedbackControls));
+$("fbtoggle").addEventListener("click", () => {
+  const on = $("fbtoggle").getAttribute("aria-pressed") !== "true";
+  $("fbtoggle").setAttribute("aria-pressed", String(on));
+  $("fbform").classList.toggle("on", on);
+});
+$("fb_save").addEventListener("click", async () => {
+  if (!db){ $("fb_status").textContent = "这个视图无法写入，反馈没有保存。"; return; }
+  $("fb_save").disabled = true; $("fb_status").textContent = "保存中…";
+  const id = "case_" + Date.now().toString(36);
+  try {
+    await db.doc("cases/" + id).set({
+      ts: Date.now(), bed: les.bed, lesion: Object.assign({}, les),
+      modelPlan: Object.assign({}, plan),
+      modelRisk12: evaluateCase(les, plan, 10, 380).risk12,
+      operatorPlan: {device: $("fb_dev").value, nominal_d: +$("fb_d").value,
+                     length: +$("fb_l").value, prep: plan.prep, postdilate: !!plan.postdilate,
+                     n_devices: 1},
+      why: $("fb_why").value.slice(0, 1200)
+    });
+    $("fb_status").textContent = "已存为一条病例。";
+    $("fb_why").value = "";
+  } catch (err){
+    $("fb_status").textContent = "没能保存：" + (err && err.code ? err.code : "未知错误");
+  }
+  $("fb_save").disabled = false;
+});
+
+function renderCases(docs){
+  if (!docs.length){ $("cases").innerHTML = `<div class="hint" style="margin:0">还没有记录的分歧病例。</div>`; return; }
+  const show = docs.slice().sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, 6);
+  $("cases").innerHTML = `<div class="eyebrow">已记录 ${docs.length} 条分歧</div>` + show.map(c => {
+    const md = DEV[c.modelPlan && c.modelPlan.device], od = DEV[c.operatorPlan && c.operatorPlan.device];
+    return `<div class="case"><div class="m">${MODEL.beds[c.bed] ? MODEL.beds[c.bed].name_cn : c.bed}
+      · ${new Date(c.ts || 0).toLocaleDateString()}</div>
+      算子选 ${md ? md.name : "?"}，你选 ${od ? od.name : "?"}
+      ${c.why ? `<div style="color:var(--muted);margin-top:2px">${escapeHtml(c.why)}</div>` : ""}</div>`;
+  }).join("");
+}
+const escapeHtml = s => String(s).replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* --- boot --- */
+syncInputs();
+recompute(true);
+renderCases([]);
+
+(async () => {
+  const d = await (window.claude && window.claude.use ? window.claude.use("db") : null);
+  if (!d) return;
+  db = d;
+  try {
+    db.collection("cases").onSnapshot(
+      snap => renderCases(snap.docs.map(doc => doc.data()).filter(Boolean)),
+      () => { /* a read failure must not take the workbench down */ });
+  } catch (e){ /* reading is optional; writing still works */ }
+})();
+</script>

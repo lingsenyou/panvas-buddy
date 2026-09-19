@@ -1,0 +1,43 @@
+  start  0  cost 0.2258
+  start  1  cost 0.2351
+  start  2  cost 0.2325
+  start  3  cost 0.2349
+  start  4  cost 0.2359
+  start  5  cost 0.2355
+  start  6  cost 0.2356
+  start  7  cost 0.2258
+  start  8  cost 0.2258
+  start  9  cost 0.2258
+  start 10  cost 0.5500
+  start 11  cost 0.5500
+
+fitted constants
+  s_under         0.090 ->    0.250
+  k_comp          0.900 ->    0.050
+  k_stress        0.550 ->    0.050
+  k_fat           3.200 ->   11.999
+  drug_K          0.600 ->    0.100
+  k_short         1.300 ->   14.000
+  need_scale      3.000 ->    1.454
+  k_lumen         0.260 ->    0.234
+  k_strut         0.300 ->    2.000
+  nih_max_um    260.000 ->  822.195
+  beta            3.600 ->    5.436
+
+anchor fit (12-month event rate)
+  anchor              observed  predicted   Gamma0  tau_sc  worst
+  COR-DES-modern         0.020      0.022    0.836     234      H
+  COR-BRS-plla           0.030      0.017    0.740     346      H
+  COR-BMS                0.098      0.114    0.502     151      H
+  COR-POBA               0.170      0.181    0.504      95      H
+  SFA-DCB                0.024      0.025    0.791     280      H
+  SFA-POBA               0.206      0.164    0.444     112      H
+  SFA-nitinol            0.127      0.141    0.347     165      H
+  BTK-DCB                0.092      0.112    0.604      83      H
+  BTK-POBA               0.131      0.174    0.283      31      H
+  CAR-stent              0.006      0.006    0.554     132      B
+  ILIAC-stent            0.028      0.029    0.524     147      B
+  RENAL-stent            0.059      0.059    0.483     165      H
+
+  mean absolute error 0.0137   max 0.0426
+  written to C:\Users\25450\Documents\claude_tmp\panvas_buddy\panvas\theta.json

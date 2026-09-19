@@ -1,0 +1,21 @@
+{
+ "n_total": 16,
+ "n_in_fit": 12,
+ "n_excluded": 4,
+ "constructs_in_fit": [
+  "CD-TLR",
+  "TLR",
+  "symptom-driven TLR"
+ ],
+ "trials_contributing_two_arms": [
+  "IN.PACT SFA",
+  "IN.PACT DEEP"
+ ],
+ "beds_with_one_anchor": [
+  "carotid",
+  "iliac",
+  "renal"
+ ],
+ "mae_in_fit": 0.0137,
+ "max_err_in_fit": 0.0426
+}

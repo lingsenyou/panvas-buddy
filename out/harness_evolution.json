@@ -1,0 +1,69 @@
+{
+  "history": [
+    {
+      "step": 0,
+      "label": "H0 (starting harness)",
+      "dev": 0.7309,
+      "skills": [
+        "size_from_reference",
+        "cover_the_lesion"
+      ]
+    },
+    {
+      "step": 1,
+      "label": "near_optimal: consult the operator before choosing",
+      "dev": 0.9374,
+      "skills": [
+        "size_from_reference",
+        "cover_the_lesion",
+        "score_and_rank"
+      ]
+    },
+    {
+      "step": 2,
+      "label": "prepared_calcium: lithotripsy from moderate calcium up",
+      "dev": 0.9541,
+      "skills": [
+        "size_from_reference",
+        "cover_the_lesion",
+        "score_and_rank",
+        "prepare_calcium"
+      ]
+    },
+    {
+      "step": 3,
+      "label": "apposition: size 5% over reference",
+      "dev": 0.9542,
+      "skills": [
+        "size_from_reference",
+        "cover_the_lesion",
+        "score_and_rank",
+        "prepare_calcium"
+      ]
+    }
+  ],
+  "test_start": 0.7494041084718287,
+  "test_end": 0.9484114038073588,
+  "final_harness": {
+    "version": "v3",
+    "instructions": "Choose one device and size it. Prefer the smallest intervention that restores the lumen. Do not implant what the vessel cannot carry.",
+    "skills": [
+      "size_from_reference",
+      "cover_the_lesion",
+      "score_and_rank",
+      "prepare_calcium"
+    ],
+    "policy": {
+      "sizing_rule": "mean_ref",
+      "oversize_target": 1.05,
+      "length_margin_mm": 2.0,
+      "calcium_prep_threshold": 0.45,
+      "prep_choice": "ivl",
+      "postdilate_calcium": 1.1,
+      "small_vessel_no_implant_mm": 0.0,
+      "long_lesion_flexible_mm": 1000000000.0,
+      "require_drug_if_drive": 1000000000.0,
+      "search_top_k": 1
+    }
+  }
+}

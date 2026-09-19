@@ -1,0 +1,27 @@
+{
+  "title": "PanVas-Buddy: a calibrated, time-resolved operator for device-vessel matching across the arterial tree",
+  "description": "<p>A suitcordance operator that treats device&ndash;vessel failure as a property of the <em>agreement</em> between device and vessel rather than of either alone. Four axes &mdash; geometric, mechanical, hemodynamic and biological &mdash; combine as a bed-weighted geometric mean and evolve in time, yielding a time constant &tau;<sub>sc</sub> and a time-averaged mismatch dose. Eleven of thirteen free constants are calibrated, as one shared parameter set, against published 12-month event rates spanning six arterial beds (coronary, femoropopliteal, below-the-knee, carotid, renal, iliac).</p><p>The release includes the operator, the calibration anchors with their provenance and trust weights, an editable device-selection harness with its rubric scorer, the in-silico evaluation (including a reported null result on cross-bed transfer), the scripts that regenerate every figure, and a browser workbench.</p><p><strong>Research prototype. Not validated in patients. Not a clinical decision tool.</strong> No patient-level data were used.</p>",
+  "upload_type": "software",
+  "license": "MIT",
+  "access_right": "open",
+  "creators": [
+    {
+      "name": "You, Lingsen",
+      "affiliation": "Department of Cardiology, Zhongshan Hospital, Fudan University, Shanghai, China"
+    }
+  ],
+  "keywords": [
+    "interventional cardiology",
+    "endovascular therapy",
+    "pan-vascular disease",
+    "device-vessel matching",
+    "suitcordance",
+    "drug-eluting stent",
+    "drug-coated balloon",
+    "bioresorbable scaffold",
+    "mechanistic model",
+    "model calibration",
+    "reproducible research"
+  ],
+  "notes": "TODO before publishing the Zenodo record: add every co-author to `creators` in the agreed order, add ORCIDs, and add the preprint DOI as a `related_identifiers` entry with relation `isSupplementTo` once the preprint is posted."
+}
