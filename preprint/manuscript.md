@@ -120,8 +120,9 @@ The framework this paper operationalises is our group's own. Device–vessel sui
 was named as the object of study of China's National Basic Science Center for
 panvascular interventional complex systems [1], developed as a tri-ecological balance
 [2], extended to full-watershed organs [3], given an experimental platform in a
-panvascular-on-a-chip system [4], and connected to intravascular imaging and digital
-twins [5]. What none of those papers does — and what we had not done — is **compute** it:
+panvascular-on-a-chip system [4], connected to intravascular imaging and digital
+twins [5], and carried into sensing fibres for monitoring and intervention [6]. What
+none of those papers does — and what we had not done — is **compute** it:
 Γ_sc has been specified verbally, without a numerical value, a time course, fitted
 constants, or anything that could be checked against an outcome. This paper is the first
 executable implementation, and it reports what happened when we tried.
@@ -163,7 +164,9 @@ recoil then costs is charged to Γ_H as residual lumen, not twice.
 
 **Γ_M, mechanical.** Compliance mismatch between device and wall, where wall
 compliance falls with calcium and device compliance for a resorbable scaffold relaxes
-toward the wall's with its degradation time constant; overstretch wall stress against
+toward the wall's with its degradation time constant — a constant that is a material
+design variable, not a fixed property, and one our group has approached from the
+materials side by screening poly-L-lactide modifiers computationally [7]; overstretch wall stress against
 a calcium-dependent tolerable strain; and cyclic fatigue, which accrues over the
 first year in proportion to the bed's deformation burden, the device's fatigue
 resistance and the implanted length. A device that leaves nothing behind is, by
@@ -587,7 +590,7 @@ anyone can look up.
 
 Device selection needs a policy deciding how the operator is used — the sizing rule,
 when to prepare calcium, when to demand an antiproliferative device. Following the
-separation used in recent interactive scientific agents [6], we hold that policy as
+separation used in recent interactive scientific agents [8], we hold that policy as
 data rather than code, score candidate plans against a fixed rubric composer, and
 improve the policy with the operator's constants frozen. Across 60 development tasks with
 120 held out, the held-out rubric score rose from 0.702 to 0.945 with no change
@@ -793,7 +796,15 @@ L.S. and J.G. supervised the work and revised the manuscript.
    imaging to adaptive vascular care: intelligent photonics and digital twins in
    panvascular disease. *Light Sci Appl*. 2026. doi:10.1038/s41377-026-02410-6
 
-6. Xue S, Zhong J, Nan Z, et al. ScienceBuddy: recursive-in-recursive self-improvement
+6. You L, Luo Y, Cheng Q, Shen L, Ge J. High-suitcordance intelligent fibers for
+   panvascular disease monitoring-intervention. *Adv Fiber Mater*. 2025.
+   doi:10.1007/s42765-025-00542-9
+
+7. You L, Guo Y, Peng Z, Wang W, Shen L, Ge J. AI-assisted generation and screening of
+   PLLA modifiers for bioresorbable vascular scaffolds. *Chin Sci Bull*. 2026.
+   doi:10.1360/csb-2026-0332
+
+8. Xue S, Zhong J, Nan Z, et al. ScienceBuddy: recursive-in-recursive self-improvement
    for interactive scientific agents. *arXiv*:2609.17523. 2026.
 
 ---
