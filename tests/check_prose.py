@@ -34,6 +34,7 @@ BRIEF1 = os.path.join(SHEN, "00b_给GPT阅读的完整技术简报.md")
 DEFECTS = os.path.join(ROOT, "KNOWN_DEFECTS.md")
 SHENBRIEF = os.path.join(ROOT, "给沈老师_项目简报.md")
 README = os.path.join(ROOT, "README.md")
+ABSTRACT = os.path.join(ROOT, "preprint", "abstract_plaintext.txt")
 
 
 def worked_lesion():
@@ -128,9 +129,20 @@ def base_rate_brier():
     return float(m.group(1))
 
 
+def e2_auc():
+    """B's AUC at the first sample size, and A'' at the last -- the pair the
+    abstract quotes for sample efficiency."""
+    d = json.load(io.open(os.path.join(ROOT, "out", "experiments.json"),
+                          encoding="utf-8"))["e2"]
+    b = next(v for k, v in d.items() if k.startswith("B "))["auc"]
+    a = next(v for k, v in d.items() if k.startswith("A'' "))["auc"]
+    return {"b_n100": b[0], "a_n800": a[-1]}
+
+
 W = worked_lesion()
 F = frontier()
 S = anchor_split()
+E2 = e2_auc()
 N = neointima()
 TH = json.load(io.open(os.path.join(ROOT, "panvas", "theta.json"), encoding="utf-8"))
 
@@ -218,6 +230,14 @@ CHECKS = [
         (MS, r"attenuates to a \*\*([\d.]+)-fold\*\*")], 0.05, "x"),
     ("cross-bed base-rate Brier", base_rate_brier(), [
         (MS, r"which is ([\d.]+) \(their event rate")], 0.0006, ""),
+    ("abstract: MAE all", S["mae_all"], [
+        (ABSTRACT, r"mean absolute error of\s+([\d.]+) percentage points")], 0.02, "pts"),
+    ("abstract: Gamma_M ablation", S["abl_total"], [
+        (ABSTRACT, r"removing it costs ([\d.]+)" + chr(10) + r"?\s*points")], 0.006, "pts"),
+    ("abstract: AUC at n=100", E2["b_n100"], [
+        (ABSTRACT, r"reached AUC ([\d.]+) at n = 100")], 0.003, ""),
+    ("abstract: raw features at n=800", E2["a_n800"], [
+        (ABSTRACT, r"by n = 800 \(([\d.]+)\)")], 0.003, ""),
     ("horizon T", float(T_HORIZON), [
         (MS, r"five-day grid to T = ([\d.]+) days"),
     ], 0.5, "d"),

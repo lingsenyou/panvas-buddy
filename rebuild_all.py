@@ -36,6 +36,7 @@ STEPS = [
     ("experiments.py", "E1-E3", False),
     ("make_figures.py", "the three preprint figures", False),
     ("build_site.py", "the public page at lingsenyou.com/suitcordance", False),
+    ("make_abstract.py", "plain-text abstract for the preprint server form", False),
     ("make_docx.py", "the submission Word file", False),
     ("tests/make_js_reference.py", "reference values for the JS parity check", False),
     ("tests/test_operator.py", "property tests, including the structural ones", False),
